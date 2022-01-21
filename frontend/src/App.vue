@@ -2,15 +2,18 @@
   <div id="map">
     <Map />
   </div>
+  <webRTC />
 </template>
 
 <script>
 import Map from "./map.vue";
+import webRTC from "./webRTC.vue";
 
 export default {
   name: "App",
   components: {
     Map,
+    webRTC,
   },
 };
 </script>
