@@ -26,6 +26,18 @@ dependencies {
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	
+	// swagger 3.0부터는 boot-starter 하나로 통합해서 사용 가능
+	// https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
+	implementation 'io.springfox:springfox-boot-starter:3.0.0'
+
+	// https://mvnrepository.com/artifact/com.google.guava/guava
+	implementation 'com.google.guava:guava:11.0.2'
+
+	// 패스워드 암호화를 위한 gradle 인데 소셜로그인이기 때문에 주석처리해둠
+	// https://mvnrepository.com/artifact/org.springframework.security/spring-security-core
+	// implementation 'org.springframework.security:spring-security-core:5.6.1'
+
 }
 
 test {
