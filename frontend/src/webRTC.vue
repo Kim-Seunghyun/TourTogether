@@ -60,7 +60,8 @@
           @click="updateMainVideoStreamManager(sub)"
         />
       </div>
-      <button @click="toggleVideo()">버튼</button>
+      <button @click="toggleVideo()">비디오버튼</button>
+      <button @click="toggleAudio()">음소거</button>
     </div>
   </div>
 </template>
@@ -265,6 +266,15 @@ export default {
       } else if (!this.publishVideo) {
         this.publishVideo = true;
         this.publisher.publishVideo(this.publishVideo);
+      }
+    },
+    toggleAudio() {
+      if (this.publishAudio) {
+        this.publishAudio = false;
+        this.publisher.publishAudio(this.publishAudio);
+      } else if (!this.publishAudio) {
+        this.publishAudio = true;
+        this.publisher.publishAudio(this.publishAudio);
       }
     },
   },
