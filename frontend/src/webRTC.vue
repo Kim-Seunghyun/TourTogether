@@ -43,25 +43,35 @@
           value="Leave session"
         />
       </div>
-      <div id="main-video" class="col-md-6">
+      <!-- <div id="main-video" class="col-md-6">
         <div class="box">
           <user-video :stream-manager="mainStreamManager" class="my-video" />
         </div>
-      </div>
+      </div> -->
       <div id="video-container" class="col-md-6">
-        <user-video
-          :stream-manager="publisher"
-          @click="updateMainVideoStreamManager(publisher)"
-        />
-        <user-video
-          v-for="sub in subscribers"
-          :key="sub.stream.connection.connectionId"
-          :stream-manager="sub"
-          @click="updateMainVideoStreamManager(sub)"
-        />
+        <div class="box">
+          <user-video
+            :stream-manager="publisher"
+            @click="updateMainVideoStreamManager(publisher)"
+          />
+        </div>
+        <div class="box">
+          <user-video
+            v-for="sub in subscribers"
+            :key="sub.stream.connection.connectionId"
+            :stream-manager="sub"
+            @click="updateMainVideoStreamManager(sub)"
+          />
+        </div>
       </div>
       <button @click="toggleVideo()">비디오버튼</button>
       <button @click="toggleAudio()">음소거</button>
+      <input
+        @keyup.enter="submitChatting()"
+        placeholder="여기에 메시지 입력"
+        id="chatting"
+        v-model="message"
+      />
     </div>
   </div>
 </template>
@@ -90,7 +100,7 @@ export default {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
-
+      message: undefined,
       mySessionId: "SessionA",
       myUserName: "Participant" + Math.floor(Math.random() * 100),
     };
@@ -163,6 +173,11 @@ export default {
       });
 
       window.addEventListener("beforeunload", this.leaveSession);
+      this.session.on("signal", (event) => {
+        console.log(event.data); // Message
+        // console.log(event.from); // Connection object of the sender
+        // console.log(event.type); // The type of message
+      });
     },
 
     leaveSession() {
@@ -276,6 +291,21 @@ export default {
         this.publishAudio = true;
         this.publisher.publishAudio(this.publishAudio);
       }
+    },
+    submitChatting() {
+      const content = this.message;
+      this.message = undefined;
+      this.session
+        .signal({
+          data: content, // Any string (optional)
+          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+        })
+        .then(() => {
+          // console.log("Message successfully sent");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     },
   },
 };
