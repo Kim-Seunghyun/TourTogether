@@ -5,6 +5,8 @@
 </template>
 
 <script>
+// import axios from "axios"
+
 export default {
   methods: {
     getParameterByName: function (name) {
@@ -47,6 +49,11 @@ export default {
         // test : Token
         alert(window.Kakao.Auth.getAccessToken());
         location.href = "/"
+        // axios({
+        //   method: 'post',
+        //   url: 'http://localhost:3000/user/login',
+        //   data: 
+        // })
       });
   },
 };
