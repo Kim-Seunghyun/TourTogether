@@ -43,18 +43,18 @@
           value="Leave session"
         />
       </div>
-      <!-- <div id="main-video" class="col-md-6">
+      <div id="main-video" class="col-md-6">
         <div class="box">
           <user-video :stream-manager="mainStreamManager" class="my-video" />
         </div>
-      </div> -->
+      </div>
       <div id="video-container" class="col-md-6">
-        <div class="box">
+        <!-- <div class="box">
           <user-video
             :stream-manager="publisher"
             @click="updateMainVideoStreamManager(publisher)"
           />
-        </div>
+        </div> -->
         <div class="box">
           <user-video
             v-for="sub in subscribers"
@@ -69,9 +69,11 @@
       <input
         @keyup.enter="submitChatting()"
         placeholder="여기에 메시지 입력"
-        id="chatting"
         v-model="message"
       />
+      <div id="chatting-wrapper">
+        <ul id="chatting"></ul>
+      </div>
     </div>
   </div>
 </template>
@@ -79,15 +81,16 @@
 <script>
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
-import UserVideo from "./components/UserVideo";
+import UserVideo from "@/components/UserVideo";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+// const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
+const OPENVIDU_SERVER_URL = "https://" + "i6a105.p.ssafy.io";
+const OPENVIDU_SERVER_SECRET = "twist";
 
 export default {
-  name: "App",
+  name: "webRTC",
 
   components: {
     UserVideo,
@@ -177,6 +180,14 @@ export default {
         console.log(event.data); // Message
         // console.log(event.from); // Connection object of the sender
         // console.log(event.type); // The type of message
+
+        // 여기에 div 찾아서 내용 넣고 올리기
+        const el = document.createElement("li");
+        const dest = document.getElementById("chatting");
+        const wrapper = document.getElementById("chatting-wrapper");
+        el.innerText = event.data;
+        dest.append(el);
+        wrapper.scrollTop = wrapper.scrollHeight;
       });
     },
 
@@ -323,5 +334,15 @@ export default {
   height: 320px;
   border-radius: 70%;
   overflow: hidden;
+}
+#chatting-wrapper {
+  width: 400px;
+  height: 300px;
+  overflow-y: auto;
+  border: solid 1px black;
+  top: 130%;
+  right: 10%;
+  position: absolute;
+  z-index: 3;
 }
 </style>

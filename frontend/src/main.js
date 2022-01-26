@@ -1,5 +1,8 @@
 import { createApp } from "vue";
 import App from "./App.vue";
 import store from "./store";
+import router from "./router";
 
-createApp(App).use(store).mount("#app");
+window.Kakao.init(process.env.VUE_APP_KAKAO_JAVASCRIPT_KEY);
+
+createApp(App).use(router).use(store).mount("#app");

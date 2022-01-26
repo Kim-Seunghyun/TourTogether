@@ -1,15 +1,20 @@
 <template>
-  <div>
+  <div class="map-wrapper">
     <div id="map" class="map">
       <div id="selectedApt_wrap" style="display: block"></div>
     </div>
+  </div>
+  <div class="rtc-wrapper">
+    <webRTC />
   </div>
 </template>
 
 <script>
 import { reactive } from "@vue/reactivity";
 import { onMounted } from "vue";
+import webRTC from "@/views/webRTC.vue";
 export default {
+  components: { webRTC },
   name: "Map",
   setup() {
     const state = reactive({
@@ -194,10 +199,16 @@ export default {
 </script>
 
 <style>
-/* .map {
-  width: 1900px;
-  height: 800px;
-} */
+.map-wrapper {
+  width: 100vw;
+  height: 100vh;
+  left: 10%;
+  position: absolute;
+}
+.map {
+  width: 80%;
+  height: 80%;
+}
 #selectedApt_wrap {
   position: absolute;
   top: 0;
@@ -212,5 +223,10 @@ export default {
   z-index: 3;
   /* font-size: 12px; */
   border-radius: 10px;
+}
+.rtc-wrapper {
+  position: absolute;
+  top: 90%;
+  width: 100vw;
 }
 </style>
