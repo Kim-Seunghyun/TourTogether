@@ -90,17 +90,18 @@ export default {
         console.log(email)
         axios({
           method: 'post',
-          url: 'http://localhost:3000/user/login',
+          url: 'http://localhost:8081/user/login',
           data: {
-            user_login_paltform: 'kakao',
-            user_client_id: response.id,
-            user_email: email,
-            user_name: response.properties.nickname,
-            user_profile_image: response.properties.profile_image,
-            
+            userLoginPlaltform: 'kakao',
+            userClientId: response.id,
+            userEmail: email,
+            userName: response.properties.nickname,
+            userProfileImage: response.properties.profile_image,
           }
         })
-          // .then()
+          .then(res => {
+            console.log(res)
+          })
       },
       fail: function (error) {
         console.log(error)
