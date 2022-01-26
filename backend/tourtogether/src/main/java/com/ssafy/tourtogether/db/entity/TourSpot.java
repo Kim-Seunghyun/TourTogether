@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TourSpot extends BaseEntity {
-//	int tourSpotId;
+	int tourSpotId;
 	String tourSpotName;
 	String tourSpotSummary;
 	String tourSpotAddress;
