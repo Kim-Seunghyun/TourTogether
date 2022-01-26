@@ -1,3 +1,11 @@
+buildscript{
+	dependencies {
+		//이클립스인 경우를 위한 QueryDSL 플러그인. IntelliJ는 불필요. [시작]
+	    classpath "gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:1.0.10"
+	    //[끝] 
+	}
+}
+
 plugins {
 	id 'org.springframework.boot' version '2.6.2'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
@@ -40,8 +48,35 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa
 	implementation 'com.querydsl:querydsl-jpa:5.0.0'
-
 }
+
+//이클립스인 경우를 위한 QueryDSL 플러그인. IntelliJ는 불필요.
+apply plugin: 'com.ewerk.gradle.plugins.querydsl'
+
+//이클립스인 경우를 위한 QueryDSL 설정. IntelliJ는 불필요. [시작]
+def querydslDir = 'src/main/generated'
+querydsl {
+    library = "com.querydsl:querydsl-apt"
+    jpa = true
+    querydslSourcesDir = querydslDir
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', querydslDir]
+        }
+    }
+}
+
+compileQuerydsl {
+    options.annotationProcessorPath = configurations.querydsl
+}
+
+configurations {
+    querydsl.extendsFrom compileClasspath
+}
+//[끝]
 
 test {
 	useJUnitPlatform()

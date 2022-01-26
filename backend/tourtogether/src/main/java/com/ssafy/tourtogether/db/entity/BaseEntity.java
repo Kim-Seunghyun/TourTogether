@@ -1,12 +1,9 @@
 package com.ssafy.tourtogether.db.entity;
 
+import javax.persistence.MappedSuperclass;
+
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
 
 /**
  * 모델 간 공통 사항 정의.
@@ -15,7 +12,7 @@ import javax.persistence.MappedSuperclass;
 @Setter
 @MappedSuperclass
 public class BaseEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id = null;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.AUTO)
+//    Long id = null;
 }

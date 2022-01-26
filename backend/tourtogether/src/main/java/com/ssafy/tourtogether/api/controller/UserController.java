@@ -18,6 +18,7 @@ import com.ssafy.tourtogether.api.response.UserLoginPostRes;
 import com.ssafy.tourtogether.api.response.UserUpdateImagePatchRes;
 import com.ssafy.tourtogether.api.response.UserUpdateNicknamePatchRes;
 import com.ssafy.tourtogether.api.service.UserService;
+import com.ssafy.tourtogether.common.model.response.BaseResponseBody;
 //import com.ssafy.tourtogether.common.util.JwtTokenUtil;
 import com.ssafy.tourtogether.db.entity.User;
 
@@ -40,22 +41,24 @@ public class UserController {
 	@PostMapping("/login")
 	@ApiOperation(value = "로그인", notes = "소셜로그인 API를 통해 로그인 한다.")
 	@ApiResponses({
-			// TODO 필요한 response 종류와 메시지 작성
-//        @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
-//        @ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
-//        @ApiResponse(code = 404, message = "사용자 없음", response = BaseResponseBody.class),
-//        @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
+        @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
+        @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
 	})
 	public ResponseEntity<UserLoginPostRes> login(
 			@RequestBody @ApiParam(value = "로그인 정보", required = true) UserLoginPostReq loginInfo) {
-		String userId = /* loginInfo.getId() */ ""; // TODO api 전달 방식에 따라 수정
-//		String password = loginInfo.getPassword();
+		String userClientId = loginInfo.getUserClientId();
+		
+		System.out.println("login Req with: "+loginInfo.toString());
 
-		User user = userService.getUserByUserId(userId);
-		// TODO login res 메시지에 따라 수정: 유저가 존재하면 로그인, 존재하지 않으면 회원가입처리 해야할듯
-//		return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(userId)));
-//		return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null));
-		return null;
+		User user;
+		user = userService.getUserByUserId(userClientId);
+		
+		if(user == null) {
+			System.out.println("회원가입 필요");
+			user = userService.createUser(loginInfo);
+		}
+		System.out.println("Return user: "+user.toString());
+		return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", user/*JwtTokenUtil.getToken(userId)*/));
 	}
 
 	@DeleteMapping("/delete")
