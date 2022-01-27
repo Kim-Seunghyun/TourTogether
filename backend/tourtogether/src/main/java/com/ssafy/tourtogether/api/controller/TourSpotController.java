@@ -1,5 +1,7 @@
 package com.ssafy.tourtogether.api.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.tourtogether.api.response.TourSpotGetRes;
 import com.ssafy.tourtogether.api.service.TourSpotService;
+import com.ssafy.tourtogether.db.entity.TourSpot;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,7 +31,7 @@ public class TourSpotController {
 //		// TODO 필요한 response 종류와 메세지 작성 
 //	})
 	public ResponseEntity<TourSpotGetRes> getAllTourSpot() throws Exception {
-		tourSpotService.getAllTourSpot();
-		return null;
+		List<TourSpot> tourSpotList = tourSpotService.getAllTourSpot();
+		return ResponseEntity.ok(TourSpotGetRes.of(200, "Success", tourSpotList));
 	}
 }

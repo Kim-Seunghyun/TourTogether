@@ -1,6 +1,9 @@
 package com.ssafy.tourtogether.api.response;
 
+import java.util.List;
+
 import com.ssafy.tourtogether.common.model.response.BaseResponseBody;
+import com.ssafy.tourtogether.db.entity.TourSpot;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Getter;
@@ -13,10 +16,15 @@ import lombok.Setter;
 @Setter
 @ApiModel("TourSpotGetResponse")
 public class TourSpotGetRes extends BaseResponseBody {
-	public static TourSpotGetRes of(Integer statusCode, String message) {
+//	@ApiModelProperty(name = "응답 코드", example = "200")
+	List<TourSpot> tourSpotList = null;
+
+	public static TourSpotGetRes of(Integer statusCode, String message, List<TourSpot> tourSpotList) {
+		System.out.println(tourSpotList.size());
 		TourSpotGetRes res = new TourSpotGetRes();
 		res.setStatusCode(statusCode);
 		res.setMessage(message);
+		res.setTourSpotList(tourSpotList);
 		return res;
 	}
 }
