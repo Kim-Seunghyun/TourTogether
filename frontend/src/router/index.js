@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import Map from "../views/Map.vue";
 import Login from "../views/Login.vue";
-import MyPage from "../views/MyPage.vue"
+import MyPage from "../views/MyPage.vue";
 import KakaoLoginCallback from "../views/KakaoLoginCallback.vue";
 import FavoritePage from "../views/FavoritePage.vue";
 

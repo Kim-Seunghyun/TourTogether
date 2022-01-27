@@ -1,17 +1,27 @@
 <template>
   <div>
-    <div id="map" style="height:1000px" class="map">
-      <div id="selectedApt_wrap" style="display: block"></div>
+    <div id="map" style="height: 1000px" class="map">
+      <div id="selectedApt_wrap" style="display: block">
+        <Plan />
+      </div>
     </div>
+  </div>
+  <div id="webrtc-wrapper">
+    <WebRTC />
   </div>
 </template>
 
 <script>
 import { reactive } from "@vue/reactivity";
 import { onMounted } from "vue";
-
+import WebRTC from "@/views/WebRTC.vue";
+import Plan from "@/components/Plan.vue";
 export default {
   name: "Map",
+  components: {
+    WebRTC,
+    Plan,
+  },
   setup() {
     const sido_json = require("../assets/sido.json");
     const sigungu_json = require("../assets/sigungu.json");
@@ -43,7 +53,7 @@ export default {
       };
       state.map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리
       kakao.maps.event.addListener(state.map, "click", function (mouseEvent) {
-        if (state.map.getLevel()<=10){
+        if (state.map.getLevel() <= 10) {
           state.map.setLevel(8);
         } else {
           state.map.setLevel(10);
@@ -53,17 +63,21 @@ export default {
           new kakao.maps.LatLng(mousePoint.getLat(), mousePoint.getLng())
         );
       });
-      kakao.maps.event.addListener(state.map, "rightclick", function (mouseEvent) {
-        if(state.map.getLevel()<10){
-          state.map.setLevel(10);
-        } else {
-          state.map.setLevel(13);
+      kakao.maps.event.addListener(
+        state.map,
+        "rightclick",
+        function (mouseEvent) {
+          if (state.map.getLevel() < 10) {
+            state.map.setLevel(10);
+          } else {
+            state.map.setLevel(13);
+          }
+          var mousePoint = mouseEvent.latLng;
+          state.map.setCenter(
+            new kakao.maps.LatLng(mousePoint.getLat(), mousePoint.getLng())
+          );
         }
-        var mousePoint = mouseEvent.latLng;
-        state.map.setCenter(
-          new kakao.maps.LatLng(mousePoint.getLat(), mousePoint.getLng())
-        );
-      });
+      );
       kakao.maps.event.addListener(state.map, "zoom_changed", function () {
         if (state.map.getLevel() <= 10) {
           for (var i = 0; i < state.sido_polygon.length; i++) {
@@ -76,7 +90,7 @@ export default {
           for (i = 0; i < state.sigungu_polygon.length; i++) {
             state.sigungu_polygon[i].setMap(null);
           }
-          for(i = 0; i < state.sido_polygon.length; i++) {
+          for (i = 0; i < state.sido_polygon.length; i++) {
             state.sido_polygon[i].setMap(state.map);
           }
         }
@@ -116,7 +130,11 @@ export default {
       for (var i = 0; i < json_data.features.length; i++) {
         if (json_data.features[i].geometry.type === "Polygon") {
           let path_tmp = [];
-          for (var j = 0; j < json_data.features[i].geometry.coordinates[0].length; j++) {
+          for (
+            var j = 0;
+            j < json_data.features[i].geometry.coordinates[0].length;
+            j++
+          ) {
             path_tmp.push(
               new kakao.maps.LatLng(
                 json_data.features[i].geometry.coordinates[0][j][1],
@@ -126,10 +144,22 @@ export default {
           }
           displayPolygonDepth1(path_tmp, flag);
         } else {
-          for (j = 0; j < json_data.features[i].geometry.coordinates.length; j++) {
-            for(var k = 0; k < json_data.features[i].geometry.coordinates[j].length; k++) {
+          for (
+            j = 0;
+            j < json_data.features[i].geometry.coordinates.length;
+            j++
+          ) {
+            for (
+              var k = 0;
+              k < json_data.features[i].geometry.coordinates[j].length;
+              k++
+            ) {
               let path_tmp = [];
-              for(var t = 0; t <json_data.features[i].geometry.coordinates[j][k].length; t++){
+              for (
+                var t = 0;
+                t < json_data.features[i].geometry.coordinates[j][k].length;
+                t++
+              ) {
                 path_tmp.push(
                   new kakao.maps.LatLng(
                     json_data.features[i].geometry.coordinates[j][k][t][1],
@@ -319,5 +349,10 @@ export default {
   z-index: 3;
   /* font-size: 12px; */
   border-radius: 10px;
+}
+#webrtc-wrapper {
+  width: 100vw;
+  height: 100vh;
+  top: 90%;
 }
 </style>
