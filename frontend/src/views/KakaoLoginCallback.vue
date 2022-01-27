@@ -16,7 +16,7 @@ export default {
       return results == null
         ? ""
         : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
+    },
   },
   beforeMount() {
     const code = this.getParameterByName("code");
@@ -48,11 +48,11 @@ export default {
         window.Kakao.Auth.setAccessToken(data.access_token);
         // test : Token
         alert(window.Kakao.Auth.getAccessToken());
-        location.href = "/"
+        location.href = "/";
         // axios({
         //   method: 'post',
         //   url: 'http://localhost:3000/user/login',
-        //   data: 
+        //   data:
         // })
       });
   },

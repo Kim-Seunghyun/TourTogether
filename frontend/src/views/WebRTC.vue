@@ -49,18 +49,31 @@
         </div>
       </div>
       <div id="video-container" class="col-md-6">
-        <user-video
-          :stream-manager="publisher"
-          @click="updateMainVideoStreamManager(publisher)"
-        />
-        <user-video
-          v-for="sub in subscribers"
-          :key="sub.stream.connection.connectionId"
-          :stream-manager="sub"
-          @click="updateMainVideoStreamManager(sub)"
-        />
+        <!-- <div class="box">
+          <user-video
+            :stream-manager="publisher"
+            @click="updateMainVideoStreamManager(publisher)"
+          />
+        </div> -->
+        <div class="box">
+          <user-video
+            v-for="sub in subscribers"
+            :key="sub.stream.connection.connectionId"
+            :stream-manager="sub"
+            @click="updateMainVideoStreamManager(sub)"
+          />
+        </div>
       </div>
-      <button @click="toggleVideo()">버튼</button>
+      <button @click="toggleVideo()">비디오버튼</button>
+      <button @click="toggleAudio()">음소거</button>
+      <input
+        @keyup.enter="submitChatting()"
+        placeholder="여기에 메시지 입력"
+        v-model="message"
+      />
+      <div id="chatting-wrapper">
+        <ul id="chatting"></ul>
+      </div>
     </div>
   </div>
 </template>
@@ -68,15 +81,16 @@
 <script>
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
-import UserVideo from "./components/UserVideo";
+import UserVideo from "@/components/UserVideo";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
-const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
-const OPENVIDU_SERVER_SECRET = "MY_SECRET";
+// const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
+const OPENVIDU_SERVER_URL = "https://" + "i6a105.p.ssafy.io";
+const OPENVIDU_SERVER_SECRET = "twist";
 
 export default {
-  name: "App",
+  name: "webRTC",
 
   components: {
     UserVideo,
@@ -89,7 +103,7 @@ export default {
       mainStreamManager: undefined,
       publisher: undefined,
       subscribers: [],
-
+      message: undefined,
       mySessionId: "SessionA",
       myUserName: "Participant" + Math.floor(Math.random() * 100),
     };
@@ -162,6 +176,19 @@ export default {
       });
 
       window.addEventListener("beforeunload", this.leaveSession);
+      this.session.on("signal", (event) => {
+        console.log(event.data); // Message
+        // console.log(event.from); // Connection object of the sender
+        // console.log(event.type); // The type of message
+
+        // 여기에 div 찾아서 내용 넣고 올리기
+        const el = document.createElement("li");
+        const dest = document.getElementById("chatting");
+        const wrapper = document.getElementById("chatting-wrapper");
+        el.innerText = event.data;
+        dest.append(el);
+        wrapper.scrollTop = wrapper.scrollHeight;
+      });
     },
 
     leaveSession() {
@@ -267,6 +294,30 @@ export default {
         this.publisher.publishVideo(this.publishVideo);
       }
     },
+    toggleAudio() {
+      if (this.publishAudio) {
+        this.publishAudio = false;
+        this.publisher.publishAudio(this.publishAudio);
+      } else if (!this.publishAudio) {
+        this.publishAudio = true;
+        this.publisher.publishAudio(this.publishAudio);
+      }
+    },
+    submitChatting() {
+      const content = this.message;
+      this.message = undefined;
+      this.session
+        .signal({
+          data: content, // Any string (optional)
+          to: [], // Array of Connection objects (optional. Broadcast to everyone if empty)
+        })
+        .then(() => {
+          // console.log("Message successfully sent");
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
   },
 };
 </script>
@@ -283,5 +334,15 @@ export default {
   height: 320px;
   border-radius: 70%;
   overflow: hidden;
+}
+#chatting-wrapper {
+  width: 400px;
+  height: 300px;
+  overflow-y: auto;
+  border: solid 1px black;
+  top: 130%;
+  right: 10%;
+  position: absolute;
+  z-index: 3;
 }
 </style>

@@ -1,7 +1,10 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
-import Login from "../views/Login.vue"
-import KakaoLoginCallback from "../views/KakaoLoginCallback.vue"
+import Map from "../views/Map.vue";
+import Login from "../views/Login.vue";
+import MyPage from "../views/MyPage.vue";
+import KakaoLoginCallback from "../views/KakaoLoginCallback.vue";
+import FavoritePage from "../views/FavoritePage.vue";
 
 const routes = [
   {
@@ -10,25 +13,30 @@ const routes = [
     component: Home,
   },
   {
-    path: "/about",
-    name: "About",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+    path: "/map",
+    name: "Map",
+    component: Map,
   },
-
   {
     path: "/login",
     name: "Login",
     component: Login,
   },
   {
+    path: "/mypage",
+    name: "MyPage",
+    component: MyPage,
+  },
+  {
+    path: "/favoritepage",
+    name: "FavoritePage",
+    component: FavoritePage,
+  },
+  {
     path: "/kakao-login-callback",
     name: "KakaoLoginCallback",
-    component: KakaoLoginCallback
-  }
+    component: KakaoLoginCallback,
+  },
 ];
 
 const router = createRouter({
