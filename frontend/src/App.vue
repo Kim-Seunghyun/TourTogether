@@ -1,8 +1,10 @@
 <template>
   <div id="nav">
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> |
+    <router-link to="/map">Map</router-link> |
     <router-link to="/Login" v-if="!accessToken">Login</router-link>||
+    <router-link to="/mypage" v-if="accessToken">MyPage</router-link> |
+    <router-link to="/favoritepage" v-if="accessToken">FavoritePage</router-link> |
     <router-link to="#" v-on:click="logout()">Logout</router-link>
     <router-link to="#" v-show="accessToken" v-on:click="unlink()">
       | Kakao Unlink</router-link
@@ -31,7 +33,7 @@ export default {
         } else {
           alert("Logout Account!");
         }
-        router.push("login");
+        router.push("");
       });
     },
     unlink() {
@@ -56,16 +58,16 @@ export default {
       // 토큰이 변경 확인
       console.log(this.accessToken);
     },
-    // $route(to) {
-    //   // 라우트 변경 될때 마다 확인하여 (로그인체크)
-    //   this.accessToken = window.Kakao.Auth.getAccessToken();
-    //   if (to.name != "Login" && to.name != "KakaoLoginCallback") {
-    //     if (!this.accessToken) {
-    //       console.log("Not logged in.");
-    //       location.href = "/login";
-    //     }
-    //   }
-    // },
+    $route(to) {
+      // 라우트 변경 될때 마다 확인하여 (로그인체크)
+      this.accessToken = window.Kakao.Auth.getAccessToken();
+      if (to.name != "Home" && to.name != "Login" && to.name != "KakaoLoginCallback") {
+        if (!this.accessToken) {
+          console.log("Not logged in.");
+          location.href = "/";
+        }
+      }
+    },
   },
   mounted() {
     // 최초 한번만 호출 (내가 작성한거 아님)
