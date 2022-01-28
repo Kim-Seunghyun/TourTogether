@@ -85,7 +85,7 @@ public class UserController {
 		return null;
 	}
 
-	@PatchMapping("/updateImage/{userId}")
+	@PatchMapping("/updateImage")
 	@ApiOperation(value = "프로필 이미지 변경", notes = "유저의 프로필 이미지를 변경한다.")
 	@ApiResponses({
 			// TODO 필요한 response 종류와 메시지 작성
@@ -102,7 +102,7 @@ public class UserController {
 		return null;
 	}
 
-	@PatchMapping("/updateNickname/{userId}")
+	@PatchMapping("/updateNickname")
 	@ApiOperation(value = "프로필 이미지 변경", notes = "유저의 프로필 이미지를 변경한다.")
 	@ApiResponses({
 			// TODO 필요한 response 종류와 메시지 작성
