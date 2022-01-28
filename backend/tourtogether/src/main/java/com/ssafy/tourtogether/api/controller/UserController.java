@@ -40,25 +40,33 @@ public class UserController {
 
 	@PostMapping("/login")
 	@ApiOperation(value = "로그인", notes = "소셜로그인 API를 통해 로그인 한다.")
-	@ApiResponses({
-        @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
-        @ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class)
-	})
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 	public ResponseEntity<UserLoginPostRes> login(
 			@RequestBody @ApiParam(value = "로그인 정보", required = true) UserLoginPostReq loginInfo) {
 		String userClientId = loginInfo.getUserClientId();
-		
-		System.out.println("login Req with: "+loginInfo.toString());
+		String userLoginPlatformString = loginInfo.getUserLoginPlatform();
+		int userLoginPlatform = -1;
+
+		if (userLoginPlatformString.compareTo("kakao") == 0)
+			userLoginPlatform = 1;
+		else if (userLoginPlatformString.compareTo("naver") == 0)
+			userLoginPlatform = 2;
+		else if (userLoginPlatformString.compareTo("google") == 0)
+			userLoginPlatform = 3;
+
+		System.out.println("login Req with: " + loginInfo.toString());
 
 		User user;
-		user = userService.getUserByUserId(userClientId);
-		
-		if(user == null) {
+		user = userService.getUserByUserId(userClientId, userLoginPlatform);
+
+		if (user == null) {
 			System.out.println("회원가입 필요");
 			user = userService.createUser(loginInfo);
-		}
-		System.out.println("Return user: "+user.toString());
-		return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", user/*JwtTokenUtil.getToken(userId)*/));
+		} else
+			System.out.println("기존유저");
+		System.out.println("Return user: " + user.toString());
+		return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", user/* JwtTokenUtil.getToken(userId) */));
 	}
 
 	@DeleteMapping("/delete")
@@ -70,7 +78,7 @@ public class UserController {
 			@RequestBody @ApiParam(value = "회원탈퇴 정보", required = true) UserDeleteDeleteReq deleteInfo) {
 		String userId = /* deleteInfo.getId() */ ""; // TODO api 전달 방식에 따라 수정
 
-		User user = userService.getUserByUserId(userId);
+//		User user = userService.getUserByUserId(userId);
 		// TODO delete res 메시지에 따라 수정
 //		return ResponseEntity.ok(UserDeleteDeleteRes.of(200, "Success", JwtTokenUtil.getToken(userId)));
 //		return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null));
@@ -86,14 +94,14 @@ public class UserController {
 			@RequestBody @ApiParam(value = "프로필 변경 정보", required = true) UserUpdateImagePatchReq updateImageInfo) {
 		String userId = /* loginInfo.getId() */ ""; // TODO api 전달 방식에 따라 수정
 
-		User user = userService.getUserByUserId(userId);
+//		User user = userService.getUserByUserId(userId);
 		// TODO updateImage res 메시지에 따라 수정
 		// TODO delete 하고 새 이미지 저장후 경로 patch 해야될것같음
 //		return ResponseEntity.ok(UserUpdateImagePatchRes.of(200, "Success", JwtTokenUtil.getToken(userId)));
 //		return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null));
 		return null;
 	}
-	
+
 	@PatchMapping("/updateNickname/{userId}")
 	@ApiOperation(value = "프로필 이미지 변경", notes = "유저의 프로필 이미지를 변경한다.")
 	@ApiResponses({
@@ -101,12 +109,37 @@ public class UserController {
 	})
 	public ResponseEntity<UserUpdateNicknamePatchRes> updateNickname(
 			@RequestBody @ApiParam(value = "닉네임 변경 정보", required = true) UserUpdateNicknamePatchReq updateNicknameInfo) {
-		String userId = /* loginInfo.getId() */ ""; // TODO api 전달 방식에 따라 수정
+		String userClientId = updateNicknameInfo.getUserClientId();
+		String userLoginPlatformString = updateNicknameInfo.getUserLoginPlatform();
+		int userLoginPlatform = -1;
 
-		User user = userService.getUserByUserId(userId);
-		// TODO updateNickname res 메시지에 따라 수정
-//		return ResponseEntity.ok(UserUpdateNicknamePatchRes.of(200, "Success", JwtTokenUtil.getToken(userId)));
-//		return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null));
-		return null;
+		if (userLoginPlatformString.compareTo("kakao") == 0)
+			userLoginPlatform = 1;
+		else if (userLoginPlatformString.compareTo("naver") == 0)
+			userLoginPlatform = 2;
+		else if (userLoginPlatformString.compareTo("google") == 0)
+			userLoginPlatform = 3;
+
+		System.out.println("update nickname Req with: " + updateNicknameInfo.toString());
+
+		User user = userService.getUserByUserId(userClientId, userLoginPlatform);
+		if (user == null) {
+			System.out.println("유효하지 않은 유저");
+			return ResponseEntity.status(401).body(UserUpdateNicknamePatchRes.of(401, "유효하지 않은 유저", null));
+		} else {
+			System.out.println("유효한 유저");
+			String userNickname = updateNicknameInfo.getUserNickname();
+			String newUserNickname = updateNicknameInfo.getNewUserNickname();
+			user = userService.updateUserNickname(userNickname, newUserNickname);
+
+			if (user == null) {
+				System.out.println("잘못된 닉네임");
+				return ResponseEntity.status(403).body(UserUpdateNicknamePatchRes.of(403, "잘못된 닉네임", null));
+			}
+			else {
+				System.out.println("닉네임 변경 성공: "+userNickname+" ====> "+user.getUserNickname());
+				return ResponseEntity.ok().body(UserUpdateNicknamePatchRes.of(200, "닉네임 변경 성공", user));
+			}
+		}
 	}
 }
