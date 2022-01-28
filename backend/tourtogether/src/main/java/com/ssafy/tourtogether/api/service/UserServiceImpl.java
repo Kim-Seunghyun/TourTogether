@@ -63,6 +63,8 @@ public class UserServiceImpl implements UserService {
 	public User updateUserNickname(String userNickname, String newUserNickname) {
 		try {
 			User user = userRepositorySupport.findByUserNickname(userNickname).get();
+			userRepositorySupport.updateUserNickname(userNickname, newUserNickname);
+			user.setUserNickname(newUserNickname);
 			return user;
 		} catch (Exception e) {
 			return null;

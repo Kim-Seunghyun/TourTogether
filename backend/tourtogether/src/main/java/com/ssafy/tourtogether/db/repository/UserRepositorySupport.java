@@ -31,4 +31,8 @@ public class UserRepositorySupport {
         if(user == null) return Optional.empty();
         return Optional.ofNullable(user);
     }
+    
+    public void updateUserNickname(String userNickname, String newUserNickname) {
+    	jpaQueryFactory.update(qUser).set(qUser.userNickname, newUserNickname).where(qUser.userNickname.eq(userNickname));
+    }
 }
