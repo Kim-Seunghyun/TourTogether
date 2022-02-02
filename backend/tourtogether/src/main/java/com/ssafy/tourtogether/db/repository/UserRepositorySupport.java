@@ -35,4 +35,8 @@ public class UserRepositorySupport {
     public void updateUserNickname(String userNickname, String newUserNickname) {
     	jpaQueryFactory.update(qUser).set(qUser.userNickname, newUserNickname).where(qUser.userNickname.eq(userNickname));
     }
+
+	public void updateProfileImage(String userClientId, String userProfileImage) {
+		jpaQueryFactory.update(qUser).set(qUser.userProfileImage, userProfileImage).where(qUser.userClientId.eq(userClientId));
+	}
 }

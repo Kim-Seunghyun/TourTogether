@@ -70,4 +70,16 @@ public class UserServiceImpl implements UserService {
 			return null;
 		}
 	}
+
+	@Override
+	public User updateUserProfileImage(String userClientId, String userProfileImage) {
+		try {
+			User user = userRepositorySupport.findByUserNickname(userClientId).get();
+			userRepositorySupport.updateProfileImage(userClientId, userProfileImage);
+			user.setUserProfileImage(userProfileImage);
+			return user;
+		} catch (Exception e) {
+			return null;
+		}
+	}
 }
