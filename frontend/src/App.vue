@@ -4,7 +4,10 @@
     <router-link to="/map">Map</router-link> |
     <router-link to="/Login" v-if="!accessToken">Login</router-link>||
     <router-link to="/mypage" v-if="accessToken">MyPage</router-link> |
-    <router-link to="/favoritepage" v-if="accessToken">FavoritePage</router-link> |
+    <router-link to="/favoritepage" v-if="accessToken"
+      >FavoritePage</router-link
+    >
+    |
     <router-link to="#" v-on:click="logout()">Logout</router-link>
     <router-link to="#" v-show="accessToken" v-on:click="unlink()">
       | Kakao Unlink</router-link
@@ -61,7 +64,11 @@ export default {
     $route(to) {
       // 라우트 변경 될때 마다 확인하여 (로그인체크)
       this.accessToken = window.Kakao.Auth.getAccessToken();
-      if (to.name != "Home" && to.name != "Login" && to.name != "KakaoLoginCallback") {
+      if (
+        to.name != "Home" &&
+        to.name != "Login" &&
+        to.name != "KakaoLoginCallback"
+      ) {
         if (!this.accessToken) {
           console.log("Not logged in.");
           location.href = "/";
@@ -107,7 +114,7 @@ export default {
         console.log(email);
         axios({
           method: "post",
-          url: "http://localhost:8081/user/login",
+          url: "https://localhost:8081/user/login",
           data: {
             userLoginPlaltform: "kakao",
             userClientId: response.id,
