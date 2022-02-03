@@ -107,8 +107,8 @@ export default {
         console.log(email);
         axios({
           method: "post",
-          url: "http://i6a105.p.ssafy.io/",
-          data: {
+          url: "http://i6a105.p.ssafy.io:8081/user/login",
+          data: { 
             userLoginPlaltform: "kakao",
             userClientId: response.id,
             userEmail: email,
