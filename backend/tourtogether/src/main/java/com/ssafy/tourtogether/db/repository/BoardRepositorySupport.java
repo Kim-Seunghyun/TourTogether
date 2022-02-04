@@ -23,7 +23,13 @@ public class BoardRepositorySupport {
 	
 	// 사용자가 참여한 보드 리스트 보여주기(수정해야함)
 	public List<Board> findByUserId() {
-		List<Board> boardList = jpaQueryFactory.select(qBoard).from(qBoard).fetch();;
+		List<Board> boardList = jpaQueryFactory.select(qBoard).from(qBoard).fetch();
 		return boardList;
+	}
+	
+	// 보드 삭제
+	public String deleteBoard() {
+		// 쿼리문 작성
+		return "success";
 	}
 }

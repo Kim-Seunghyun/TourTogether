@@ -11,7 +11,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@ApiModel("BoardCreatePostReq")
+@ApiModel("BoardCreatePostRequest")
 public class BoardCreatePostReq {
 
 	@ApiModelProperty(name="보드 이름", example = "보드 이름")
