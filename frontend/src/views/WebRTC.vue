@@ -55,14 +55,14 @@
             @click="updateMainVideoStreamManager(publisher)"
           />
         </div> -->
-        <div class="box">
-          <user-video
-            v-for="sub in subscribers"
-            :key="sub.stream.connection.connectionId"
-            :stream-manager="sub"
-            @click="updateMainVideoStreamManager(sub)"
-          />
-        </div>
+        <!-- <div class="box"> -->
+        <user-video
+          v-for="sub in subscribers"
+          :key="sub.stream.connection.connectionId"
+          :stream-manager="sub"
+          @click="updateMainVideoStreamManager(sub)"
+        />
+        <!-- </div> -->
       </div>
       <button @click="toggleVideo()">비디오버튼</button>
       <button @click="toggleAudio()">음소거</button>
@@ -86,7 +86,7 @@ import UserVideo from "@/components/UserVideo";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 // const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
-const OPENVIDU_SERVER_URL = "https://" + "i6a105.p.ssafy.io";
+const OPENVIDU_SERVER_URL = "https://" + "i6a105.p.ssafy.io:443";
 const OPENVIDU_SERVER_SECRET = "twist";
 
 export default {
