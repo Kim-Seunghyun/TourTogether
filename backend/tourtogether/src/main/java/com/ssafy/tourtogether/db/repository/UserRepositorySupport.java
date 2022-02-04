@@ -18,10 +18,25 @@ public class UserRepositorySupport {
     private JPAQueryFactory jpaQueryFactory;
     QUser qUser = QUser.user;
 
-    public Optional<User> findByUserClientId(String userClientId) {
+    public Optional<User> findByUserClientId(String userClientId, int userLoginPlatform) {
         User user = jpaQueryFactory.select(qUser).from(qUser)
-                .where(qUser.userClientId.eq(userClientId)).fetchOne();
+                .where(qUser.userClientId.eq(userClientId).and(qUser.userLoginPlatform.eq(userLoginPlatform))).fetchOne();
         if(user == null) return Optional.empty();
         return Optional.ofNullable(user);
     }
+
+    public Optional<User> findByUserNickname(String userNickname) {
+        User user = jpaQueryFactory.select(qUser).from(qUser)
+                .where(qUser.userNickname.eq(userNickname)).fetchOne();
+        if(user == null) return Optional.empty();
+        return Optional.ofNullable(user);
+    }
+    
+    public void updateUserNickname(String userNickname, String newUserNickname) {
+    	jpaQueryFactory.update(qUser).set(qUser.userNickname, newUserNickname).where(qUser.userNickname.eq(userNickname));
+    }
+
+	public void updateProfileImage(String userClientId, String userProfileImage) {
+		jpaQueryFactory.update(qUser).set(qUser.userProfileImage, userProfileImage).where(qUser.userClientId.eq(userClientId));
+	}
 }

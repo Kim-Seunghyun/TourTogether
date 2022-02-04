@@ -35,10 +35,10 @@ public class UserServiceImpl implements UserService {
 //	}
 
 	@Override
-	public User getUserByUserId(String userId) {
+	public User getUserByUserId(String userId, int userLoginPlatform) {
 		// 디비에 유저 정보 조회 (userId 를 통한 조회).
 		try {
-			User user = userRepositorySupport.findByUserClientId(userId).get();
+			User user = userRepositorySupport.findByUserClientId(userId, userLoginPlatform).get();
 			return user;
 		} catch (Exception e) {
 			return null;
@@ -49,11 +49,37 @@ public class UserServiceImpl implements UserService {
 	public User createUser(UserLoginPostReq loginInfo) {
 		System.out.println("save");
 		User user = new User(loginInfo);
+//		System.out.println(user.toString());
 		user.setUserClientId(loginInfo.getUserClientId());
 		user.setUserName(loginInfo.getUserName());
 		user.setUserProfileImage(loginInfo.getUserProfileImage());
 		user.setUserEmail(loginInfo.getUserEmail());
+		System.out.println(user.toString());
 		userRepository.save(user);
 		return user;
+	}
+
+	@Override
+	public User updateUserNickname(String userNickname, String newUserNickname) {
+		try {
+			User user = userRepositorySupport.findByUserNickname(userNickname).get();
+			userRepositorySupport.updateUserNickname(userNickname, newUserNickname);
+			user.setUserNickname(newUserNickname);
+			return user;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public User updateUserProfileImage(String userClientId, String userProfileImage) {
+		try {
+			User user = userRepositorySupport.findByUserNickname(userClientId).get();
+			userRepositorySupport.updateProfileImage(userClientId, userProfileImage);
+			user.setUserProfileImage(userProfileImage);
+			return user;
+		} catch (Exception e) {
+			return null;
+		}
 	}
 }

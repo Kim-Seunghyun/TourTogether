@@ -20,7 +20,7 @@ public class UserLoginPostReq {
 	String userProfileImage;
 	@ApiModelProperty(name = "유저가 로그인한 플랫폼", example = "카카오")
 	String userLoginPlatform;
-	@ApiModelProperty(name = "유저 client id", example = "asdf1234")
+	@ApiModelProperty(name = "유저 client id", example = "2012345678")
 	String userClientId;
 	@ApiModelProperty(name = "유저 이메일 (카카오 계쩡이 등록된 이메일)", example = "test@test.com")
 	String userEmail;
