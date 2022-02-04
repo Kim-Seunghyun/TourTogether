@@ -63,6 +63,20 @@ public class UserServiceImpl implements UserService {
 	public User updateUserNickname(String userNickname, String newUserNickname) {
 		try {
 			User user = userRepositorySupport.findByUserNickname(userNickname).get();
+			userRepositorySupport.updateUserNickname(userNickname, newUserNickname);
+			user.setUserNickname(newUserNickname);
+			return user;
+		} catch (Exception e) {
+			return null;
+		}
+	}
+
+	@Override
+	public User updateUserProfileImage(String userClientId, String userProfileImage) {
+		try {
+			User user = userRepositorySupport.findByUserNickname(userClientId).get();
+			userRepositorySupport.updateProfileImage(userClientId, userProfileImage);
+			user.setUserProfileImage(userProfileImage);
 			return user;
 		} catch (Exception e) {
 			return null;

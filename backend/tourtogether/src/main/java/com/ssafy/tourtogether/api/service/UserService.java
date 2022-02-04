@@ -9,4 +9,5 @@ public interface UserService {
 	User createUser(UserLoginPostReq loginInfo); 
 	
 	User updateUserNickname(String userNickname, String newUserNickname);
+	User updateUserProfileImage(String userClientId, String userProfileImage);
 }

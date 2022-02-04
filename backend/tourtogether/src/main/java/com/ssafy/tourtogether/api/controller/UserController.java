@@ -76,7 +76,7 @@ public class UserController {
 	})
 	public ResponseEntity<UserDeleteDeleteRes> delete(
 			@RequestBody @ApiParam(value = "회원탈퇴 정보", required = true) UserDeleteDeleteReq deleteInfo) {
-		String userId = /* deleteInfo.getId() */ ""; // TODO api 전달 방식에 따라 수정
+//		String userId = /* deleteInfo.getId() */ ""; // TODO api 전달 방식에 따라 수정
 
 //		User user = userService.getUserByUserId(userId);
 		// TODO delete res 메시지에 따라 수정
@@ -92,14 +92,37 @@ public class UserController {
 	})
 	public ResponseEntity<UserUpdateImagePatchRes> updateImage(
 			@RequestBody @ApiParam(value = "프로필 변경 정보", required = true) UserUpdateImagePatchReq updateImageInfo) {
-		String userId = /* loginInfo.getId() */ ""; // TODO api 전달 방식에 따라 수정
+		String userClientId = updateImageInfo.getUserClientId();
+		String userLoginPlatformString = updateImageInfo.getUserLoginPlatform();
+		int userLoginPlatform = -1;
 
-//		User user = userService.getUserByUserId(userId);
-		// TODO updateImage res 메시지에 따라 수정
-		// TODO delete 하고 새 이미지 저장후 경로 patch 해야될것같음
-//		return ResponseEntity.ok(UserUpdateImagePatchRes.of(200, "Success", JwtTokenUtil.getToken(userId)));
-//		return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null));
-		return null;
+		if (userLoginPlatformString.compareTo("kakao") == 0)
+			userLoginPlatform = 1;
+		else if (userLoginPlatformString.compareTo("naver") == 0)
+			userLoginPlatform = 2;
+		else if (userLoginPlatformString.compareTo("google") == 0)
+			userLoginPlatform = 3;
+
+		System.out.println("update image Req with: " + updateImageInfo.toString());
+
+		User user = userService.getUserByUserId(userClientId, userLoginPlatform);
+		if (user == null) {
+			System.out.println("유효하지 않은 유저");
+			return ResponseEntity.status(401).body(UserUpdateImagePatchRes.of(401, "유효하지 않은 유저", null));
+		} else {
+			System.out.println("유효한 유저");
+			String userProfileImage = updateImageInfo.getUserProfileImage();
+			user = userService.updateUserProfileImage(userClientId, userProfileImage);
+
+			if (user == null) {
+				System.out.println("잘못된 이미지 링크");
+				return ResponseEntity.status(403).body(UserUpdateImagePatchRes.of(403, "잘못된 이미지 링크", null));
+			}
+			else {
+				System.out.println("이미지 변경 성공 ====> "+user.getUserProfileImage());
+				return ResponseEntity.ok().body(UserUpdateImagePatchRes.of(200, "이미지 변경 성공", user));
+			}
+		}
 	}
 
 	@PatchMapping("/updateNickname")
