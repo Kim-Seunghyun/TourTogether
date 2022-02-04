@@ -5,7 +5,8 @@ import Login from "../views/Login.vue";
 import MyPage from "../views/MyPage.vue";
 import KakaoLoginCallback from "../views/KakaoLoginCallback.vue";
 import FavoritePage from "../views/FavoritePage.vue";
-import Tiptap from "../views/Tiptap.vue";
+import Memo from "../views/Memo.vue";
+import Memo2 from "../views/Memo2.vue";
 
 const routes = [
   {
@@ -39,9 +40,14 @@ const routes = [
     component: KakaoLoginCallback,
   },
   {
-    path: "/tiptap",
-    name: "Tiptap",
-    component: Tiptap,
+    path: "/memo",
+    name: "Memo",
+    component: Memo,
+  },
+  {
+    path: "/memo2",
+    name: "Memo2",
+    component: Memo2,
   },
 ];
 

@@ -13,7 +13,9 @@
       | Kakao Unlink</router-link
     >
     |
-    <router-link to="/tiptap">tiptap</router-link>
+    <router-link to="/memo">Memo</router-link>
+    |
+    <router-link to="/memo2">Memo2</router-link>
   </div>
   <router-view />
 </template>
