@@ -1,9 +1,5 @@
 <template>
   <div>
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="upgrade-insecure-requests"
-    />
     <div>
       <div class="profile-image">
         <img

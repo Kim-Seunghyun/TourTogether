@@ -1,9 +1,5 @@
 <template>
   <div id="nav">
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="upgrade-insecure-requests"
-    />
     <router-link to="/">Home</router-link> |
     <router-link to="/map">Map</router-link> |
     <router-link to="/Login" v-if="!accessToken">Login</router-link>||

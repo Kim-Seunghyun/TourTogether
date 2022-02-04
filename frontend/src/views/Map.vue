@@ -1,9 +1,5 @@
 <template>
   <div>
-    <meta
-      http-equiv="Content-Security-Policy"
-      content="upgrade-insecure-requests"
-    />
     <div id="map" style="height: 1000px" class="map">
       <div id="selectedApt_wrap" style="display: block">
         <Plan />
@@ -99,7 +95,7 @@ export default {
       });
       axios({
         method: "get",
-        url: "http://i6a105.p.ssafy.io:8081/tourspot",
+        url: "https://i6a105.p.ssafy.io:8081/tourspot",
       }).then((res) => {
         makeMarker(res.data.tourSpotList);
       });
