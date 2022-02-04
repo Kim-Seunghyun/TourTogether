@@ -107,7 +107,7 @@ export default {
       /* global kakao */
       script.onload = () => kakao.maps.load(initMap);
       script.src =
-        "http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=d8a883df5abd036e1c9ac7857a408e64";
+        "https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=d8a883df5abd036e1c9ac7857a408e64";
       document.head.appendChild(script);
     };
     const makeMarker = (tourSpotList) => {
