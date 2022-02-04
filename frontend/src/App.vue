@@ -1,10 +1,14 @@
 <template>
   <div id="nav">
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link> | 
+    <router-link to="/map">Map</router-link> |
     <router-link to="/Login" v-if="!accessToken">Login</router-link>||
+    <router-link to="/mypage" v-if="accessToken">MyPage</router-link> |
+    <router-link to="/favoritepage" v-if="accessToken">FavoritePage</router-link> |
     <router-link to="#" v-on:click="logout()">Logout</router-link>
-    <router-link to="#" v-show="accessToken" v-on:click="unlink()"> | Kakao Unlink</router-link>
+    <router-link to="#" v-show="accessToken" v-on:click="unlink()">
+      | Kakao Unlink</router-link
+    >
   </div>
   <router-view />
 </template>
@@ -27,22 +31,23 @@ export default {
     const inc = () => store. commit("setCounter", counter.value + 1)
     const login = () => {
       window.Kakao.Auth.authorize({
-        redirectUri: "http://localhost:8080/kakao-login-callback/",
+        redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
       });
     }
     const accessToken = watch(console.log(state.accessToken))
     const logout = (type) => { // 카카오 로그아웃
       window.Kakao.Auth.logout(function () {
-        if (type) { // "unlink"
+        if (type) {
+          // "unlink"
           alert("Unlinked Kakao Account!");
         } else {
           alert("Logout Account!");
         }
-        router.push("login");
+        router.push("");
       });
     }
 
-    onMounted(() => { // 최초 한번만 호출 (내가 작성한거 아님)
+    onMounted(() => {
       // 우리 api에 id있는지 확인, 있으면 기존 정보 가져오고 없으면 window.Kakao.API.request
       window.Kakao.API.request({
         url: '/v2/user/me',
@@ -51,15 +56,12 @@ export default {
         },
         success: function (response) {
           let email = null
-          // kakao developers에서 email_needs부분 확인 요망
           if(response.kakao_account.has_email & !response.kakao_account.email_needs_agreement) {
             email = response.kakao_account.email
           }
-          // 우리 db에 idp에 상응하는 user정보가 없다면 이렇게하고
-          // ㄴㄴ 백에서 처리하면 될듯
           axios({
             method: 'post',
-            url: 'http://localhost:8081/user/login',
+            url: 'https://i6a105.p.ssafy.io:8081/user/login',
             data: {
               userLoginPlatform: 'kakao',
               userClientId: response.id,

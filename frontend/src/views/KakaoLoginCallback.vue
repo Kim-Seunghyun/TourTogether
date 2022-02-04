@@ -16,7 +16,7 @@ export default {
       return results == null
         ? ""
         : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
+    },
   },
   beforeMount() {
     const code = this.getParameterByName("code");
@@ -24,7 +24,7 @@ export default {
     var details = {
       grant_type: "authorization_code",
       client_id: process.env.VUE_APP_KAKAO_RESTAPI_KEY,
-      redirect_uri: "http://localhost:8080/kakao-login-callback/",
+      redirect_uri: "http://i6a105.p.ssafy.io/kakao-login-callback/",
       code: code,
     };
     var formBody = [];
@@ -48,11 +48,11 @@ export default {
         window.Kakao.Auth.setAccessToken(data.access_token);
         // test : Token
         alert(window.Kakao.Auth.getAccessToken());
-        location.href = "/"
+        location.href = "/";
         // axios({
         //   method: 'post',
         //   url: 'http://localhost:3000/user/login',
-        //   data: 
+        //   data:
         // })
       });
   },
