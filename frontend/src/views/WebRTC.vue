@@ -86,7 +86,7 @@ import UserVideo from "@/components/UserVideo";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 // const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
-const OPENVIDU_SERVER_URL = "https://" + "i6a105.p.ssafy.iㅐ";
+const OPENVIDU_SERVER_URL = "https://" + "i6a105.p.ssafy.io";
 const OPENVIDU_SERVER_SECRET = "twist";
 
 export default {
