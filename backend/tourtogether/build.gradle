@@ -76,8 +76,8 @@ compileQuerydsl {
 configurations {
     querydsl.extendsFrom compileClasspath
 }
-//[끝]
 
+//[끝]
 test {
     useJUnitPlatform()
 }
