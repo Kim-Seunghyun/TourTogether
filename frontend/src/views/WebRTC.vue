@@ -87,7 +87,7 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 
 // const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
 // 서버 배포 시
-const OPENVIDU_SERVER_URL = "https://i6a105.p.ssafy.io:5443";
+const OPENVIDU_SERVER_URL = "https://i6a105.p.ssafy.io:443";
 // 로컬에서 테스트 시
 // const OPENVIDU_SERVER_URL = "https://localhost:8080";
 const OPENVIDU_SERVER_SECRET = "twist";
