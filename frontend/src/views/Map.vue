@@ -1,5 +1,9 @@
 <template>
   <div>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="upgrade-insecure-requests"
+    />
     <div id="map" style="height: 1000px" class="map">
       <div id="selectedApt_wrap" style="display: block">
         <Plan />
