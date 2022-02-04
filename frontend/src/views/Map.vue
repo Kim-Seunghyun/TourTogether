@@ -16,7 +16,7 @@ import { reactive } from "@vue/reactivity";
 import { onMounted } from "vue";
 import WebRTC from "@/views/WebRTC.vue";
 import Plan from "@/components/Plan.vue";
-import axios from "axios"
+import axios from "axios";
 export default {
   name: "Map",
   components: {
@@ -56,8 +56,11 @@ export default {
         level: 13, //지도의 레벨(확대, 축소 정도)
       };
       state.map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리
-      kakao.maps.event.addListener(state.map,"rightclick",function (mouseEvent) {
-          if (state.map.getLevel() < 10) { 
+      kakao.maps.event.addListener(
+        state.map,
+        "rightclick",
+        function (mouseEvent) {
+          if (state.map.getLevel() < 10) {
             state.map.setLevel(10);
           } else {
             state.map.setLevel(13);
@@ -69,19 +72,20 @@ export default {
         }
       );
       kakao.maps.event.addListener(state.map, "zoom_changed", function () {
-        if (state.map.getLevel() <= 10) { // 10->9 9->8
+        if (state.map.getLevel() <= 10) {
+          // 10->9 9->8
           for (var i = 0; i < state.sido_polygon.length; i++) {
             state.sido_polygon[i][2].setMap(null);
-          };
+          }
         } else {
           state.num = 0;
           for (i = 0; i < state.sigungu_polygon.length; i++) {
             state.sigungu_polygon[i][2].setMap(null);
           }
-          for(i = 0; i< state.tourspot_top100.length; i++) {
+          for (i = 0; i < state.tourspot_top100.length; i++) {
             state.tourspot_top100[i][0].setMap(null);
           }
-          for(i = 0; i < state.tourspot.length; i++) {
+          for (i = 0; i < state.tourspot.length; i++) {
             state.tourspot[i][0].setMap(null);
           }
           for (i = 0; i < state.sido_polygon.length; i++) {
@@ -90,9 +94,9 @@ export default {
         }
       });
       axios({
-        method:"get",
-        url:"http://localhost:8081/tourspot",
-      }).then((res)=>{
+        method: "get",
+        url: "https://i6a105.p.ssafy.io:8081/tourspot",
+      }).then((res) => {
         makeMarker(res.data.tourSpotList);
       });
       makePolygonDepth1(sido_json);
@@ -108,17 +112,20 @@ export default {
     };
     const makeMarker = (tourSpotList) => {
       for (var i = 0; i < tourSpotList.length; i++) {
-        var position = new kakao.maps.LatLng(tourSpotList[i].tourSpotLatitude, tourSpotList[i].tourSpotLongitude);
+        var position = new kakao.maps.LatLng(
+          tourSpotList[i].tourSpotLatitude,
+          tourSpotList[i].tourSpotLongitude
+        );
 
-        var overlay_info = document.createElement('div');
+        var overlay_info = document.createElement("div");
         overlay_info.className = "overlay_info";
 
-        var title = document.createElement('div');
+        var title = document.createElement("div");
         title.className = "title";
         title.innerText = tourSpotList[i].tourSpotName;
         overlay_info.appendChild(title);
 
-        var close = document.createElement('div');
+        var close = document.createElement("div");
         close.onclick = function () {
           state.customOverlay[0].setMap(null);
         };
@@ -126,45 +133,45 @@ export default {
         close.setAttribute("title", "닫기");
         title.appendChild(close);
 
-        var desc = document.createElement('div');
+        var desc = document.createElement("div");
         desc.className = "desc";
         overlay_info.appendChild(desc);
 
-        var address = document.createElement('div');
+        var address = document.createElement("div");
         address.className = "address";
         address.innerText = "주소 : " + tourSpotList[i].tourSpotAddress;
         desc.appendChild(address);
 
-        if (tourSpotList[i].tourSpotHoliday){
-          var holiday = document.createElement('div');
+        if (tourSpotList[i].tourSpotHoliday) {
+          var holiday = document.createElement("div");
           holiday.className = "holiday";
           holiday.innerText = "쉬는날 : " + tourSpotList[i].tourSpotHoliday;
           desc.appendChild(holiday);
         }
 
-        if (tourSpotList[i].tourSpotTime){
-          var time = document.createElement('div');
+        if (tourSpotList[i].tourSpotTime) {
+          var time = document.createElement("div");
           time.className = "time";
           time.innerText = "이용시간 : " + tourSpotList[i].tourSpotTime;
           desc.appendChild(time);
         }
 
-        if (tourSpotList[i].tourSpotParking){
-          var parking = document.createElement('div');
+        if (tourSpotList[i].tourSpotParking) {
+          var parking = document.createElement("div");
           parking.className = "parking";
           parking.innerText = "주차시설 : " + tourSpotList[i].tourSpotParking;
           desc.appendChild(parking);
         }
 
-        var bottom = document.createElement('div');
+        var bottom = document.createElement("div");
         bottom.className = "bottom";
         desc.appendChild(bottom);
 
-        var selectbar = document.createElement('select');
+        var selectbar = document.createElement("select");
         selectbar.className = "selectbar";
 
         for (var day = 1; day <= 4; day++) {
-          var option = document.createElement('option');
+          var option = document.createElement("option");
           option.value = day;
           option.innerHTML = day;
           selectbar.appendChild(option);
@@ -173,10 +180,10 @@ export default {
           console.log("asdasd");
           console.log(selectbar.value);
           selectbar.value = option.value;
-        }
+        };
         bottom.appendChild(selectbar);
 
-        var register = document.createElement('div');
+        var register = document.createElement("div");
         register.className = "register";
         register.onclick = function () {
           console.log(selectbar.value);
@@ -190,23 +197,31 @@ export default {
           tourSpotList[i].tourSpotIsTop100,
           tourSpotList[i].tourSpotTwoDepthCode,
           tourSpotList[i].tourSpotId,
-          tourSpotList[i].tourSpotName,
-          );
+          tourSpotList[i].tourSpotName
+        );
       }
     };
-    const displayMarker = (position, content, isTop100, twoDepthCode, tourSpotId, tourSpotName) => {
+    const displayMarker = (
+      position,
+      content,
+      isTop100,
+      twoDepthCode,
+      tourSpotId,
+      tourSpotName
+    ) => {
       var marker = new kakao.maps.Marker({
         position: position,
         clickable: true,
       });
-      if (isTop100 === true){
+      if (isTop100 === true) {
         var markerImage = new kakao.maps.MarkerImage(
           "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
           new kakao.maps.Size(31, 35),
-          new kakao.maps.Point(13, 34));
+          new kakao.maps.Point(13, 34)
+        );
         marker.setImage(markerImage);
-        state.tourspot_top100.push([marker,twoDepthCode]);
-      } else{
+        state.tourspot_top100.push([marker, twoDepthCode]);
+      } else {
         state.tourspot.push([marker, twoDepthCode]);
       }
       var overlay = new kakao.maps.CustomOverlay({
@@ -214,7 +229,7 @@ export default {
         position: marker.getPosition(),
         zIndex: 100,
       });
-      kakao.maps.event.addListener(marker, 'click', function(){
+      kakao.maps.event.addListener(marker, "click", function () {
         if (state.customOverlay[0]) {
           state.customOverlay[0].setMap(null);
         }
@@ -225,13 +240,17 @@ export default {
     const makePolygonDepth1 = (json_data) => {
       for (var i = 0; i < json_data.features.length; i++) {
         var area = {
-            name : json_data.features[i].properties.CTP_KOR_NM,
-            path: [],
-            num : json_data.features[i].properties.CTPRVN_CD,
+          name: json_data.features[i].properties.CTP_KOR_NM,
+          path: [],
+          num: json_data.features[i].properties.CTPRVN_CD,
         };
         if (json_data.features[i].geometry.type === "Polygon") {
           let path_tmp = [];
-          for (var j = 0; j < json_data.features[i].geometry.coordinates[0].length; j++) {
+          for (
+            var j = 0;
+            j < json_data.features[i].geometry.coordinates[0].length;
+            j++
+          ) {
             path_tmp.push(
               new kakao.maps.LatLng(
                 json_data.features[i].geometry.coordinates[0][j][1],
@@ -242,8 +261,16 @@ export default {
           area.path = path_tmp;
           displayPolygonDepth1(area);
         } else {
-          for ( j = 0; j < json_data.features[i].geometry.coordinates.length; j++) {
-            for ( var k = 0; k < json_data.features[i].geometry.coordinates[j].length; k++) {
+          for (
+            j = 0;
+            j < json_data.features[i].geometry.coordinates.length;
+            j++
+          ) {
+            for (
+              var k = 0;
+              k < json_data.features[i].geometry.coordinates[j].length;
+              k++
+            ) {
               let path_tmp = [];
               for (
                 var t = 0;
@@ -278,19 +305,23 @@ export default {
       kakao.maps.event.addListener(polygon, "click", function (mouseEvent) {
         state.num = area.num;
         state.map.setLevel(10);
-        for(var i = 0; i < state.sigungu_polygon.length; i++){
-          if(state.sigungu_polygon[i][1].substr(0,2) !== area.num){continue;}
+        for (var i = 0; i < state.sigungu_polygon.length; i++) {
+          if (state.sigungu_polygon[i][1].substr(0, 2) !== area.num) {
+            continue;
+          }
           state.sigungu_polygon[i][2].setMap(state.map);
-        };
-        for( i = 0; i < state.tourspot_top100.length; i++){
-          if(String(state.tourspot_top100[i][1]).substr(0,2) !== area.num){continue;}
+        }
+        for (i = 0; i < state.tourspot_top100.length; i++) {
+          if (String(state.tourspot_top100[i][1]).substr(0, 2) !== area.num) {
+            continue;
+          }
           state.tourspot_top100[i][0].setMap(state.map);
-        };
+        }
         var mousePoint = mouseEvent.latLng;
         state.map.setCenter(
           new kakao.maps.LatLng(mousePoint.getLat(), mousePoint.getLng())
         );
-      })
+      });
       kakao.maps.event.addListener(polygon, "mouseover", function () {
         polygon.setOptions({ fillColor: "#09f" });
       });
@@ -301,13 +332,17 @@ export default {
     const makePolygonDepth2 = (json_data) => {
       for (var i = 0; i < json_data.features.length; i++) {
         var area = {
-            name : json_data.features[i].properties.SIG_KOR_NM,
-            path: [],
-            num : json_data.features[i].properties.SIG_CD,
+          name: json_data.features[i].properties.SIG_KOR_NM,
+          path: [],
+          num: json_data.features[i].properties.SIG_CD,
         };
         if (json_data.features[i].geometry.type === "Polygon") {
           let path_tmp = [];
-          for (var j = 0; j < json_data.features[i].geometry.coordinates[0].length; j++) {
+          for (
+            var j = 0;
+            j < json_data.features[i].geometry.coordinates[0].length;
+            j++
+          ) {
             path_tmp.push(
               new kakao.maps.LatLng(
                 json_data.features[i].geometry.coordinates[0][j][1],
@@ -318,8 +353,16 @@ export default {
           area.path = path_tmp;
           displayPolygonDepth2(area);
         } else {
-          for ( j = 0; j < json_data.features[i].geometry.coordinates.length; j++) {
-            for ( var k = 0; k < json_data.features[i].geometry.coordinates[j].length; k++) {
+          for (
+            j = 0;
+            j < json_data.features[i].geometry.coordinates.length;
+            j++
+          ) {
+            for (
+              var k = 0;
+              k < json_data.features[i].geometry.coordinates[j].length;
+              k++
+            ) {
               let path_tmp = [];
               for (
                 var t = 0;
@@ -349,9 +392,11 @@ export default {
         fillColor: "#00CC00",
         fillOpacity: 0.1,
       });
-      kakao.maps.event.addListener(polygon, "click", function (mouseEvent) { 
-        for(var i = 0; i < state.tourspot.length; i++) {
-          if(String(state.tourspot[i][1]) !== area.num){continue;}
+      kakao.maps.event.addListener(polygon, "click", function (mouseEvent) {
+        for (var i = 0; i < state.tourspot.length; i++) {
+          if (String(state.tourspot[i][1]) !== area.num) {
+            continue;
+          }
           state.tourspot[i][0].setMap(state.map);
         }
         state.map.setLevel(8);
@@ -359,7 +404,7 @@ export default {
         state.map.setCenter(
           new kakao.maps.LatLng(mousePoint.getLat(), mousePoint.getLng())
         );
-      })
+      });
       state.sigungu_polygon.push([area.name, area.num, polygon]);
       kakao.maps.event.addListener(polygon, "mouseover", function () {
         polygon.setOptions({ fillColor: "#0033CC" });
@@ -390,23 +435,34 @@ export default {
   position: relative;
   border: 1px solid #ccc;
   border-bottom: 2px solid #ddd;
-  background-color:#fff;
+  background-color: #fff;
 }
 .selectbar {
   background-color: #fff;
 }
-.selectbar li:hover{color:#fff; background:#d24545; cursor: pointer;}
-.selectbar li:hover .up {background-position:0 0px;}
-.selectbar li:hover .down {background-position:0 -20px;} 
-.overlay_info:nth-of-type(n) {border:0; box-shadow: 0px 1px 2px #888;}
+.selectbar li:hover {
+  color: #fff;
+  background: #d24545;
+  cursor: pointer;
+}
+.selectbar li:hover .up {
+  background-position: 0 0px;
+}
+.selectbar li:hover .down {
+  background-position: 0 -20px;
+}
+.overlay_info:nth-of-type(n) {
+  border: 0;
+  box-shadow: 0px 1px 2px #888;
+}
 .overlay_info .title {
   display: block;
   background: #d95050;
   text-decoration: none;
   color: #fff;
-  padding:12px 36px 12px 14px;
+  padding: 12px 36px 12px 14px;
   font-size: 14px;
-  border-radius: 6px 6px 0 0
+  border-radius: 6px 6px 0 0;
 }
 .overlay_info .close {
   position: absolute;
@@ -414,26 +470,32 @@ export default {
   right: 10px;
   width: 17px;
   height: 17px;
-  background: url('https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png');
+  background: url("https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/overlay_close.png");
 }
-.overlay_info .close:hover {cursor: pointer;}
+.overlay_info .close:hover {
+  cursor: pointer;
+}
 .overlay_info .desc {
   padding: 14px;
   position: relative;
   min-width: 250px;
   min-height: 50px;
 }
-.overlay_info img {vertical-align: top;}
-.desc div{
+.overlay_info img {
+  vertical-align: top;
+}
+.desc div {
   text-align: left;
   font-size: 12px;
 }
 .desc .register {
   width: 17px;
   height: 17px;
-  background: url('../assets/kakao_login_large_wide.png');
+  background: url("../assets/kakao_login_large_wide.png");
 }
-.desc .register:hover {cursor: pointer;}
+.desc .register:hover {
+  cursor: pointer;
+}
 /* .overlay_info .address {
   font-size: 12px;
   color: #333;
