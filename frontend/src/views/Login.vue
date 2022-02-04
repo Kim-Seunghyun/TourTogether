@@ -10,13 +10,14 @@
 
 <script>
 export default {
-  name: "Login",
-  methods: {
-    login: function () {
+  setup() {
+    const login = () => {
       window.Kakao.Auth.authorize({
         redirectUri: "http://localhost:8080/kakao-login-callback/",
       });
-    },
-  },
+    }
+
+    return { login }
+  }
 };
 </script>
