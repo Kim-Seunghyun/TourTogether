@@ -11,7 +11,7 @@ import com.ssafy.tourtogether.db.repository.BoardRepositorySupport;
 /**
  *	보드 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
  */
-@Service("userService")
+@Service("boardService")
 public class BoardServiceImpl implements BoardService {
 
 	@Autowired
