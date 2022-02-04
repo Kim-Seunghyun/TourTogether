@@ -249,6 +249,7 @@ export default {
           .then((response) => response.data)
           .then((data) => resolve(data.id))
           .catch((error) => {
+            console.log("errorrororororo", error);
             if (error.response.status === 409) {
               resolve(sessionId);
             } else {
