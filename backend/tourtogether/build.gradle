@@ -37,14 +37,8 @@ dependencies {
     
     // swagger 3.0부터는 boot-starter 하나로 통합해서 사용 가능
     // https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter
-    // implementation 'io.springfox:springfox-boot-starter:3.0.0'
+    implementation 'io.springfox:springfox-boot-starter:3.0.0'
     
-    // Swagger 2
- 	//https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
-	implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
-	implementation group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
-
-
     // https://mvnrepository.com/artifact/com.google.guava/guava
     implementation 'com.google.guava:guava:11.0.2'
 

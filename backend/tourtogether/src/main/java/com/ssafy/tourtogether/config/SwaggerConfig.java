@@ -33,7 +33,7 @@ public class SwaggerConfig {
 
 	@Bean
 	public Docket api() {
-		return new Docket(DocumentationType.SWAGGER_2).useDefaultResponseMessages(false).select()
+		return new Docket(DocumentationType.OAS_30).useDefaultResponseMessages(false).select()
 				.apis(RequestHandlerSelectors.basePackage("com.ssafy.tourtogether.api.controller"))
 				.paths(PathSelectors.any()).build().apiInfo(apiInfo());
 	}
