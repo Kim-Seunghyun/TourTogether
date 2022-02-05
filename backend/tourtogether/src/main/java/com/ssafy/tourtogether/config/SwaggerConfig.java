@@ -30,7 +30,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Configuration
 @EnableSwagger2
 @EnableWebMvc
-public class SwaggerConfig extends WebMvcConfigurationSupport{
+public class SwaggerConfig{
 
 //    @Bean
 //    public Docket api() {
@@ -45,32 +45,37 @@ public class SwaggerConfig extends WebMvcConfigurationSupport{
 //                ;
 //    }
 	
+//	@Bean
+//    public Docket api() {
+//        return new Docket(DocumentationType.OAS_30)
+//                .useDefaultResponseMessages(false)
+//                .select()
+//                .apis(RequestHandlerSelectors.basePackage("com.ssafy.tourtogether.api.controller"))
+//                .paths(PathSelectors.any())
+//                .build()
+//                .apiInfo(apiInfo());
+//    }
+	
+	
 	@Bean
     public Docket api() {
-        return new Docket(DocumentationType.OAS_30)
-                .useDefaultResponseMessages(false)
+        return new Docket(DocumentationType.SWAGGER_2)
+                .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.ssafy.tourtogether.api.controller"))
                 .paths(PathSelectors.any())
-                .build()
-                .apiInfo(apiInfo());
+                .build();
     }
     
     private ApiInfo apiInfo() {
-        String description = "Welcome TourTogether";
+        String description = "TourTogether Project by twist";
         return new ApiInfoBuilder()
                 .title("TourTogether")
                 .description(description)
                 .version("1.0")
                 .build();
     }
-    
-    @Override
-    protected void addResourceHandlers(ResourceHandlerRegistry registry) {
-    	registry.addResourceHandler("swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
-    	registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
-    	
-    }
+
 
 //    private ApiKey apiKey() {
 //        return new ApiKey(SECURITY_SCHEMA_NAME, "Authorization", "header");
