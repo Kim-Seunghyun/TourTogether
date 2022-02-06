@@ -24,7 +24,8 @@ export default {
     var details = {
       grant_type: "authorization_code",
       client_id: process.env.VUE_APP_KAKAO_RESTAPI_KEY,
-      redirect_uri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
+      // redirect_uri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
+      redirect_uri: "http://localhost/kakao-login-callback/",
       code: code,
     };
     var formBody = [];
