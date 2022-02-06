@@ -72,7 +72,7 @@ export default {
           }
           axios({
             method: "post",
-            url: "https://i6a105.p.ssafy.io:8081/user/login",
+            url: "http://i6a105.p.ssafy.io:8081/user/login",
             data: {
               userLoginPlatform: "kakao",
               userClientId: response.id,
