@@ -9,17 +9,17 @@ import com.ssafy.tourtogether.db.repository.BoardRepository;
 import com.ssafy.tourtogether.db.repository.BoardRepositorySupport;
 
 /**
- *	보드 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
+ * 보드 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
  */
 @Service("boardService")
 public class BoardServiceImpl implements BoardService {
 
 	@Autowired
 	BoardRepository boardRepository;
-	
+
 	@Autowired
 	BoardRepositorySupport boardRepositorySupport;
-	
+
 	@Override
 	public Board createBoard(BoardCreatePostReq boardCreateInfo) {
 		Board board = new Board();
