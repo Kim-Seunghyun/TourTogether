@@ -65,7 +65,7 @@ export default {
     const submitNickname = () => {
       axios({
         method: "patch",
-        url: "http://i6a105.p.ssafy.io:8081/user/updateNickname/",
+        url: "https://i6a105.p.ssafy.io:8081/user/updateNickname/",
         data: {
           userLoginPlatform: getters.getUserLoginPlatform,
           userNickname: getters.getUserNickname,

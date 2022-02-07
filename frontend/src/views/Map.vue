@@ -95,7 +95,7 @@ export default {
       });
       axios({
         method: "get",
-        url: "http://i6a105.p.ssafy.io:8081/tourspot",
+        url: "https://i6a105.p.ssafy.io:8081/tourspot",
       }).then((res) => {
         makeMarker(res.data.tourSpotList);
       });
