@@ -16,6 +16,12 @@
     <router-link to="/memo">Memo</router-link>
     |
     <router-link to="/memo2">Memo2</router-link>
+    |
+    <router-link to="/memo3">Memo3</router-link>
+    |
+    <router-link to="/schedule">Schedule</router-link>
+    |
+    <router-link to="/sch2">Sch2</router-link>
   </div>
   <router-view />
 </template>
@@ -65,20 +71,20 @@ export default {
       // 토큰이 변경 확인
       console.log(this.accessToken);
     },
-    $route(to) {
-      // 라우트 변경 될때 마다 확인하여 (로그인체크)
-      this.accessToken = window.Kakao.Auth.getAccessToken();
-      if (
-        to.name != "Home" &&
-        to.name != "Login" &&
-        to.name != "KakaoLoginCallback"
-      ) {
-        if (!this.accessToken) {
-          console.log("Not logged in.");
-          location.href = "/";
-        }
-      }
-    },
+    // $route(to) {
+    //   // 라우트 변경 될때 마다 확인하여 (로그인체크)
+    //   this.accessToken = window.Kakao.Auth.getAccessToken();
+    //   if (
+    //     to.name != "Home" &&
+    //     to.name != "Login" &&
+    //     to.name != "KakaoLoginCallback"
+    //   ) {
+    //     if (!this.accessToken) {
+    //       console.log("Not logged in.");
+    //       location.href = "/";
+    //     }
+    //   }
+    // },
   },
   mounted() {
     // 최초 한번만 호출 (내가 작성한거 아님)

@@ -19,9 +19,11 @@
     "node-sass": "^6.0.1",
     "openvidu-browser": "^2.21.0-beta1",
     "sass-loader": "^10.2.1",
+    "sockjs": "^0.3.24",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vue3-quill": "^0.2.6",
+    "vuedraggable": "^4.1.0",
     "vuequilleditor": "^1.0.0",
     "vuex": "^4.0.0-0"
   },
