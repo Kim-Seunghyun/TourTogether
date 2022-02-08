@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 유저 모델 관련 디비 쿼리 생성을 위한 구현 정의.
@@ -32,11 +33,13 @@ public class UserRepositorySupport {
         return Optional.ofNullable(user);
     }
     
+    @Transactional
     public void updateUserNickname(String userNickname, String newUserNickname) {
-    	jpaQueryFactory.update(qUser).set(qUser.userNickname, newUserNickname).where(qUser.userNickname.eq(userNickname));
+    	jpaQueryFactory.update(qUser).where(qUser.userNickname.eq(userNickname)).set(qUser.userNickname, newUserNickname).execute();
     }
-
+    
+    @Transactional
 	public void updateProfileImage(String userClientId, String userProfileImage) {
-		jpaQueryFactory.update(qUser).set(qUser.userProfileImage, userProfileImage).where(qUser.userClientId.eq(userClientId));
+		jpaQueryFactory.update(qUser).where(qUser.userClientId.eq(userClientId)).set(qUser.userProfileImage, userProfileImage).execute();
 	}
 }
