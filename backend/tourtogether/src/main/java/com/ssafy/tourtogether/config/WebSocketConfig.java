@@ -23,12 +23,12 @@ public class WebSocketConfig implements WebSocketConfigurer {
 	        .withSockJS()
 	        .setClientLibraryUrl("https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js");
         webSocketHandlerRegistry.addHandler(webSocketComponent, "/schedule")
-        .setAllowedOriginPatterns("*")
-        .withSockJS()
-        .setClientLibraryUrl("https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js");
+	        .setAllowedOriginPatterns("*")
+	        .withSockJS()
+	        .setClientLibraryUrl("https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js");
         webSocketHandlerRegistry.addHandler(webSocketComponent, "/sch2")
-        .setAllowedOriginPatterns("*")
-        .withSockJS()
-        .setClientLibraryUrl("https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js");
+	        .setAllowedOriginPatterns("*")
+	        .withSockJS()
+	        .setClientLibraryUrl("https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js");
     }
 }

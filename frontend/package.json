@@ -22,6 +22,7 @@
     "sockjs": "^0.3.24",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
+    "vue-websocket": "^0.2.3",
     "vue3-quill": "^0.2.6",
     "vuedraggable": "^4.1.0",
     "vuequilleditor": "^1.0.0",

@@ -83,6 +83,10 @@ export default {
         console.log("data받음" + data);
         console.log(data);
       }
+      this.sockjs.onerror = function (e) {
+          alert('연결에 실패하였습니다.');
+          console.log(e);
+        }
     },
     add: function() {
       this.list.push({ name: "Juan " + id, id: id++ });

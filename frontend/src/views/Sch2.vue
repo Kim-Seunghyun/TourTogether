@@ -12,6 +12,11 @@
     </div>
     <button @click="updateArray()">일정바꾸기</button>
     <p id="ptag"></p>
+
+    <hr>
+
+    <button @click="getAllSchedule()">redis에서 값 찾기</button>
+
     <hr>
 
     <div v-for="(item,index) in list" :key="index">
@@ -26,6 +31,7 @@
 </template>
 
 <script>
+// import axios from "axios";
 import SockJS from "sockjs-client";
 
 export default {
@@ -92,6 +98,9 @@ export default {
       this.arr[1] = "X";
       this.sockjs.send(this.arr);
     },
+    getAllSchedule() {
+      
+    }
 
   }
 }
