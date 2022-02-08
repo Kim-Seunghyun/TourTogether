@@ -72,13 +72,14 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
-	public User updateUserProfileImage(String userClientId, String userProfileImage) {
+	public User updateUserProfileImage(String userClientId, int userLoginPlatform, String userProfileImage) {
 		try {
-			User user = userRepositorySupport.findByUserNickname(userClientId).get();
+			User user = userRepositorySupport.findByUserClientId(userClientId, userLoginPlatform).get();
 			userRepositorySupport.updateProfileImage(userClientId, userProfileImage);
 			user.setUserProfileImage(userProfileImage);
 			return user;
 		} catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
