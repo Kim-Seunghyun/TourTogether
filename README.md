@@ -32,7 +32,7 @@ Tour Together을 통해 실시간으로 소통하고, 인기있는 여행계획�
     - Sub1 : 22.01.10 - 22.02.14
     - Sub2 : 22.01.17 - 22.01.28
     - Sub3 : 22.01.31 - 22.02.18 (🔅 진행중🔅 )
-    - 세부 일정 [간트차트](https://www.notion.so/79098e3921524c51ab5f992d430e954a?v=b79c670d23a14315bfc79d2ac54af7e3)
+    - [세부 일정](https://www.notion.so/79098e3921524c51ab5f992d430e954a?v=b79c670d23a14315bfc79d2ac54af7e3)
 2. 인원 (총 6인)
     - 김승현 : Front-end, Front-end Tech Leader
     - 박세진 : Front-end, 기획
@@ -121,5 +121,5 @@ Tour Together을 통해 실시간으로 소통하고, 인기있는 여행계획�
 - 기획서 (산출물 폴더 링크 걸기)
 - 와이어프레임 (산출물 폴더 링크 걸기)
 - ERD (산출물 폴더 링크 걸기)
-- 시퀀스 다이어그램 (산출물 폴더 링크 걸기)
+- [시퀀스 다이어그램](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A105/-/tree/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/%EC%8B%9C%ED%80%80%EC%8A%A4%20%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8)
 - 서비스 아키텍처 (산출물 폴더 링크 걸기)
