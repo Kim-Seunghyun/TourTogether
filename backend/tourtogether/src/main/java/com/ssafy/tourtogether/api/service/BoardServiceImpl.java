@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
+import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.db.entity.Board;
 import com.ssafy.tourtogether.db.repository.BoardRepository;
 import com.ssafy.tourtogether.db.repository.BoardRepositorySupport;
@@ -25,6 +26,17 @@ public class BoardServiceImpl implements BoardService {
 		Board board = new Board();
 		board.setBoardName(boardCreateInfo.getBoardName());
 		return boardRepository.save(board);
+	}
+
+	@Override
+	public String deleteBoard(BoardDeleteDeleteReq boardDeleteInfo) {
+		String userClientId = boardDeleteInfo.getUserClientId();
+		int userPlatFormNum = boardDeleteInfo.getPlatformNum();
+		// 가입한 플랫폼이 카카오라면 카카오 db에서 찾기
+		if (userPlatFormNum == 1) {
+			
+		}
+		return boardRepositorySupport.deleteBoard();
 	}
 
 }

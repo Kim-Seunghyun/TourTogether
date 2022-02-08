@@ -10,4 +10,5 @@ import com.ssafy.tourtogether.db.entity.Board;
 public interface BoardRepository extends JpaRepository<Board, Integer>{
 
 	List<Board> findAll();
+
 }
