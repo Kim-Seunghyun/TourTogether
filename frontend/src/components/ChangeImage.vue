@@ -1,14 +1,12 @@
 <template>
   <div>
-    <form method="post" enctype="multipart/form-data">
-      <div>
-        <label for="chooseFile">
-          Click
-        </label>
-      </div>
-    <input ref="image" @change="uploadImg" type="file" id="chooseFile" name="chooseFile" accept="image/*">
-    </form>
-    <img v-if="state.image" :src="state.image" class="profile-image" alt="Preview">
+    <div>
+      <label for="chooseFile">
+        Click
+      </label>
+    </div>
+    <input ref="image" @change="handleImageUpload" type="file" id="chooseFile" name="chooseFile" accept="image/*">
+    <img v-if="state.preview" :src="state.preview" class="profile-image" alt="Preview">
   </div>
   
 
@@ -43,12 +41,15 @@
 
 
   <div>
-    <button @click="changeProfileImage">이미지변경</button>
+    <button @click="uploadImage()">이미지변경!</button>
   </div>
 </template>
 
 <script>
 import { ref, reactive, onMounted, } from "vue";
+import AWS from "aws-sdk";
+import axios from "axios";
+import { useStore } from "vuex";
 
 export default {
   name: "ChangeImage",
@@ -56,21 +57,73 @@ export default {
     msg: String,
   },
   setup() {
+    const store = useStore();
+    const getters = store.getters;
+
     const state = reactive({
       isChangingImage: false,
       image : null,
+      preview: null,
     })
-    const changeProfileImage = () => {
 
-      };
+    const uploadImage = () => {
+      if (state.image) {
+        AWS.config.update({
+          region: 'ap-northeast-2',
+          credentials: new AWS.CognitoIdentityCredentials({
+            IdentityPoolId: 'ap-northeast-2:f52ba70c-f5cf-4db7-abba-8435eacd4828',
+          })
+        })
+        // Use S3 ManagedUpload class as it supports multipart uploads
+        const upload = new AWS.S3.ManagedUpload({
+          params: {
+            Bucket: 'tour-together--s3',
+            // user이름이랑 같이
+            Key: state.image.name,
+            Body: state.image
+          }
+        });
+        const promise = upload.promise();
+  
+        promise.then(
+          function(data) {
+            console.log(typeof(data.Location))
+            store.commit("setUserProfileImage", data.Location)
+            alert("Successfully uploaded photo.");
+            axios({
+              method: 'patch',
+              url: 'http://localhost:8081/user/updateImage/',
+              data: {
+                userLoginPlatform: getters.getUserLoginPlatform,
+                userClientId: getters.getUserClientId,
+                userProfileImage: data.Location,
+              },
+            })
+              .then((res) => {
+                console.log(res)
+              });
+          },
+          function(err) {
+            return alert("There was an error uploading your photo: ", err.message);
+          }
+        );
+      } else {
+        console.log(state.image)
+        alert('이미지를 선택해주세요!')
+      }
+      
+    };
+
     const imageRef = ref(null)
     // const hello = ref(null)
-    const uploadImg = (event) => {
+    const handleImageUpload = (event) => {
       console.log(event.target.files[0])
       const imageFile = event.target.files[0]
+      state.image = imageFile
       if(imageFile) {
-        state.image = URL.createObjectURL(imageFile)
-        console.log(state.image)
+        state.preview = URL.createObjectURL(imageFile)
+      } else {
+        state.preview = null
       }
     }
 
@@ -80,9 +133,10 @@ export default {
 
     return {
       state,
-      changeProfileImage,
-      uploadImg,
+      uploadImage,
+      handleImageUpload,
       imageRef,
+      getters,
     };
   }
 };

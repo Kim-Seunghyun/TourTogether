@@ -27,12 +27,20 @@
       <button @click="[toggleChangeNickname(), submitNickname()]">확인</button>
       <button @click="toggleChangeNickname">취소</button>
     </div>
-    <div></div>
+    <div>
+      <span>
+        <span>진행중인 일정 |</span>
+        <div>1</div>
+        <div>2</div>
+      </span>
+      <span> 완료된 일정 |</span>
+      <span> 좋아요 누른 일정</span>
+    </div>
   </div>
 </template>
 
 <script>
-import { computed, reactive } from "vue";
+import { computed, reactive, onMounted } from "vue";
 import { useStore } from "vuex";
 import axios from "axios";
 
@@ -56,8 +64,6 @@ export default {
       } else {
         state.isChangingNickname = true;
       }
-      console.log(state.isChangingNickname);
-      console.log(getters.getUserClientId);
     };
     const setUserInputNickname = (event) => {
       store.commit("setUserInputNickname", event.target.value);
@@ -65,17 +71,37 @@ export default {
     const submitNickname = () => {
       axios({
         method: "patch",
-        url: "https://i6a105.p.ssafy.io:8081/user/updateNickname/",
+        url: "http://localhost:8081/user/updateNickname/",
         data: {
           userLoginPlatform: getters.getUserLoginPlatform,
           userNickname: getters.getUserNickname,
           userClientId: getters.getUserClientId,
           newUserNickname: getters.getUserInputNickname,
         },
-      }).then((res) => {
-        console.log(res);
-      });
+      })
+        .then((res) => {
+          console.log(res);
+          console.log(res.data.user.userNickname)
+          store.commit("setUserNickname", res.data.user.userNickname)
+        });
+        
     };
+
+    onMounted(() => {
+      if (!getters.getUserClientId) {
+        alert('로그인해주세요!')
+      }
+      axios({
+        method: 'get',
+        url: 'http://localhost:8081/board/user',
+        data: {
+          userClientId: getters.getUserClientId
+        }
+      })
+        .then((res) => {
+          console.log(res)
+        })
+    })
 
     return {
       computedGetters,

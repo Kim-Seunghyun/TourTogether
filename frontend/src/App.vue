@@ -27,11 +27,9 @@ export default {
     })
     const store = useStore();
     const counter = computed(() => store.state.counter);
-    const test = computed(() => store.getters);
-    const inc = () => store. commit("setCounter", counter.value + 1)
     const login = () => {
       window.Kakao.Auth.authorize({
-        redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
+        redirectUri: "http://localhost:8080/kakao-login-callback/",
       });
     }
     const accessToken = watch(console.log(state.accessToken))
@@ -44,6 +42,11 @@ export default {
           alert("Logout Account!");
         }
         router.push("");
+        store.commit("setUserLoginPlatform", '')
+        store.commit("setUserClientId", '')
+        store.commit("setUserNickname", '')
+        store.commit("setUserInputNickname", '')
+        store.commit("setUserProfileImage", '')
       });
     }
 
@@ -61,7 +64,7 @@ export default {
           }
           axios({
             method: 'post',
-            url: 'https://i6a105.p.ssafy.io:8081/user/login',
+            url: 'http://localhost:8081/user/login',
             data: {
               userLoginPlatform: 'kakao',
               userClientId: response.id,
@@ -84,7 +87,7 @@ export default {
       })
     })
 
-    return { state, counter, inc, test, login, logout, accessToken}
+    return { state, counter, login, logout, accessToken}
   }
   // methods: {
   //   unlink() {  // 카카오 계정 연결끊기
