@@ -12,6 +12,16 @@
     <router-link to="#" v-show="accessToken" v-on:click="unlink()">
       | Kakao Unlink</router-link
     >
+    |
+    <router-link to="/memo">Memo</router-link>
+    |
+    <router-link to="/memo2">Memo2</router-link>
+    |
+    <router-link to="/memo3">Memo3</router-link>
+    |
+    <router-link to="/schedule">Schedule</router-link>
+    |
+    <router-link to="/sch2">Sch2</router-link>
   </div>
   <router-view />
 </template>
