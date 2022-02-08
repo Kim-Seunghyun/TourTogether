@@ -118,7 +118,7 @@ Tour Together을 통해 실시간으로 소통하고, 인기있는 여행계획�
 ---
 
 - 프로젝트 관리 : [Notion](https://www.notion.so/SSAFY-2-5-ba42d6abf58c4708a3257429d4c31bc9)
-- 기획서 (산출물 폴더 링크 걸기)
+- [기획서](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A105/-/blob/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/%EA%B8%B0%ED%9A%8D%EC%84%9C/%E1%84%80%E1%85%A9%E1%86%BC%E1%84%90%E1%85%A9%E1%86%BCPJT_%E1%84%80%E1%85%B5%E1%84%92%E1%85%AC%E1%86%A8%E1%84%87%E1%85%A1%E1%86%AF%E1%84%91%E1%85%AD.pdf) 
 - 와이어프레임 (산출물 폴더 링크 걸기)
 - ERD (산출물 폴더 링크 걸기)
 - [시퀀스 다이어그램](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A105/-/tree/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/%EC%8B%9C%ED%80%80%EC%8A%A4%20%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8)
