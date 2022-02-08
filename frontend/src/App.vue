@@ -4,7 +4,10 @@
     <router-link to="/map">Map</router-link> |
     <router-link to="/Login" v-if="!accessToken">Login</router-link>||
     <router-link to="/mypage" v-if="accessToken">MyPage</router-link> |
-    <router-link to="/favoritepage" v-if="accessToken">FavoritePage</router-link> |
+    <router-link to="/favoritepage" v-if="accessToken"
+      >FavoritePage</router-link
+    >
+    |
     <router-link to="#" v-on:click="logout()">Logout</router-link>
     <router-link to="#" v-show="accessToken" v-on:click="unlink()">
       | Kakao Unlink</router-link
@@ -16,24 +19,25 @@
 <script>
 import router from "./router";
 import axios from "axios";
-import { reactive } from '@vue/reactivity';
-import { computed, watch, onMounted } from 'vue';
-import { useStore } from 'vuex';
+import { reactive } from "@vue/reactivity";
+import { computed, watch, onMounted } from "vue";
+import { useStore } from "vuex";
 
 export default {
   setup() {
     const state = reactive({
-        accessToken: window.Kakao.Auth.getAccessToken(),
-    })
+      accessToken: window.Kakao.Auth.getAccessToken(),
+    });
     const store = useStore();
     const counter = computed(() => store.state.counter);
     const login = () => {
       window.Kakao.Auth.authorize({
         redirectUri: "http://localhost:8080/kakao-login-callback/",
       });
-    }
-    const accessToken = watch(console.log(state.accessToken))
-    const logout = (type) => { // 카카오 로그아웃
+    };
+    const accessToken = watch(console.log(state.accessToken));
+    const logout = (type) => {
+      // 카카오 로그아웃
       window.Kakao.Auth.logout(function () {
         if (type) {
           // "unlink"
@@ -48,44 +52,50 @@ export default {
         store.commit("setUserInputNickname", '')
         store.commit("setUserProfileImage", '')
       });
-    }
+    };
 
     onMounted(() => {
       // 우리 api에 id있는지 확인, 있으면 기존 정보 가져오고 없으면 window.Kakao.API.request
       window.Kakao.API.request({
-        url: '/v2/user/me',
+        url: "/v2/user/me",
         data: {
-          property_keys: ["properties.nickname", "kakao_account.email", "properties.profile_image"]
+          property_keys: [
+            "properties.nickname",
+            "kakao_account.email",
+            "properties.profile_image",
+          ],
         },
         success: function (response) {
-          let email = null
-          if(response.kakao_account.has_email & !response.kakao_account.email_needs_agreement) {
-            email = response.kakao_account.email
+          let email = null;
+          if (
+            response.kakao_account.has_email &
+            !response.kakao_account.email_needs_agreement
+          ) {
+            email = response.kakao_account.email;
           }
           axios({
-            method: 'post',
-            url: 'http://localhost:8081/user/login',
+            method: "post",
+            url: "https://i6a105.p.ssafy.io:8081/user/login",
             data: {
-              userLoginPlatform: 'kakao',
+              userLoginPlatform: "kakao",
               userClientId: response.id,
               userEmail: email,
               userName: response.properties.nickname,
               userProfileImage: response.properties.profile_image,
-            }
-          })
-            .then(res => {
-              store.commit("setUserLoginPlatform", 'kakao')
-              store.commit("setUserClientId", res.data.user.userClientId)
-              store.commit("setUserNickname", res.data.user.userNickname)
-              store.commit("setUserInputNickname", res.data.user.userNickname)
-              store.commit("setUserProfileImage", res.data.user.userProfileImage)
-            })
+            },
+          }).then((res) => {
+            store.commit("setUserLoginPlatform", "kakao");
+            store.commit("setUserClientId", res.data.user.userClientId);
+            store.commit("setUserNickname", res.data.user.userNickname);
+            store.commit("setUserInputNickname", res.data.user.userNickname);
+            store.commit("setUserProfileImage", res.data.user.userProfileImage);
+          });
         },
         fail: function (error) {
-          console.log(error)
+          console.log(error);
         },
-      })
-    })
+      });
+    });
 
     return { state, counter, login, logout, accessToken}
   }
@@ -110,15 +120,15 @@ export default {
   //   accessToken: function () { // 토큰이 변경 확인
   //     console.log(this.accessToken);
   //   },
-    // $route(to) { // 라우트 변경 될때 마다 확인하여 (로그인체크)
-    //   this.accessToken = window.Kakao.Auth.getAccessToken();
-    //   if (to.name != "Login" && to.name != "KakaoLoginCallback") {
-    //     if (!this.accessToken) {
-    //       console.log("Not logged in.");
-    //       location.href = "/login";
-    //     }
-    //   }
-    // },
+  // $route(to) { // 라우트 변경 될때 마다 확인하여 (로그인체크)
+  //   this.accessToken = window.Kakao.Auth.getAccessToken();
+  //   if (to.name != "Login" && to.name != "KakaoLoginCallback") {
+  //     if (!this.accessToken) {
+  //       console.log("Not logged in.");
+  //       location.href = "/login";
+  //     }
+  //   }
+  // },
   // },
 };
 </script>
