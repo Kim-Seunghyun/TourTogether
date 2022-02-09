@@ -13,6 +13,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import com.ssafy.tourtogether.db.entity.RedisSchedule;
 
+import io.lettuce.core.dynamic.annotation.Value;
 import lombok.RequiredArgsConstructor;
 
 @Configuration
@@ -24,8 +25,9 @@ public class RedisConfig {
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory(){
+    	
         RedisStandaloneConfiguration redisStandaloneConfiguration = new RedisStandaloneConfiguration();
-        redisStandaloneConfiguration.setHostName(redisProperties.getHost());
+        redisStandaloneConfiguration.setHostName("172.26.13.35");
         redisStandaloneConfiguration.setPort(redisProperties.getPort());
 
         LettuceConnectionFactory lettuceConnectionFactory = new LettuceConnectionFactory(redisStandaloneConfiguration);
