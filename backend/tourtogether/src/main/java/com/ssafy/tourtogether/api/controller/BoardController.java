@@ -105,7 +105,7 @@ public class BoardController {
 	}
 
 	@GetMapping
-	@ApiOperation(value = "모든 보드 가져오기", notes = "모든 보드 가져온다")
+	@ApiOperation(value = "모든 보드 중 완료된 보드만 가져오기", notes = "모든 보드 가져온다")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
 			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
@@ -207,4 +207,18 @@ public class BoardController {
 		boardService.category(boardCategoryInfo);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
+
+//	@GetMapping
+//	@ApiOperation(value = "선택된 유형에 해당되는 보드만 가져오기", notes = "선택된 유형에 해당되는 보드 가져온다")
+//	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+//			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+//			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
+//			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+//
+//	public ResponseEntity<? extends BaseResponseBody> searchAll() {
+//
+//		// 보드 ID로 불러오기
+//		List<Board> boards = boardService.searchAll();
+//		return ResponseEntity.status(200).body(BoardSearchAllGetRes.of(200, "Success", boards));
+//	}
 }
