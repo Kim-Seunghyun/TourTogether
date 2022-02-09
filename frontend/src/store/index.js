@@ -1,6 +1,12 @@
 import { createStore } from "vuex";
+// import createPersistedState from "vuex-persistedstate";
+
+import { userStore } from "@/store/modules/userStore.js";
 
 export default createStore({
+  modules: {
+    userStore,
+  },
   state: {
     hideConfigButton: false,
     isPinned: true,
@@ -15,29 +21,8 @@ export default createStore({
     showNavbar: true,
     showFooter: true,
     showMain: true,
-    userNickname: "",
-    userProfileImage: "",
-    userInputNickname: "",
-    userLoginPlatform: "",
-    userClientId: "",
   },
-  getters: {
-    getUserNickname(state) {
-      return state.userNickname;
-    },
-    getUserProfileImage(state) {
-      return state.userProfileImage;
-    },
-    getUserInputNickname(state) {
-      return state.userInputNickname;
-    },
-    getUserLoginPlatform(state) {
-      return state.userLoginPlatform;
-    },
-    getUserClientId(state) {
-      return state.userClientId;
-    },
-  },
+  getters: {},
   mutations: {
     toggleConfigurator(state) {
       state.showConfig = !state.showConfig;
@@ -70,26 +55,16 @@ export default createStore({
         state.isNavFixed = false;
       }
     },
-    setUserNickname(state, userNickname) {
-      state.userNickname = userNickname;
-    },
-    setUserProfileImage(state, userProfileImage) {
-      state.userProfileImage = userProfileImage;
-    },
-    setUserInputNickname(state, value) {
-      state.userInputNickname = value;
-    },
-    setUserLoginPlatform(state, userLoginPlatform) {
-      state.userLoginPlatform = userLoginPlatform;
-    },
-    setUserClientId(state, userCliendId) {
-      state.userClientId = userCliendId;
-    },
   },
   actions: {
     toggleSidebarColor({ commit }, payload) {
       commit("sidebarType", payload);
     },
   },
-  // modules: {},
+  plugins: [
+    // createPersistedState({
+    //   // 브라우저 종료시 제거하기 위해 localStorage가 아닌 sessionStorage로 변경. (default: localStorage)
+    //   storage: sessionStorage,
+    // }),
+  ],
 });

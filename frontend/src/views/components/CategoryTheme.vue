@@ -1,44 +1,50 @@
 <template>
   <div class="nav-wrapper position-relative end-0">
+    <!-- 여행 유형 -->
     <ul class="nav nav-pills nav-fill p-1" role="tablist">
       <li class="nav-item">
         <a
           class="nav-link mb-0 px-0 py-1 active active"
           data-bs-toggle="tab"
-          href="../../../examples/pages/account/settings.html"
           role="tab"
           aria-selected="true"
-          >Messages</a
+          >#바다,강</a
         >
       </li>
       <li class="nav-item">
         <a
           class="nav-link mb-0 px-0 py-1"
           data-bs-toggle="tab"
-          href="../../../examples/pages/account/billing.html"
           role="tab"
           aria-selected="false"
-          >Social</a
+          >#산</a
         >
       </li>
       <li class="nav-item">
         <a
           class="nav-link mb-0 px-0 py-1"
           data-bs-toggle="tab"
-          href="../../../examples/pages/account/invoice.html"
           role="tab"
           aria-selected="false"
-          >Notifications</a
+          >#액티비티</a
         >
       </li>
       <li class="nav-item">
         <a
           class="nav-link mb-0 px-0 py-1"
           data-bs-toggle="tab"
-          href="../../../examples/pages/account/security.html"
           role="tab"
           aria-selected="false"
-          >Backup</a
+          >#호캉스</a
+        >
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link mb-0 px-0 py-1"
+          data-bs-toggle="tab"
+          role="tab"
+          aria-selected="false"
+          >#그 외</a
         >
       </li>
     </ul>

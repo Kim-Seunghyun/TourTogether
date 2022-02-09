@@ -44,85 +44,176 @@
         <div class="card h-100 p-3">
           <div
             class="overflow-hidden position-relative border-radius-lg bg-cover h-100"
-            style="
-              background-image: url('https://demos.creative-tim.com/soft-ui-dashboard/assets/img/ivancik.jpg');
-            "
           >
             <span class="mask bg-gradient-dark"></span>
             <div
               class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3"
             >
-              <h5 class="text-white font-weight-bolder mb-4 pt-2">
-                여행 일정 짜기
-              </h5>
-              <p class="text-white">주절주절 설명~~~~~</p>
+              <h1 class="text-white font-weight-bolder mb-4 pt-2">✈️</h1>
+              <p class="text-white">
+                친구들과 실시간으로 소통하며 여행 계획을 짜고 싶은 사람!<br />
+                다른 사람들의 기깔나는 여행 계획을 추천받고 싶은 사람! <br />
+                여행지는 정했지만 어디 가야할지 도저히 모르겠는 사람!
+                <br /><br /><br />
+                Tour Together을 통해 실시간으로 소통하고, 인기있는 여행계획을
+                둘러보고, 관광지를 추천받으세요!
+                <br />
+                당신의 완벽한 여행을 위해 Tour Together가 도와줍니다.
+              </p>
               <a
                 class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto"
                 href="javascript:;"
               >
-                <router-link
-                  to="/map"
-                  class="px-0 text-white nav-link font-weight-bold"
-                  >일정짜러 가기</router-link
-                >
+                <h4>
+                  <!-- <router-link
+                    class="px-0 text-white nav-link font-weight-bold"
+                    data-bs-toggle="modal"
+                    data-bs-target="#startModal"
+                    >일정 짜기 START</router-link
+                  > -->
 
-                <i
-                  class="fas fa-arrow-right text-sm ms-1"
-                  aria-hidden="true"
-                ></i>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-bs-toggle="modal"
+                    data-bs-target="#modal"
+                  >
+                    일정 짜기 START
+                  </button>
+                </h4>
               </a>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="mt-4 row">
-      <div class="mb-4 col-lg-5 mb-lg-0">
-        <div class="card z-index-2">
-          <div class="p-3 card-body">
-            <!-- chart -->
-            <active-users-chart />
+      <!-- Modal -->
+      <div
+        class="modal fade"
+        id="modal"
+        tabindex="-1"
+        aria-labelledby="modalLabel"
+        aria-hidden="true"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalLabel">
+                당신의 일정에 제목을 정해주세요.
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <form @submit.prevent="startBoard">
+              <div class="modal-body">
+                <input
+                  type="text"
+                  class="form-control"
+                  v-model="boardName"
+                  placeholder="여행 제목을 입력해주세요"
+                  required
+                  @keyup.enter="startBoard"
+                />
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-bs-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button type="submit" class="btn btn-primary">START</button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
-      <div class="col-lg-7">
-        <!-- line chart -->
-        <div class="card z-index-2">
-          <gradient-line-chart />
-        </div>
-      </div>
     </div>
-    <div class="row my-4">
-      <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
-        <projects-card />
-      </div>
-      <div class="col-lg-4 col-md-6">
-        <Orders-card />
+    <!-- 유형 선택하기 -->
+    <div class="mt-4 row">
+      <div class="mb-4 col-lg-12 mb-lg-0">
+        <h4>여행지 추천</h4>
+        <div class="card z-index-2">
+          <div class="p-3 card-body">
+            <div class="col-lg-4 col-sm-8">
+              <category-with-whom />
+            </div>
+            <br />
+            <div class="col-lg-4 col-sm-8">
+              <category-season />
+            </div>
+            <br />
+
+            <div class="col-lg-4 col-sm-8">
+              <category-area />
+            </div>
+            <br />
+            <div class="col-lg-4 col-sm-8">
+              <category-theme />
+            </div>
+          </div>
+          완료된 보드들 뜰 곳
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import ActiveUsersChart from "@/examples/Charts/ActiveUsersChart.vue";
-import GradientLineChart from "@/examples/Charts/GradientLineChart.vue";
-import OrdersCard from "./components/OrdersCard.vue";
-import ProjectsCard from "./components/ProjectsCard.vue";
+import CategoryWithWhom from "./components/CategoryWithWhom.vue";
+import CategorySeason from "./components/CategorySeason.vue";
+import CategoryArea from "./components/CategoryArea.vue";
+import CategoryTheme from "./components/CategoryTheme.vue";
+import { mapState } from "vuex";
+import axios from "axios";
+
+const userStore = "userStore";
 
 export default {
-  name: "dashboard-default",
+  name: "dashboard",
   data() {
     return {
+      boardName: "",
+      // userId: "",
       stats: {
         iconBackground: "bg-gradient-success",
       },
       sales: {},
     };
   },
+  computed: {
+    ...mapState(userStore, ["userId"]),
+  },
+  methods: {
+    startBoard() {
+      console.log("createBoard!!!");
+      console.log("userId는 ", this.userId);
+      console.log("boardName은 ", this.boardName);
+      this.createBoard();
+      location.href = "/map";
+    },
+    createBoard() {
+      // alert("send create board data");
+      axios({
+        method: "post",
+        url: "https://i6a105.p.ssafy.io:8081/board/create",
+        data: {
+          boardName: this.boardName,
+          userId: this.userId,
+        },
+      }).then((res) => {
+        console.log(res);
+      });
+    },
+  },
   components: {
-    ActiveUsersChart,
-    GradientLineChart,
-    ProjectsCard,
-    OrdersCard,
+    CategoryWithWhom,
+    CategorySeason,
+    CategoryArea,
+    CategoryTheme,
   },
 };
 </script>
