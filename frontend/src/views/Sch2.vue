@@ -66,7 +66,7 @@ export default {
         userSpotId: 1,
         tourSpotId: 1,
         order: 1,
-        additional: "변경",
+        additional: "바뀌는거까지",
       }
     }
   },
