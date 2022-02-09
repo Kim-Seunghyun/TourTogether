@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.tourtogether.api.request.BoardAddParticipantPostReq;
+import com.ssafy.tourtogether.api.request.BoardCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
@@ -192,4 +193,18 @@ public class BoardController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
+	@PostMapping("/category")
+	@ApiOperation(value = "보드에 유형 설정하기", notes = "보드에 유형 설정한다")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+
+	public ResponseEntity<? extends BaseResponseBody> category(
+			@RequestBody @ApiParam(value = "추가할 유저의 아이디와 보드 아이 정보", required = true) BoardCategoryPostReq boardCategoryInfo) {
+
+		// 보드 생성
+		boardService.category(boardCategoryInfo);
+		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+	}
 }
