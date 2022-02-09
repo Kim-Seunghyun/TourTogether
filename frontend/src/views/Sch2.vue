@@ -181,7 +181,7 @@ export default {
           userSpotId: 1,
           tourSpotId: 1,
           order: 1,
-          additional: "aaaa"
+          additional: "bbb"
         },
       })
         .then(res => {
