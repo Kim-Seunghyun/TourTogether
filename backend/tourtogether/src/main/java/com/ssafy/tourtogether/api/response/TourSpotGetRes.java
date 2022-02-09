@@ -20,7 +20,6 @@ public class TourSpotGetRes extends BaseResponseBody {
 	List<TourSpot> tourSpotList = null;
 
 	public static TourSpotGetRes of(Integer statusCode, String message, List<TourSpot> tourSpotList) {
-		System.out.println(tourSpotList.size());
 		TourSpotGetRes res = new TourSpotGetRes();
 		res.setStatusCode(statusCode);
 		res.setMessage(message);

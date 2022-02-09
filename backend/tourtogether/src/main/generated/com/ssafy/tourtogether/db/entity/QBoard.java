@@ -25,6 +25,8 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final BooleanPath boardIsActive = createBoolean("boardIsActive");
 
+    public final NumberPath<Integer> boardLikesCount = createNumber("boardLikesCount", Integer.class);
+
     public final StringPath boardName = createString("boardName");
 
     public QBoard(String variable) {
