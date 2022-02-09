@@ -92,6 +92,11 @@ export default {
           alert("Logout Account!");
         }
         router.push("");
+        store.commit("setUserLoginPlatform", '')
+        store.commit("setUserClientId", '')
+        store.commit("setUserNickname", '')
+        store.commit("setUserInputNickname", '')
+        store.commit("setUserProfileImage", '')
       });
     };
 
@@ -116,8 +121,7 @@ export default {
           }
           axios({
             method: "post",
-            // url: "https://i6a105.p.ssafy.io:8081/user/login",
-            url: "http://localhost:8081/user/login",
+            url: "https://i6a105.p.ssafy.io:8081/user/login",
             data: {
               userLoginPlatform: "kakao",
               userClientId: response.id,
@@ -162,15 +166,15 @@ export default {
   //   accessToken: function () { // 토큰이 변경 확인
   //     console.log(this.accessToken);
   //   },
-  // $route(to) { // 라우트 변경 될때 마다 확인하여 (로그인체크)
-  //   this.accessToken = window.Kakao.Auth.getAccessToken();
-  //   if (to.name != "Login" && to.name != "KakaoLoginCallback") {
-  //     if (!this.accessToken) {
-  //       console.log("Not logged in.");
-  //       location.href = "/login";
+  //   $route(to) { // 라우트 변경 될때 마다 확인하여 (로그인체크)
+  //     this.accessToken = window.Kakao.Auth.getAccessToken();
+  //     if (to.name != "Login" && to.name != "KakaoLoginCallback") {
+  //       if (!this.accessToken) {
+  //         console.log("Not logged in.");
+  //         location.href = "/login";
+  //       }
   //     }
-  //   }
-  // },
+  //   },
   // },
 };
 </script>

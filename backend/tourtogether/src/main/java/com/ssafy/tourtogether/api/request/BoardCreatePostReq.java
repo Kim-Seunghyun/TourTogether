@@ -14,6 +14,9 @@ import lombok.Setter;
 @ApiModel("BoardCreatePostReq")
 public class BoardCreatePostReq {
 
-	@ApiModelProperty(name="보드 이름", example = "보드 이름")
+	@ApiModelProperty(name = "보드 이름", example = "보드 이름")
 	String boardName;
+
+	@ApiModelProperty(name = "유저 아이디", example = "유저 아이디")
+	int userId;
 }
