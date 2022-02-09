@@ -26,6 +26,9 @@
     <button @click="sendChange()">값 변경 axios 테스트</button>
 
     <button @click="sendChange()">websocket 보내기</button>
+    
+    <button @click="saveSchedule()">schedule저장 axios 테스트</button>
+
     <hr>
 
     <textarea id="area" cols="30" rows="10">hi</textarea>
@@ -166,6 +169,27 @@ export default {
           console.log(err);
         })
       // this.sockjs.send("값 변경");
+    },
+    saveSchedule() {
+      axios({
+        method: 'post',
+        url: 'https://i6a105.p.ssafy.io:8081/redisschedule/save',
+        data: {
+          scheduleId: 1,
+          boardId: 1,
+          day: 1,
+          userSpotId: 1,
+          tourSpotId: 1,
+          order: 1,
+          additional: "aaaaa"
+        },
+      })
+        .then(res => {
+          console.log(res);
+        })
+        .catch(err => {
+          console.log(err);
+        })
     }
 
   }
