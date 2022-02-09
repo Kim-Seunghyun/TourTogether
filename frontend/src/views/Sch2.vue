@@ -130,7 +130,7 @@ export default {
     getAllSchedule() {
       axios({
         method: 'get',
-        url: 'http://127.0.0.1:8081/redisschedule/all'
+        url: 'https://i6a105.p.ssafy.io:8081/redisschedule/all'
       })
         .then(res => {
           console.log(res.data.redisScheduleList);
@@ -148,7 +148,7 @@ export default {
       // 수정 후 websocket으로 알리기
       axios({
         method: 'delete',
-        url: 'http://127.0.0.1:8081/redisschedule/delete',
+        url: 'https://i6a105.p.ssafy.io:8081/redisschedule/delete',
         // headers:{
         //   'Content-Type': 'application/json',
         //   'Accept' : 'application/json',
