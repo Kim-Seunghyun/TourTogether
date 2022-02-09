@@ -26,7 +26,7 @@ import com.ssafy.tourtogether.db.entity.RedisSchedule;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("redisschedule/")
+@RequestMapping("/redisschedule")
 public class RedisScheduleController {
 	
 	@Autowired
