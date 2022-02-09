@@ -30,8 +30,6 @@ export default {
     });
     const store = useStore();
     const counter = computed(() => store.state.counter);
-    const test = computed(() => store.getters);
-    const inc = () => store.commit("setCounter", counter.value + 1);
     const login = () => {
       window.Kakao.Auth.authorize({
         redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
@@ -48,6 +46,11 @@ export default {
           alert("Logout Account!");
         }
         router.push("");
+        store.commit("setUserLoginPlatform", '')
+        store.commit("setUserClientId", '')
+        store.commit("setUserNickname", '')
+        store.commit("setUserInputNickname", '')
+        store.commit("setUserProfileImage", '')
       });
     };
 
@@ -94,8 +97,8 @@ export default {
       });
     });
 
-    return { state, counter, inc, test, login, logout, accessToken };
-  },
+    return { state, counter, login, logout, accessToken}
+  }
   // methods: {
   //   unlink() {  // 카카오 계정 연결끊기
   //     let logout = this.logout;
@@ -117,15 +120,15 @@ export default {
   //   accessToken: function () { // 토큰이 변경 확인
   //     console.log(this.accessToken);
   //   },
-  // $route(to) { // 라우트 변경 될때 마다 확인하여 (로그인체크)
-  //   this.accessToken = window.Kakao.Auth.getAccessToken();
-  //   if (to.name != "Login" && to.name != "KakaoLoginCallback") {
-  //     if (!this.accessToken) {
-  //       console.log("Not logged in.");
-  //       location.href = "/login";
+  //   $route(to) { // 라우트 변경 될때 마다 확인하여 (로그인체크)
+  //     this.accessToken = window.Kakao.Auth.getAccessToken();
+  //     if (to.name != "Login" && to.name != "KakaoLoginCallback") {
+  //       if (!this.accessToken) {
+  //         console.log("Not logged in.");
+  //         location.href = "/login";
+  //       }
   //     }
-  //   }
-  // },
+  //   },
   // },
 };
 </script>

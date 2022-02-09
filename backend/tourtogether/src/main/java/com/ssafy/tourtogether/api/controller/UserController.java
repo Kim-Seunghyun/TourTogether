@@ -112,7 +112,7 @@ public class UserController {
 		} else {
 			System.out.println("유효한 유저");
 			String userProfileImage = updateImageInfo.getUserProfileImage();
-			user = userService.updateUserProfileImage(userClientId, userProfileImage);
+			user = userService.updateUserProfileImage(userClientId, userLoginPlatform, userProfileImage);
 
 			if (user == null) {
 				System.out.println("잘못된 이미지 링크");
