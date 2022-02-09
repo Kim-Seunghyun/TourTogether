@@ -133,7 +133,7 @@ export default {
     getAllSchedule() {
       axios({
         method: 'get',
-        url: 'https://i6a105.p.ssafy.io:8081/redisschedule/all'
+        url: 'https://i6a105.p.ssafy.io:6379/redisschedule/all'
       })
         .then(res => {
           console.log(res.data.redisScheduleList);
