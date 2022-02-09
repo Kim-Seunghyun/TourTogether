@@ -32,7 +32,7 @@ export default {
     const counter = computed(() => store.state.counter);
     const login = () => {
       window.Kakao.Auth.authorize({
-        redirectUri: "http://localhost:8080/kakao-login-callback/",
+        redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
       });
     };
     const accessToken = watch(console.log(state.accessToken));
@@ -120,15 +120,15 @@ export default {
   //   accessToken: function () { // 토큰이 변경 확인
   //     console.log(this.accessToken);
   //   },
-  // $route(to) { // 라우트 변경 될때 마다 확인하여 (로그인체크)
-  //   this.accessToken = window.Kakao.Auth.getAccessToken();
-  //   if (to.name != "Login" && to.name != "KakaoLoginCallback") {
-  //     if (!this.accessToken) {
-  //       console.log("Not logged in.");
-  //       location.href = "/login";
+  //   $route(to) { // 라우트 변경 될때 마다 확인하여 (로그인체크)
+  //     this.accessToken = window.Kakao.Auth.getAccessToken();
+  //     if (to.name != "Login" && to.name != "KakaoLoginCallback") {
+  //       if (!this.accessToken) {
+  //         console.log("Not logged in.");
+  //         location.href = "/login";
+  //       }
   //     }
-  //   }
-  // },
+  //   },
   // },
 };
 </script>

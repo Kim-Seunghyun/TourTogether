@@ -88,11 +88,10 @@ export default {
         promise.then(
           function(data) {
             console.log(typeof(data.Location))
-            store.commit("setUserProfileImage", data.Location)
             alert("Successfully uploaded photo.");
             axios({
               method: 'patch',
-              url: 'http://localhost:8081/user/updateImage/',
+              url: 'https://i6a105.p.ssafy.io:8081/user/updateImage/',
               data: {
                 userLoginPlatform: getters.getUserLoginPlatform,
                 userClientId: getters.getUserClientId,
@@ -100,6 +99,7 @@ export default {
               },
             })
               .then((res) => {
+                store.commit("setUserProfileImage", data.Location)
                 console.log(res)
               });
           },

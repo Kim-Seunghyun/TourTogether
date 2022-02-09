@@ -71,7 +71,7 @@ export default {
     const submitNickname = () => {
       axios({
         method: "patch",
-        url: "http://localhost:8081/user/updateNickname/",
+        url: "https://i6a105.p.ssafy.io:8081/user/updateNickname/",
         data: {
           userLoginPlatform: getters.getUserLoginPlatform,
           userNickname: getters.getUserNickname,
@@ -89,11 +89,13 @@ export default {
 
     onMounted(() => {
       if (!getters.getUserClientId) {
+        console.log(getters.getUserClientId)
+        console.log(getters.getUserNickname)
         alert('로그인해주세요!')
       }
       axios({
         method: 'get',
-        url: 'http://localhost:8081/board/user',
+        url: 'https://i6a105.p.ssafy.io:8081/board/user',
         data: {
           userClientId: getters.getUserClientId
         }
