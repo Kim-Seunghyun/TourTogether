@@ -23,10 +23,12 @@ import com.ssafy.tourtogether.api.service.RedisScheduleService;
 import com.ssafy.tourtogether.common.model.response.BaseResponseBody;
 import com.ssafy.tourtogether.db.entity.RedisSchedule;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/redisschedule")
+@Api(value = "schedule API", tags = { "schedule" })
 public class RedisScheduleController {
 	
 	@Autowired
