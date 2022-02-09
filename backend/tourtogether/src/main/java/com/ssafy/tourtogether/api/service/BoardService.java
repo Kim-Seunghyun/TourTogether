@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.ssafy.tourtogether.api.request.BoardAddParticipantPostReq;
+import com.ssafy.tourtogether.api.request.BoardCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
@@ -33,5 +34,7 @@ public interface BoardService {
 	void cancelBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo);
 
 	List<Board> searchLikeBoardByUserId(BoardSearchByUserIdGetReq boardSearchByUserIdInfo);
+
+	void category(BoardCategoryPostReq boardCategoryInfo);
 
 }

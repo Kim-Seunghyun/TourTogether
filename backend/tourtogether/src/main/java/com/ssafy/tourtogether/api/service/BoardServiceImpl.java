@@ -8,6 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.tourtogether.api.request.BoardAddParticipantPostReq;
+import com.ssafy.tourtogether.api.request.BoardCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
@@ -17,12 +18,15 @@ import com.ssafy.tourtogether.api.request.BoardSearchByUserIdGetReq;
 import com.ssafy.tourtogether.db.entity.Board;
 import com.ssafy.tourtogether.db.entity.BoardLikes;
 import com.ssafy.tourtogether.db.entity.BoardParticipant;
+import com.ssafy.tourtogether.db.entity.Category;
 import com.ssafy.tourtogether.db.repository.BoardLikesRepository;
 import com.ssafy.tourtogether.db.repository.BoardLikesRepositorySupport;
 import com.ssafy.tourtogether.db.repository.BoardParticipantRepository;
 import com.ssafy.tourtogether.db.repository.BoardParticipantRepositorySupport;
 import com.ssafy.tourtogether.db.repository.BoardRepository;
 import com.ssafy.tourtogether.db.repository.BoardRepositorySupport;
+import com.ssafy.tourtogether.db.repository.CategoryRepository;
+import com.ssafy.tourtogether.db.repository.CategoryRepositorySupport;
 
 /**
  * 보드 관련 비즈니스 로직 처리를 위한 서비스 구현 정의.
@@ -36,6 +40,8 @@ public class BoardServiceImpl implements BoardService {
 	BoardParticipantRepository boardParticipantRepository;
 	@Autowired
 	BoardLikesRepository boardLikesRepository;
+	@Autowired
+	CategoryRepository categoryRepository;
 
 	@Autowired
 	BoardRepositorySupport boardRepositorySupport;
@@ -43,6 +49,8 @@ public class BoardServiceImpl implements BoardService {
 	BoardParticipantRepositorySupport boardParticipantRepositorySupport;
 	@Autowired
 	BoardLikesRepositorySupport boardLikesRepositorySupport;
+	@Autowired
+	CategoryRepositorySupport categoryRepositorySupport;
 
 	@Override
 	public void createBoard(BoardCreatePostReq boardCreateInfo) {
@@ -120,6 +128,17 @@ public class BoardServiceImpl implements BoardService {
 		boardLikesRepositorySupport.deleteByBoardId(boardclickBoardLikeInfo);
 		// 좋아요 누른 보드 아이디의 좋아요 개수 -1
 		boardRepositorySupport.decreaseLike(boardclickBoardLikeInfo.getBoardId());
+	}
+
+	@Override
+	public void category(BoardCategoryPostReq boardCategoryInfo) {
+		Category category = new Category();
+		category.setCategoryBoardId(boardCategoryInfo.getBoardId());
+		category.setCategoryWithWhom(boardCategoryInfo.getCategoryWithWhom());
+		category.setCategorySeason(boardCategoryInfo.getCategorySeason());
+		category.setCategoryArea(boardCategoryInfo.getCategoryArea());
+		category.setCategoryTheme(boardCategoryInfo.getCategorySeason());
+		categoryRepository.save(category);
 	}
 
 }
