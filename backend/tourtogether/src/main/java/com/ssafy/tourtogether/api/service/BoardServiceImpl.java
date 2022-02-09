@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ssafy.tourtogether.api.request.BoardAddParticipantPostReq;
@@ -98,7 +97,7 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public List<Board> searchAll() {
 		// 좋아요 개수를 기준으로 내림차순 정렬
-		List<Board> boards = boardRepository.findAll(Sort.by(Sort.Direction.DESC, "boardLikesCount"));
+		List<Board> boards = boardRepositorySupport.findAll();
 		return boards;
 	}
 
