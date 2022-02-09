@@ -12,16 +12,6 @@
     <router-link to="#" v-show="accessToken" v-on:click="unlink()">
       | Kakao Unlink</router-link
     >
-    |
-    <router-link to="/memo">Memo</router-link>
-    |
-    <router-link to="/memo2">Memo2</router-link>
-    |
-    <router-link to="/memo3">Memo3</router-link>
-    |
-    <router-link to="/schedule">Schedule</router-link>
-    |
-    <router-link to="/sch2">Sch2</router-link>
   </div>
   <router-view />
 </template>
@@ -40,8 +30,6 @@ export default {
     });
     const store = useStore();
     const counter = computed(() => store.state.counter);
-    const test = computed(() => store.getters);
-    const inc = () => store.commit("setCounter", counter.value + 1);
     const login = () => {
       window.Kakao.Auth.authorize({
         redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
@@ -58,6 +46,11 @@ export default {
           alert("Logout Account!");
         }
         router.push("");
+        store.commit("setUserLoginPlatform", '')
+        store.commit("setUserClientId", '')
+        store.commit("setUserNickname", '')
+        store.commit("setUserInputNickname", '')
+        store.commit("setUserProfileImage", '')
       });
     };
 
@@ -102,85 +95,10 @@ export default {
           console.log(error);
         },
       });
-    },
-  },
-  watch: {
-    accessToken: function () {
-      // 토큰이 변경 확인
-      console.log(this.accessToken);
-    },
-    // $route(to) {
-    //   // 라우트 변경 될때 마다 확인하여 (로그인체크)
-    //   this.accessToken = window.Kakao.Auth.getAccessToken();
-    //   if (
-    //     to.name != "Home" &&
-    //     to.name != "Login" &&
-    //     to.name != "KakaoLoginCallback"
-    //   ) {
-    //     if (!this.accessToken) {
-    //       console.log("Not logged in.");
-    //       location.href = "/";
-    //     }
-    //   }
-    // },
-  },
-  mounted() {
-    // 최초 한번만 호출 (내가 작성한거 아님)
-    // axios({
-    //   method: 'get',
-    //   url: 'http://localhost:3000/user/login',
-    //   data:
-    // })
-    // if() {
-
-    // }
-    // 우리 api에 id있는지 확인, 있으면 기존 정보 가져오고 없으면 window.Kakao.API.request
-    window.Kakao.API.request({
-      url: "/v2/user/me",
-      data: {
-        property_keys: [
-          "properties.nickname",
-          "kakao_account.email",
-          "properties.profile_image",
-        ],
-      },
-      success: function (response) {
-        console.log(response);
-        console.log(response.id);
-        console.log(response.properties.nickname);
-        console.log(response.properties.profile_image);
-        let email = null;
-        // kakao developers에서 email_needs부분 확인 요망
-        if (
-          response.kakao_account.has_email &
-          !response.kakao_account.email_needs_agreement
-        ) {
-          email = response.kakao_account.email;
-        }
-        // 우리 db에 idp에 상응하는 user정보가 없다면 이렇게하고
-        // ㄴㄴ 백에서 처리하면 될듯
-        console.log(email);
-        axios({
-          method: "post",
-          url: "http://i6a105.p.ssafy.io:8081/user/login",
-          data: { 
-            userLoginPlaltform: "kakao",
-            userClientId: response.id,
-            userEmail: email,
-            userName: response.properties.nickname,
-            userProfileImage: response.properties.profile_image,
-          },
-        }).then((res) => {
-          console.log(res);
-        });
-      },
-      fail: function (error) {
-        console.log(error);
-      },
     });
 
-    return { state, counter, inc, test, login, logout, accessToken };
-  },
+    return { state, counter, login, logout, accessToken}
+  }
   // methods: {
   //   unlink() {  // 카카오 계정 연결끊기
   //     let logout = this.logout;
@@ -202,15 +120,15 @@ export default {
   //   accessToken: function () { // 토큰이 변경 확인
   //     console.log(this.accessToken);
   //   },
-  // $route(to) { // 라우트 변경 될때 마다 확인하여 (로그인체크)
-  //   this.accessToken = window.Kakao.Auth.getAccessToken();
-  //   if (to.name != "Login" && to.name != "KakaoLoginCallback") {
-  //     if (!this.accessToken) {
-  //       console.log("Not logged in.");
-  //       location.href = "/login";
+  //   $route(to) { // 라우트 변경 될때 마다 확인하여 (로그인체크)
+  //     this.accessToken = window.Kakao.Auth.getAccessToken();
+  //     if (to.name != "Login" && to.name != "KakaoLoginCallback") {
+  //       if (!this.accessToken) {
+  //         console.log("Not logged in.");
+  //         location.href = "/login";
+  //       }
   //     }
-  //   }
-  // },
+  //   },
   // },
 };
 </script>
