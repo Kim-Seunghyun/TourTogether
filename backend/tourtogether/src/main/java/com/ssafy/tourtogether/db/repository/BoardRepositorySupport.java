@@ -80,4 +80,10 @@ public class BoardRepositorySupport {
 		jpaQueryFactory.update(qBoard).where(qBoard.boardId.eq(boardFinishInfo.getBoardId()))
 				.set(qBoard.boardIsActive, true).execute();
 	}
+
+	public List<Board> findAll() {
+		List<Board> boards = jpaQueryFactory.select(qBoard).from(qBoard).where(qBoard.boardIsActive.eq(true))
+				.orderBy(qBoard.boardLikesCount.desc()).fetch();
+		return boards;
+	}
 }
