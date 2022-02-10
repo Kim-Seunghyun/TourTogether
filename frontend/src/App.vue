@@ -37,7 +37,6 @@
 import Configurator from "@/examples/Configurator.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
-import router from "./router";
 import axios from "axios";
 import { reactive } from "@vue/reactivity";
 import { computed, watch, onMounted } from "vue";
@@ -77,28 +76,11 @@ export default {
     const inc = () => store.commit("setCounter", counter.value + 1);
     const login = () => {
       window.Kakao.Auth.authorize({
-        // redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
-        redirectUri: "http://localhost/kakao-login-callback/",
+        redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
+        // redirectUri: "http://localhost/kakao-login-callback/",
       });
     };
     const accessToken = watch(console.log(state.accessToken));
-    const logout = (type) => {
-      // 카카오 로그아웃
-      window.Kakao.Auth.logout(function () {
-        if (type) {
-          // "unlink"
-          alert("Unlinked Kakao Account!");
-        } else {
-          alert("Logout Account!");
-        }
-        router.push("");
-        store.commit("setUserLoginPlatform", '')
-        store.commit("setUserClientId", '')
-        store.commit("setUserNickname", '')
-        store.commit("setUserInputNickname", '')
-        store.commit("setUserProfileImage", '')
-      });
-    };
 
     onMounted(() => {
       // 우리 api에 id있는지 확인, 있으면 기존 정보 가져오고 없으면 window.Kakao.API.request
@@ -143,7 +125,7 @@ export default {
       });
     });
 
-    return { state, counter, inc, test, login, logout, accessToken };
+    return { state, counter, inc, test, login, accessToken };
   },
   // methods: {
   //   unlink() {  // 카카오 계정 연결끊기

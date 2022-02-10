@@ -14,7 +14,7 @@ export default {
     const login = () => {
       window.Kakao.Auth.authorize({
         // redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
-        redirectUri: "http://localhost/kakao-login-callback/",
+        redirectUri: "http://localhost:8080/kakao-login-callback/",
       });
     };
 

@@ -201,7 +201,11 @@ export default {
     getAllBoards() {
       axios({
         method: "get",
-        url: "https://i6a105.p.ssafy.io:8081/board",
+        // url: "https://i6a105.p.ssafy.io:8081/board",
+        url: "https://i6a105.p.ssafy.io:8081/board/searchByUserId",
+        data: {
+          userId: 98,
+        },
       }).then((res) => {
         this.boards = res.data.boards;
         this.setAllBoards(res.data.boards);

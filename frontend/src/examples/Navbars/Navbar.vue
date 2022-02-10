@@ -217,6 +217,10 @@
 </template>
 <script>
 import { mapMutations, mapActions } from "vuex";
+import router from "@/router";
+import { useStore } from "vuex";
+
+const store = useStore();
 
 export default {
   name: "navbar",
@@ -236,6 +240,24 @@ export default {
     toggleSidebar() {
       this.toggleSidebarColor("bg-white");
       this.navbarMinimize();
+    },
+    logout(type) {
+      // 카카오 로그아웃
+      window.Kakao.Auth.logout(function () {
+        if (type) {
+          // "unlink"
+          alert("Unlinked Kakao Account!");
+        } else {
+          alert("Logout Account!");
+        }
+        router.push("");
+        store.commit("userStore/setUserId", "");
+        store.commit("userStore/setUserLoginPlatform", "");
+        store.commit("userStore/setUserClientId", "");
+        store.commit("userStore/setUserNickname", "");
+        store.commit("userStore/setUserInputNickname", "");
+        store.commit("userStore/setUserProfileImage", "");
+      });
     },
   },
   components: {},
