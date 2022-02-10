@@ -16,11 +16,11 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("BoardSearchAllGetRes")
-public class BoardSearchAllGetRes extends BaseResponseBody {
+public class BoardSearchAllPostRes extends BaseResponseBody {
 	List<Board> boards = null;
 
-	public static BoardSearchAllGetRes of(Integer statusCode, String message, List<Board> boards) {
-		BoardSearchAllGetRes res = new BoardSearchAllGetRes();
+	public static BoardSearchAllPostRes of(Integer statusCode, String message, List<Board> boards) {
+		BoardSearchAllPostRes res = new BoardSearchAllPostRes();
 		res.setStatusCode(statusCode);
 		res.setMessage(message);
 		res.setBoards(boards);
