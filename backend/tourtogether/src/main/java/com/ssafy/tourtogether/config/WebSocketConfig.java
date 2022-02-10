@@ -22,7 +22,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
 	        .setAllowedOriginPatterns("*")
 	        .withSockJS()
 	        .setClientLibraryUrl("https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js");
-        webSocketHandlerRegistry.addHandler(webSocketComponent, "/schedule")
+        webSocketHandlerRegistry.addHandler(webSocketComponent, "")
 	        .setAllowedOriginPatterns("*")
 	        .withSockJS()
 	        .setClientLibraryUrl("https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.5/sockjs.min.js");
