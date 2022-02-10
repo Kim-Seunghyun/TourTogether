@@ -2,23 +2,24 @@
   <quill-editor
     v-model:value="state.content"
     :options="state.editorOption"
-    :disabled="state.disabled"
     @blur="onEditorBlur($event)"
     @focus="onEditorFocus($event)"
     @ready="onEditorReady($event)"
     @change="onEditorChange($event)"
   />
+  <!-- <p>{{ state._content }}</p> -->
 </template>
 
 <script>
-// import "quill/dist/quill.core.css";
-// import "quill/dist/quill.snow.css";
-// import "quill/dist/quill.bubble.css";
-
 import { reactive } from "vue";
 import { quillEditor } from "vue3-quill";
-// import customQuillModule from "customQuillModule";
-// Quill.register("modules/customQuillModule", customQuillModule);
+
+import SockJS from "sockjs-client";
+import Stomp from "stomp-websocket";
+
+import axios from "axios";
+
+let sock = new SockJS("http://localhost:8081/ws-stomp");
 
 export default {
   components: {
@@ -26,40 +27,74 @@ export default {
   },
   setup() {
     const state = reactive({
-      dynamicComponent: null,
-      content: "<p>2333</p>",
-      _content: "",
+      ws: Stomp.over(sock),
+      quill: null,
+      my: true,
+      user: "임의의 사용자1",
+
+      // dynamicComponent: null,
+      content: "qwe",
       editorOption: {
         placeholder: "core",
         modules: {
           toolbar: [
             // custom toolbars options
             // will override the default configuration
+            ["bold", "italic", "underline", "strike"],
+            ["blockquote", "code-block"],
+            [{ header: 1 }, { header: 2 }],
+            [{ list: "ordered" }, { list: "bullet" }],
+            [{ script: "sub" }, { script: "super" }],
+            [{ indent: "-1" }, { indent: "+1" }],
+            [{ direction: "rtl" }],
+            [{ size: ["small", false, "large", "huge"] }],
+            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+            [{ color: [] }, { background: [] }],
+            [{ font: [] }],
+            [{ align: [] }],
+            ["clean"],
+            ["link", "image", "video"],
           ],
           // other moudle options here
         },
         // more options
       },
-      disabled: false,
     });
 
-    const onEditorBlur = (quill) => {
-      console.log("editor blur!", quill);
+    const onEditorBlur = () => {
+      // console.log("editor blur!");
     };
-    const onEditorFocus = (quill) => {
-      console.log("editor focus!", quill);
+    const onEditorFocus = () => {
+      // console.log("editor focus!");
     };
-    const onEditorReady = (quill) => {
-      console.log("editor ready!", quill);
+    const onEditorReady = () => {
+      // console.log("editor ready!");
+      // if (state.quill === null) {
+      // console.log("quill 초기화");
+      // state.quill = quill;
+      // }
     };
-    const onEditorChange = ({ quill, html, text }) => {
-      console.log("editor change!", quill, html, text);
-      state._content = html;
+    const onEditorChange = ({ quill }) => {
+      state.quill = quill;
+      // sendText(html);
+      quill.once("text-change", function (...args) {
+        if (state.my) sendMessage(args[0]);
+        // console.log(args[2]); // user
+      });
     };
 
-    setTimeout(() => {
-      state.disabled = true;
-    }, 2000);
+    const sendMessage = function (delta) {
+      console.log("sendMessage", delta);
+      state.ws.send(
+        "/pub/memo",
+        {},
+        JSON.stringify({
+          roomId: 1,
+          user: state.user,
+          delta: delta,
+        })
+      );
+    };
 
     return {
       state,
@@ -68,6 +103,77 @@ export default {
       onEditorReady,
       onEditorChange,
     };
+  },
+  created() {
+    this.init();
+    this.initRecv();
+  },
+  methods: {
+    recvMessage(message) {
+      // let _this = this;
+      console.log("recvMessage", message);
+      if (message.user !== this.state.user) {
+        this.state.my = false;
+        this.state.quill.enable(false);
+        this.state.quill.updateContents(message.delta);
+        this.state.quill.enable();
+        this.state.my = true;
+      }
+      // this.state.quill.enable(true);
+    },
+    initRecv() {
+      // 접속시 처음 값을 받아오도록 하기
+      // 테스트 페이지인 경우와 아닌 경우로 분기
+      console.log("init RECV start");
+      (response) => {
+        console.log("initRecv@@@@");
+        console.log(response.data);
+      },
+        (err) => {
+          console.log("initRecv 실패");
+          console.log(err);
+        };
+    },
+    init() {
+      axios({
+        method: "POST",
+        url: "http://localhost:8081/memo/room",
+        params: {
+          name: 1,
+        },
+        // data: {
+        // name: "1",
+        // },
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      var sock = new SockJS("http://localhost:8081/ws-stomp");
+      var ws = Stomp.over(sock);
+      var _this = this;
+      this.ws = ws;
+      var subUrl = "/sub/memo";
+      console.log("채널 구독하기: ", subUrl);
+      ws.connect(
+        {
+          userNickname: _this.state.user, // 이거 없으면 오류나는데, stomp API 내부적으로 쓰는거같음
+        },
+        function (frame) {
+          console.log("ws.connect: ", frame);
+          ws.subscribe(subUrl, function (message) {
+            var recv = JSON.parse(message.body);
+            _this.recvMessage(recv);
+          });
+        },
+        function (error) {
+          console.log("ws.connect error: ", error);
+          alert("서버 연결에 실패 하였습니다. 다시 접속해 주십시요.");
+        }
+      );
+    },
   },
 };
 </script>
