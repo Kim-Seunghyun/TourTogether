@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("BoardSearchByBoardIdGetReq")
-public class BoardSearchByBoardIdGetReq {
+public class BoardSearchByBoardIdPostReq {
 	@ApiModelProperty(name = "보드 아이디", example = "보드 아이디")
 	int boardId;
 }
