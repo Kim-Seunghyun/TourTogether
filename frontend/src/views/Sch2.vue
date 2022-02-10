@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     connectSocket() {
-      this.sockjs = new SockJS("http://localhost:8081/sch2");
+      this.sockjs = new SockJS("https://i6a105.p.ssafy.io:8081/sch2");
       this.sockjs.onopen = function () {
         // websocket을 열어줄 때 redis에서 data를 가져와야할거같음
         // console.log(this.arr);
