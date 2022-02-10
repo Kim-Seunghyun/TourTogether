@@ -12,9 +12,9 @@ import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
-import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdGetReq;
-import com.ssafy.tourtogether.api.request.BoardSearchByCategoryGetReq;
-import com.ssafy.tourtogether.api.request.BoardSearchByUserIdGetReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
 import com.ssafy.tourtogether.db.entity.Board;
 import com.ssafy.tourtogether.db.entity.BoardLikes;
 import com.ssafy.tourtogether.db.entity.BoardParticipant;
@@ -54,15 +54,38 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public void createBoard(BoardCreatePostReq boardCreateInfo) {
+
 		Board board = new Board();
 		board.setBoardName(boardCreateInfo.getBoardName());
-		board.setBoardIsActive(false); // 보드가 처음에 생성됐을때는 무조건 완료되지 않은 일정임으로 false로 설
+		board.setBoardIsActive(false); // 보드가 처음에 생성됐을때는 무조건 완료되지 않은 일정임으로 false로 설정
+		board.setBoardRandom(makeBoardRandom()); // 랜덤으로 보드값 생성
 		boardRepository.save(board);
 		// 참가자 추가
 		BoardParticipant boardParticipant = new BoardParticipant();
 		boardParticipant.setBoardParticipantBoardId(board.getBoardId());
 		boardParticipant.setBoardParticipantUserId(boardCreateInfo.getUserId());
 		boardParticipantRepository.save(boardParticipant);
+	}
+
+	// 랜덤으로 보드값 생성
+	private String makeBoardRandom() {
+
+		while (true) {
+			StringBuffer boardRandom = new StringBuffer();
+			for (int i = 0; i < 3; i++) {
+				boardRandom.append((char) ((Math.random() * 26) + 97));
+			}
+			boardRandom.append("-");
+			for (int i = 0; i < 4; i++) {
+				boardRandom.append((int) ((Math.random() * 10000) % 10));
+			}
+
+			// 중복 검사
+			if (boardRepositorySupport.duplicationCheck(boardRandom.toString())) {
+				return boardRandom.toString();
+			}
+		}
+
 	}
 
 	@Override
@@ -78,19 +101,19 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public Optional<Board> searchByBoardId(BoardSearchByBoardIdGetReq boardSearchByBoardIdInfo) {
+	public Optional<Board> searchByBoardId(BoardSearchByBoardIdPostReq boardSearchByBoardIdInfo) {
 		Optional<Board> board = boardRepository.findById(boardSearchByBoardIdInfo.getBoardId());
 		return board;
 	}
 
 	@Override
-	public List<Board> searchByUserId(BoardSearchByUserIdGetReq boardSearchByUserIdInfo) {
+	public List<Board> searchByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
 		List<Board> myBoards = boardRepositorySupport.findByUserId(boardSearchByUserIdInfo);
 		return myBoards;
 	}
 
 	@Override
-	public List<Board> searchLikeBoardByUserId(BoardSearchByUserIdGetReq boardSearchByUserIdInfo) {
+	public List<Board> searchLikeBoardByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
 		List<Board> myLikeBoards = boardRepositorySupport.findLikeBoardByUserId(boardSearchByUserIdInfo);
 		return myLikeBoards;
 	}
@@ -142,7 +165,7 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<Board> searchByCategory(BoardSearchByCategoryGetReq boardSearchByCategoryInfo) {
+	public List<Board> searchByCategory(BoardSearchByCategoryPostReq boardSearchByCategoryInfo) {
 		List<Board> boards = boardRepositorySupport.findByCategory(boardSearchByCategoryInfo);
 		return boards;
 	}

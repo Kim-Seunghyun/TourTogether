@@ -11,8 +11,8 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
-import com.ssafy.tourtogether.api.request.BoardSearchByCategoryGetReq;
-import com.ssafy.tourtogether.api.request.BoardSearchByUserIdGetReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
 import com.ssafy.tourtogether.db.entity.Board;
 import com.ssafy.tourtogether.db.entity.QBoard;
 import com.ssafy.tourtogether.db.entity.QBoardLikes;
@@ -34,7 +34,7 @@ public class BoardRepositorySupport {
 		jpaQueryFactory.delete(qBoard).where(qBoard.boardId.eq(boardDeleteInfo.getBoardId())).execute();
 	}
 
-	public List<Board> findByUserId(BoardSearchByUserIdGetReq boardSearchByUserIdInfo) {
+	public List<Board> findByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
 		List<Integer> myBoardIds = jpaQueryFactory.select(qBoardParticipant.boardParticipantBoardId)
 				.from(qBoardParticipant)
 				.where(qBoardParticipant.boardParticipantUserId.eq(boardSearchByUserIdInfo.getUserId())).fetch();
@@ -65,7 +65,7 @@ public class BoardRepositorySupport {
 				.execute();
 	}
 
-	public List<Board> findLikeBoardByUserId(BoardSearchByUserIdGetReq boardSearchByUserIdInfo) {
+	public List<Board> findLikeBoardByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
 		List<Integer> myLikeBoardIds = jpaQueryFactory.select(qBoardLikes.boardLikesBoardId).from(qBoardLikes)
 				.where(qBoardLikes.boardLikesUserId.eq(boardSearchByUserIdInfo.getUserId())).fetch();
 
@@ -90,10 +90,8 @@ public class BoardRepositorySupport {
 		return boards;
 	}
 
-	public List<Board> findByCategory(BoardSearchByCategoryGetReq boardSearchByCategoryInfo) {
-		System.out.println(boardSearchByCategoryInfo.getCategoryWithWhom() + " , "
-				+ boardSearchByCategoryInfo.getCategorySeason() + " , " + boardSearchByCategoryInfo.getCategoryArea()
-				+ " , " + boardSearchByCategoryInfo.getCategoryTheme());
+	public List<Board> findByCategory(BoardSearchByCategoryPostReq boardSearchByCategoryInfo) {
+
 		String withWhom, season, area, theme;
 		// 값이 0이면 선택되지 않은 것.
 		if (boardSearchByCategoryInfo.getCategoryWithWhom() == 0) {
@@ -131,5 +129,15 @@ public class BoardRepositorySupport {
 			boards.add(board);
 		}
 		return boards;
+	}
+
+	public boolean duplicationCheck(String boardRandom) {
+		List<Board> boards = jpaQueryFactory.select(qBoard).from(qBoard).where(qBoard.boardRandom.eq(boardRandom))
+				.fetch();
+		if (boards.size() == 0)
+			return true;
+		else
+			return false;
+
 	}
 }
