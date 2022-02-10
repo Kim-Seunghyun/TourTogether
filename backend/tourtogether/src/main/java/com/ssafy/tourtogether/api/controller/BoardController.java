@@ -19,12 +19,12 @@ import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
-import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdGetReq;
-import com.ssafy.tourtogether.api.request.BoardSearchByCategoryGetReq;
-import com.ssafy.tourtogether.api.request.BoardSearchByUserIdGetReq;
-import com.ssafy.tourtogether.api.response.BoardSearchAllGetRes;
-import com.ssafy.tourtogether.api.response.BoardSearchByBoardIdGetRes;
-import com.ssafy.tourtogether.api.response.BoardSearchByUserIdGetRes;
+import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
+import com.ssafy.tourtogether.api.response.BoardSearchAllPostRes;
+import com.ssafy.tourtogether.api.response.BoardSearchByBoardIdPostRes;
+import com.ssafy.tourtogether.api.response.BoardSearchByUserIdPostRes;
 import com.ssafy.tourtogether.api.service.BoardService;
 import com.ssafy.tourtogether.common.model.response.BaseResponseBody;
 import com.ssafy.tourtogether.db.entity.Board;
@@ -116,10 +116,10 @@ public class BoardController {
 
 		// 보드 ID로 불러오기
 		List<Board> boards = boardService.searchAll();
-		return ResponseEntity.status(200).body(BoardSearchAllGetRes.of(200, "Success", boards));
+		return ResponseEntity.status(200).body(BoardSearchAllPostRes.of(200, "Success", boards));
 	}
 
-	@GetMapping("/searchByBoardId")
+	@PostMapping("/searchByBoardId")
 	@ApiOperation(value = "보드 ID로 보드 가져오기", notes = "보드 ID로 보드 가져온다")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
@@ -127,14 +127,14 @@ public class BoardController {
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 
 	public ResponseEntity<? extends BaseResponseBody> searchByBoardId(
-			@RequestBody @ApiParam(value = "불러올 보드 ID", required = true) BoardSearchByBoardIdGetReq boardSearchByBoardIdInfo) {
+			@RequestBody @ApiParam(value = "불러올 보드 ID", required = true) BoardSearchByBoardIdPostReq boardSearchByBoardIdInfo) {
 
 		// 보드 ID로 불러오기
 		Optional<Board> board = boardService.searchByBoardId(boardSearchByBoardIdInfo);
-		return ResponseEntity.status(200).body(BoardSearchByBoardIdGetRes.of(200, "Success", board));
+		return ResponseEntity.status(200).body(BoardSearchByBoardIdPostRes.of(200, "Success", board));
 	}
 
-	@GetMapping("/searchByUserId")
+	@PostMapping("/searchByUserId")
 	@ApiOperation(value = "유저 ID로 모든 보드 가져오기", notes = "유저 ID로 모든 보드 가져온다")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
@@ -142,14 +142,14 @@ public class BoardController {
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 
 	public ResponseEntity<? extends BaseResponseBody> searchByUserId(
-			@RequestBody @ApiParam(value = "불러올 보드 ID", required = true) BoardSearchByUserIdGetReq boardSearchByUserIdInfo) {
+			@RequestBody @ApiParam(value = "불러올 보드 ID", required = true) BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
 
 		// 보드 ID로 불러오기
 		List<Board> myBoards = boardService.searchByUserId(boardSearchByUserIdInfo);
-		return ResponseEntity.status(200).body(BoardSearchByUserIdGetRes.of(200, "Success", myBoards));
+		return ResponseEntity.status(200).body(BoardSearchByUserIdPostRes.of(200, "Success", myBoards));
 	}
 
-	@GetMapping("/searchLikeBoardByUserId")
+	@PostMapping("/searchLikeBoardByUserId")
 	@ApiOperation(value = "유저 ID로 좋아요 누른 모든 보드 가져오기", notes = "유저 ID로 좋아요 누른 모든 보드 가져온다")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
@@ -157,11 +157,11 @@ public class BoardController {
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 
 	public ResponseEntity<? extends BaseResponseBody> searchLikeBoardByUserId(
-			@RequestBody @ApiParam(value = "불러올 보드 ID", required = true) BoardSearchByUserIdGetReq boardSearchByUserIdInfo) {
+			@RequestBody @ApiParam(value = "불러올 보드 ID", required = true) BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
 
 		// 보드 ID로 불러오기
 		List<Board> myBoards = boardService.searchLikeBoardByUserId(boardSearchByUserIdInfo);
-		return ResponseEntity.status(200).body(BoardSearchByUserIdGetRes.of(200, "Success", myBoards));
+		return ResponseEntity.status(200).body(BoardSearchByUserIdPostRes.of(200, "Success", myBoards));
 	}
 
 	@PatchMapping("/clickBoardLike")
@@ -209,7 +209,7 @@ public class BoardController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
-	@GetMapping("/searchByCategory")
+	@PostMapping("/searchByCategory")
 	@ApiOperation(value = "선택된 유형에 해당되는 보드만 가져오기", notes = "선택된 유형에 해당되는 보드 가져온다")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
@@ -217,10 +217,10 @@ public class BoardController {
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 
 	public ResponseEntity<? extends BaseResponseBody> searchByCategory(
-			@RequestBody @ApiParam(value = "추가할 유저의 아이디와 보드 아이 정보", required = true) BoardSearchByCategoryGetReq boardSearchByCategoryInfo) {
+			@RequestBody @ApiParam(value = "추가할 유저의 아이디와 보드 아이 정보", required = true) BoardSearchByCategoryPostReq boardSearchByCategoryInfo) {
 
 		// 보드 ID로 불러오기
 		List<Board> boards = boardService.searchByCategory(boardSearchByCategoryInfo);
-		return ResponseEntity.status(200).body(BoardSearchAllGetRes.of(200, "Success", boards));
+		return ResponseEntity.status(200).body(BoardSearchAllPostRes.of(200, "Success", boards));
 	}
 }

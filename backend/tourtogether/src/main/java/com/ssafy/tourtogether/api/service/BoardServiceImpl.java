@@ -12,9 +12,9 @@ import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
-import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdGetReq;
-import com.ssafy.tourtogether.api.request.BoardSearchByCategoryGetReq;
-import com.ssafy.tourtogether.api.request.BoardSearchByUserIdGetReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
 import com.ssafy.tourtogether.db.entity.Board;
 import com.ssafy.tourtogether.db.entity.BoardLikes;
 import com.ssafy.tourtogether.db.entity.BoardParticipant;
@@ -78,19 +78,19 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public Optional<Board> searchByBoardId(BoardSearchByBoardIdGetReq boardSearchByBoardIdInfo) {
+	public Optional<Board> searchByBoardId(BoardSearchByBoardIdPostReq boardSearchByBoardIdInfo) {
 		Optional<Board> board = boardRepository.findById(boardSearchByBoardIdInfo.getBoardId());
 		return board;
 	}
 
 	@Override
-	public List<Board> searchByUserId(BoardSearchByUserIdGetReq boardSearchByUserIdInfo) {
+	public List<Board> searchByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
 		List<Board> myBoards = boardRepositorySupport.findByUserId(boardSearchByUserIdInfo);
 		return myBoards;
 	}
 
 	@Override
-	public List<Board> searchLikeBoardByUserId(BoardSearchByUserIdGetReq boardSearchByUserIdInfo) {
+	public List<Board> searchLikeBoardByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
 		List<Board> myLikeBoards = boardRepositorySupport.findLikeBoardByUserId(boardSearchByUserIdInfo);
 		return myLikeBoards;
 	}
@@ -142,7 +142,7 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<Board> searchByCategory(BoardSearchByCategoryGetReq boardSearchByCategoryInfo) {
+	public List<Board> searchByCategory(BoardSearchByCategoryPostReq boardSearchByCategoryInfo) {
 		List<Board> boards = boardRepositorySupport.findByCategory(boardSearchByCategoryInfo);
 		return boards;
 	}
