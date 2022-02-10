@@ -91,6 +91,7 @@ const routes = [
     name: "Sign Up",
     component: SignUp,
   },
+  {
     path: "/memo",
     name: "Memo",
     component: Memo,
@@ -114,7 +115,7 @@ const routes = [
     path: "/sch2",
     name: "Sch2",
     component: Sch2,
-  }
+  },
 ];
 
 const router = createRouter({
