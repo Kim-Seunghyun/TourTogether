@@ -7,9 +7,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication(scanBasePackages = "com.ssafy.tourtogether")
-@EntityScan(basePackages = {"com.ssafy.tourtogether.domain"})
-@ComponentScan(basePackages = {"com.ssafy.tourtogether"})
-@EnableJpaRepositories(basePackages = {"com.ssafy.tourtogether.repository"})
+@EntityScan(basePackages = {"com.ssafy.tourtogether"})
+@ComponentScan(basePackages = {"com.ssafy.tourtogether.db.repository"})
+@EnableJpaRepositories(basePackages = {"com.ssafy.tourtogether.db.repository"})
 public class TourtogetherApplication {
 
 	public static void main(String[] args) {
