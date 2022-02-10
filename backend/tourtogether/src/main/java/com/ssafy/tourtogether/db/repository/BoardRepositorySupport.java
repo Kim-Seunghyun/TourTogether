@@ -125,6 +125,11 @@ public class BoardRepositorySupport {
 				.where(qCategory.categoryWithWhom.like(withWhom)).where(qCategory.categorySeason.like(season))
 				.where(qCategory.categoryArea.like(area)).where(qCategory.categoryTheme.like(theme)).fetch();
 
-		return null;
+		List<Board> boards = new LinkedList<Board>();
+		for (int boardId : boardIds) {
+			Board board = jpaQueryFactory.select(qBoard).from(qBoard).where(qBoard.boardId.eq(boardId)).fetchFirst();
+			boards.add(board);
+		}
+		return boards;
 	}
 }
