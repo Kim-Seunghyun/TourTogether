@@ -13,6 +13,7 @@ import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdGetReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByCategoryGetReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdGetReq;
 import com.ssafy.tourtogether.db.entity.Board;
 import com.ssafy.tourtogether.db.entity.BoardLikes;
@@ -138,6 +139,12 @@ public class BoardServiceImpl implements BoardService {
 		category.setCategoryArea(boardCategoryInfo.getCategoryArea());
 		category.setCategoryTheme(boardCategoryInfo.getCategorySeason());
 		categoryRepository.save(category);
+	}
+
+	@Override
+	public List<Board> searchByCategory(BoardSearchByCategoryGetReq boardSearchByCategoryInfo) {
+		List<Board> boards = boardRepositorySupport.findByCategory(boardSearchByCategoryInfo);
+		return boards;
 	}
 
 }
