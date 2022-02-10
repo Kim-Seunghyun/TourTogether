@@ -2,10 +2,12 @@ import { createStore } from "vuex";
 // import createPersistedState from "vuex-persistedstate";
 
 import { userStore } from "@/store/modules/userStore.js";
+import { boardStore } from "@/store/modules/boardStore.js";
 
 export default createStore({
   modules: {
     userStore,
+    boardStore,
   },
   state: {
     hideConfigButton: false,

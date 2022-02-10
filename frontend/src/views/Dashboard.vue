@@ -156,7 +156,10 @@
               <category-theme />
             </div>
           </div>
-          완료된 보드들 뜰 곳
+          <div v-for="(board, index) in boards" :key="index">
+            보드 이름 : {{ board.boardName }} // 좋아요 수 :
+            {{ board.boardLikesCount }}
+          </div>
         </div>
       </div>
     </div>
@@ -167,15 +170,17 @@ import CategoryWithWhom from "./components/CategoryWithWhom.vue";
 import CategorySeason from "./components/CategorySeason.vue";
 import CategoryArea from "./components/CategoryArea.vue";
 import CategoryTheme from "./components/CategoryTheme.vue";
-import { mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
 import axios from "axios";
 
 const userStore = "userStore";
+const boardStore = "boardStore";
 
 export default {
   name: "dashboard",
   data() {
     return {
+      boards: [],
       boardName: "",
       // userId: "",
       stats: {
@@ -186,8 +191,22 @@ export default {
   },
   computed: {
     ...mapState(userStore, ["userId"]),
+    // ...mapState(boardStore, ["boards"]),
+  },
+  created() {
+    this.getAllBoards();
   },
   methods: {
+    ...mapMutations(boardStore, ["setAllBoards"]),
+    getAllBoards() {
+      axios({
+        method: "get",
+        url: "https://i6a105.p.ssafy.io:8081/board",
+      }).then((res) => {
+        this.boards = res.data.boards;
+        this.setAllBoards(res.data.boards);
+      });
+    },
     startBoard() {
       console.log("createBoard!!!");
       console.log("userId는 ", this.userId);
