@@ -130,4 +130,14 @@ public class BoardRepositorySupport {
 		}
 		return boards;
 	}
+
+	public boolean duplicationCheck(String boardRandom) {
+		List<Board> boards = jpaQueryFactory.select(qBoard).from(qBoard).where(qBoard.boardRandom.eq(boardRandom))
+				.fetch();
+		if (boards.size() == 0)
+			return true;
+		else
+			return false;
+
+	}
 }

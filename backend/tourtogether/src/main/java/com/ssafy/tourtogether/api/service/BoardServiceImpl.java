@@ -54,15 +54,38 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public void createBoard(BoardCreatePostReq boardCreateInfo) {
+
 		Board board = new Board();
 		board.setBoardName(boardCreateInfo.getBoardName());
-		board.setBoardIsActive(false); // 보드가 처음에 생성됐을때는 무조건 완료되지 않은 일정임으로 false로 설
+		board.setBoardIsActive(false); // 보드가 처음에 생성됐을때는 무조건 완료되지 않은 일정임으로 false로 설정
+		board.setBoardRandom(makeBoardRandom()); // 랜덤으로 보드값 생성
 		boardRepository.save(board);
 		// 참가자 추가
 		BoardParticipant boardParticipant = new BoardParticipant();
 		boardParticipant.setBoardParticipantBoardId(board.getBoardId());
 		boardParticipant.setBoardParticipantUserId(boardCreateInfo.getUserId());
 		boardParticipantRepository.save(boardParticipant);
+	}
+
+	// 랜덤으로 보드값 생성
+	private String makeBoardRandom() {
+
+		while (true) {
+			StringBuffer boardRandom = new StringBuffer();
+			for (int i = 0; i < 3; i++) {
+				boardRandom.append((char) ((Math.random() * 26) + 97));
+			}
+			boardRandom.append("-");
+			for (int i = 0; i < 4; i++) {
+				boardRandom.append((int) ((Math.random() * 10000) % 10));
+			}
+
+			// 중복 검사
+			if (boardRepositorySupport.duplicationCheck(boardRandom.toString())) {
+				return boardRandom.toString();
+			}
+		}
+
 	}
 
 	@Override
