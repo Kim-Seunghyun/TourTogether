@@ -20,6 +20,7 @@ import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdGetReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByCategoryGetReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdGetReq;
 import com.ssafy.tourtogether.api.response.BoardSearchAllGetRes;
 import com.ssafy.tourtogether.api.response.BoardSearchByBoardIdGetRes;
@@ -208,17 +209,18 @@ public class BoardController {
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
-//	@GetMapping
-//	@ApiOperation(value = "선택된 유형에 해당되는 보드만 가져오기", notes = "선택된 유형에 해당되는 보드 가져온다")
-//	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
-//			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
-//			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
-//			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
-//
-//	public ResponseEntity<? extends BaseResponseBody> searchAll() {
-//
-//		// 보드 ID로 불러오기
-//		List<Board> boards = boardService.searchAll();
-//		return ResponseEntity.status(200).body(BoardSearchAllGetRes.of(200, "Success", boards));
-//	}
+	@GetMapping("/searchByCategory")
+	@ApiOperation(value = "선택된 유형에 해당되는 보드만 가져오기", notes = "선택된 유형에 해당되는 보드 가져온다")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+
+	public ResponseEntity<? extends BaseResponseBody> searchByCategory(
+			@RequestBody @ApiParam(value = "추가할 유저의 아이디와 보드 아이 정보", required = true) BoardSearchByCategoryGetReq boardSearchByCategoryInfo) {
+
+		// 보드 ID로 불러오기
+		List<Board> boards = boardService.searchByCategory(boardSearchByCategoryInfo);
+		return ResponseEntity.status(200).body(BoardSearchAllGetRes.of(200, "Success", boards));
+	}
 }
