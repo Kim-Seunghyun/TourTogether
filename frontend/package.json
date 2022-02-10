@@ -8,12 +8,25 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@tiptap/vue-3": "2.0.0-beta.85",
+    "@vue/cli-plugin-babel": "4.1.1",
     "aws-sdk": "^2.1069.0",
     "axios": "^0.25.0",
     "core-js": "^3.6.5",
+    "debounce": "1.2.1",
+    "dedent": "0.7.0",
+    "highlight.js": "11.3.1",
+    "lodash": "4.17.21",
+    "node-sass": "^6.0.1",
     "openvidu-browser": "^2.21.0-beta1",
+    "sass-loader": "^10.2.1",
+    "sockjs": "^0.3.24",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
+    "vue-websocket": "^0.2.3",
+    "vue3-quill": "^0.2.6",
+    "vuedraggable": "^4.1.0",
+    "vuequilleditor": "^1.0.0",
     "vuex": "^4.0.2"
   },
   "devDependencies": {
@@ -28,7 +41,8 @@
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.3.1",
     "eslint-plugin-vue": "^7.0.0",
-    "prettier": "^2.2.1"
+    "prettier": "^2.2.1",
+    "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
     "root": true,
