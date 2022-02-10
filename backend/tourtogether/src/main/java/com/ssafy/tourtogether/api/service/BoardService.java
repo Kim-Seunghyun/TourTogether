@@ -10,6 +10,7 @@ import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdGetReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByCategoryGetReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdGetReq;
 import com.ssafy.tourtogether.db.entity.Board;
 
@@ -36,5 +37,7 @@ public interface BoardService {
 	List<Board> searchLikeBoardByUserId(BoardSearchByUserIdGetReq boardSearchByUserIdInfo);
 
 	void category(BoardCategoryPostReq boardCategoryInfo);
+
+	List<Board> searchByCategory(BoardSearchByCategoryGetReq boardSearchByCategoryInfo);
 
 }
