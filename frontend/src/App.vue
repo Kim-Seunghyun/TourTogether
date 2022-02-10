@@ -13,6 +13,7 @@
       | Kakao Unlink</router-link
     >
   </div>
+  <router-view />
 </template>
 
 <script>
