@@ -30,7 +30,7 @@
             >
             <router-link
               to="/mypage"
-              v-if="accessToken"
+              v-if="!accessToken"
               class="px-0 nav-link font-weight-bold"
               :class="textWhite ? textWhite : 'text-body'"
               >MyPage &nbsp;</router-link
@@ -38,7 +38,7 @@
 
             <router-link
               to="/favoritepage"
-              v-if="accessToken"
+              v-if="!accessToken"
               class="px-0 nav-link font-weight-bold"
               :class="textWhite ? textWhite : 'text-body'"
               >FavoritePage &nbsp;</router-link
@@ -238,12 +238,11 @@ export default {
       this.toggleSidebarColor("bg-white");
       this.navbarMinimize();
     },
-    
   },
   setup() {
     const store = useStore();
     const getters = store.getters;
-    const logout = type => {
+    const logout = (type) => {
       // 카카오 로그아웃
       window.Kakao.Auth.logout(function () {
         if (type) {
@@ -253,17 +252,17 @@ export default {
           alert("Logout Account!");
         }
         router.push("");
-        console.log(store)
+        console.log(store);
         store.commit("userStore/setUserId", "");
         store.commit("userStore/setUserLoginPlatform", "");
         store.commit("userStore/setUserClientId", "");
         store.commit("userStore/setUserNickname", "");
         store.commit("userStore/setUserInputNickname", "");
         store.commit("userStore/setUserProfileImage", "");
-        console.log(getters.getUserId)
+        console.log(getters.getUserId);
       });
-    }
-    return { logout }
+    };
+    return { logout };
   },
   components: {},
   computed: {

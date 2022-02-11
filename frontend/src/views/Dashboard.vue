@@ -208,6 +208,7 @@ export default {
     return {
       boards: [],
       boardName: "",
+      boardRandom: "",
       // userId: "",
       propTitle: "mypdf",
       stats: {
@@ -272,11 +273,15 @@ export default {
           userId: this.userId,
         },
       }).then((res) => {
-        console.log(res);
+        console.log(res.data.boardRandom);
+        this.boardRandom = res.data.boardRandom;
+        console.log(this.boardRandom);
+        location.href = `/board/${this.boardRandom}`;
       });
     },
     enterBoard() {
-      location.href = `/board/${this.boardName}`;
+      console.log(`/board/${this.boardRandom}`);
+      //
     },
     likeClick(boardId, event) {
       if (event.target.classList.contains("btn_unlike")) {
