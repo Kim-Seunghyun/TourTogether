@@ -22,6 +22,7 @@ import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
+import com.ssafy.tourtogether.api.response.BoardCreatePostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchAllPostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchByBoardIdPostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchByUserIdPostRes;
@@ -56,8 +57,8 @@ public class BoardController {
 			@RequestBody @ApiParam(value = "보드 생성 정보", required = true) BoardCreatePostReq boardCreateInfo) {
 
 		// 보드 생성
-		boardService.createBoard(boardCreateInfo);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		String boardRandom = boardService.createBoard(boardCreateInfo);
+		return ResponseEntity.status(200).body(BoardCreatePostRes.of(200, "Success", boardRandom));
 	}
 
 	@PatchMapping("/finish")

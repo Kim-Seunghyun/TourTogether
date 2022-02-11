@@ -54,7 +54,7 @@ public class BoardServiceImpl implements BoardService {
 	CategoryRepositorySupport categoryRepositorySupport;
 
 	@Override
-	public void createBoard(BoardCreatePostReq boardCreateInfo) {
+	public String createBoard(BoardCreatePostReq boardCreateInfo) {
 
 		Board board = new Board();
 		board.setBoardName(boardCreateInfo.getBoardName());
@@ -66,6 +66,8 @@ public class BoardServiceImpl implements BoardService {
 		boardParticipant.setBoardParticipantBoardId(board.getBoardId());
 		boardParticipant.setBoardParticipantUserId(boardCreateInfo.getUserId());
 		boardParticipantRepository.save(boardParticipant);
+
+		return board.getBoardRandom();
 	}
 
 	// 랜덤으로 보드값 생성
