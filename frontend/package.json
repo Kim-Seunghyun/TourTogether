@@ -16,6 +16,8 @@
     "debounce": "1.2.1",
     "dedent": "0.7.0",
     "highlight.js": "11.3.1",
+    "jquery": "^3.6.0",
+    "jquery-ui": "^1.13.1",
     "lodash": "4.17.21",
     "node-sass": "^6.0.1",
     "openvidu-browser": "^2.21.0-beta1",
@@ -57,7 +59,7 @@
     "parserOptions": {
       "parser": "babel-eslint"
     },
-    "rules": {}
+    "rules": {"prettier/prettier": ["error", { "endOfLine": "auto" }]}
   },
   "browserslist": [
     "> 1%",
