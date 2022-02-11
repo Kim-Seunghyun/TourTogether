@@ -18,13 +18,18 @@
               item.index + 1
             }}일차
             <div v-if="state.selectedIndex === item.index">
-              <p
-                class="tour_item"
-                v-for="tourItem in item.list"
-                v-bind:key="tourItem"
-              >
-                {{ tourItem.name }}
-              </p>
+              <div v-for="tourItem in item.list" v-bind:key="tourItem">
+                <!-- <span class="left">&nbsp;</span> -->
+                <div class="tour_item">
+                  {{ tourItem.name }}
+                  <img
+                    src="https://user-images.githubusercontent.com/63468607/153530715-d5123829-4dc5-4a63-86d0-6b156fa0bd38.png"
+                    class="close_image"
+                    @click="deleteTour(item.index, tourItem.id)"
+                  />
+                </div>
+                <!-- <span class="right">&nbsp;</span> -->
+              </div>
             </div>
           </ul>
         </div>
@@ -153,6 +158,9 @@ export default {
     const emitDay = () => {
       emit("getDay", state.tourList.length);
     };
+    const deleteTour = (day, index) => {
+      console.log(day + "일차" + index + "번쨰");
+    };
     watch(
       () => props.tourData,
       () => {
@@ -168,7 +176,7 @@ export default {
           lat: props.tourData.lat,
           lng: props.tourData.lng,
         });
-        //console.log(state.tourList);
+        // console.log(state.tourList);
         /*
         TODO
         Redis 로 보낼때
@@ -198,6 +206,7 @@ export default {
       makeSortable,
       emitTest,
       emitDay,
+      deleteTour,
     };
   },
 };
@@ -219,13 +228,32 @@ export default {
 .tour_item {
   border: 1px solid #888;
   cursor: pointer;
-  border-radius: 15%;
+  border-radius: 5px;
   margin: 1%;
   z-index: 3;
-  color: rgb(180, 179, 179);
+  background-color: rgb(238, 231, 231);
+  /* box-shadow: 1px 1px 1px 1px gray; */
+  border-collapse: collapse;
 }
 #root {
   width: 100%;
   height: 100%;
 }
+.close_image {
+  z-index: 5;
+  width: 25px;
+  height: 25px;
+  right: 3px;
+  top: 1%;
+}
+/* .left {
+  border-radius: 50% 0 0 50%;
+  border: 1px solid #888;
+  background-color: rgb(238, 231, 231);
+}
+.right {
+  border-radius: 0 50% 50% 0;
+  border: 1px solid #888;
+  background-color: rgb(238, 231, 231);
+} */
 </style>
