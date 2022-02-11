@@ -47,7 +47,7 @@ public class MemoRepositorySupport{
      */
     public MemoRoom createMemoRoom(String id) {
     	System.out.println("createMemoRoom: "+id);
-        MemoRoom memoRoom = MemoRoom.create(id, new Memo(id, "<p>TEST</p>"));
+        MemoRoom memoRoom = MemoRoom.create(id, new Memo(id, "<p>새로 만들어진 메모입니다.</p>"));
         opsHashMemoRoom.put(MEMO_ROOMS, memoRoom.getRoomId(), memoRoom);
         return memoRoom;
     }
