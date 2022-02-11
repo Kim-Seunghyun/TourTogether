@@ -1,5 +1,6 @@
 package com.ssafy.tourtogether.api.service;
 
+import java.security.MessageDigest;
 import java.util.List;
 import java.util.Optional;
 
@@ -82,8 +83,32 @@ public class BoardServiceImpl implements BoardService {
 
 			// 중복 검사
 			if (boardRepositorySupport.duplicationCheck(boardRandom.toString())) {
-				return boardRandom.toString();
+
+				return makeSHA256(boardRandom.toString());
 			}
+		}
+
+	}
+
+	private String makeSHA256(String boardRandom) {
+		try {
+			MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			byte[] hash = digest.digest(boardRandom.getBytes("UTF-8"));
+			StringBuffer hexString = new StringBuffer();
+
+			for (int i = 0; i < hash.length; i++) {
+				String hex = Integer.toHexString(0xff & hash[i]);
+				if (hex.length() == 1)
+					hexString.append('0');
+				hexString.append(hex);
+			}
+
+			// 출력
+			return hexString.toString();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
 		}
 
 	}
