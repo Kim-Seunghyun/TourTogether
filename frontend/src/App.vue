@@ -112,11 +112,12 @@ export default {
               userProfileImage: response.properties.profile_image,
             },
           }).then((res) => {
-            store.commit("setUserLoginPlatform", "kakao");
-            store.commit("setUserClientId", res.data.user.userClientId);
-            store.commit("setUserNickname", res.data.user.userNickname);
-            store.commit("setUserInputNickname", res.data.user.userNickname);
-            store.commit("setUserProfileImage", res.data.user.userProfileImage);
+            store.commit("userStore/setUserId", res.data.user.userId);
+            store.commit("userStore/setUserLoginPlatform", "kakao");
+            store.commit("userStore/setUserClientId", res.data.user.userClientId);
+            store.commit("userStore/setUserNickname", res.data.user.userNickname);
+            store.commit("userStore/setUserInputNickname", res.data.user.userNickname);
+            store.commit("userStore/setUserProfileImage", res.data.user.userProfileImage);
           });
         },
         fail: function (error) {

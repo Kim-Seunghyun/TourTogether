@@ -216,11 +216,8 @@
   </nav>
 </template>
 <script>
-import { mapMutations, mapActions } from "vuex";
+import { mapMutations, mapActions, useStore } from "vuex";
 import router from "@/router";
-import { useStore } from "vuex";
-
-const store = useStore();
 
 export default {
   name: "navbar",
@@ -241,7 +238,12 @@ export default {
       this.toggleSidebarColor("bg-white");
       this.navbarMinimize();
     },
-    logout(type) {
+    
+  },
+  setup() {
+    const store = useStore();
+    const getters = store.getters;
+    const logout = type => {
       // 카카오 로그아웃
       window.Kakao.Auth.logout(function () {
         if (type) {
@@ -251,14 +253,17 @@ export default {
           alert("Logout Account!");
         }
         router.push("");
+        console.log(store)
         store.commit("userStore/setUserId", "");
         store.commit("userStore/setUserLoginPlatform", "");
         store.commit("userStore/setUserClientId", "");
         store.commit("userStore/setUserNickname", "");
         store.commit("userStore/setUserInputNickname", "");
         store.commit("userStore/setUserProfileImage", "");
+        console.log(getters.getUserId)
       });
-    },
+    }
+    return { logout }
   },
   components: {},
   computed: {

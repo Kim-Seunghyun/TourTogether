@@ -53,7 +53,7 @@ export default {
   setup() {
     const store = useStore();
 
-    const computedGetters = computed(() => store.getters);
+    const computedGetters = computed(() => store.getters.userStore);
     const getters = store.getters;
     const state = reactive({
       isChangingNickname: false,
