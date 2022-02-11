@@ -66,7 +66,7 @@ const routes = [
     path: "/sch2",
     name: "Sch2",
     component: Sch2,
-  }
+  },
 ];
 
 const router = createRouter({

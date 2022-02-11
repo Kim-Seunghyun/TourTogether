@@ -52,6 +52,16 @@ dependencies {
     
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket
+	implementation 'org.springframework.boot:spring-boot-starter-websocket:2.6.3'
+    
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis
+	implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.6.3'
+    
+    // 로컬에서 사용하는 redis
+    // https://mvnrepository.com/artifact/com.github.kstyrc/embedded-redis
+	implementation 'com.github.kstyrc:embedded-redis:0.6'
+    
 }
 
 //이클립스인 경우를 위한 QueryDSL 플러그인. IntelliJ는 불필요.

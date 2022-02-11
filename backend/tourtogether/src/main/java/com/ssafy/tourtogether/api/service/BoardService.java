@@ -16,7 +16,7 @@ import com.ssafy.tourtogether.db.entity.Board;
 
 public interface BoardService {
 
-	void createBoard(BoardCreatePostReq boardCreateInfo);
+	String createBoard(BoardCreatePostReq boardCreateInfo);
 
 	void deleteBoard(BoardDeleteDeleteReq boardDeleteInfo);
 
