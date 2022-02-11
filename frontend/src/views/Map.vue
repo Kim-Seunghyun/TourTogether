@@ -2,7 +2,11 @@
   <div>
     <div id="map" style="height: 1000px" class="map">
       <div id="selectedApt_wrap" style="display: block">
-        <Plan />
+        <Plan
+          v-on:getLine="emitList"
+          :tourData="state.tmp"
+          v-on:getDay="emitDay"
+        />
       </div>
     </div>
     <div id="menu_wrap" class="bg_white">
@@ -42,6 +46,8 @@ export default {
       tourspot: [],
       tourspot_top100: [], // {marker, 2depthcode}
       ps: null,
+      tmp: Object,
+      tmpDay: null,
     });
     onMounted(() => {
       window.kakao && window.kakao.maps ? initMap() : addKakaoMapScript();
@@ -130,7 +136,7 @@ export default {
         title.className = "title";
         title.innerText = tourSpotList[i].tourSpotName;
         overlay_info.appendChild(title);
-
+        // var name = tourSpotList[i].tourSpotName;/
         var close = document.createElement("div");
         close.onclick = function () {
           state.customOverlay[0][0].setMap(null);
@@ -189,9 +195,18 @@ export default {
 
         var register = document.createElement("div");
         register.className = "register";
-        register.onclick = function () {
+
+        register.onclick = () => {
+          console.log(state.customOverlay);
           console.log(selectbar.value);
-        }; 
+          // console.log(name);
+          state.tmp = {
+            name: state.customOverlay[0][2],
+            day: selectbar.value,
+            lat: state.customOverlay[0][0].getPosition().getLat(),
+            lng: state.customOverlay[0][0].getPosition().getLng(),
+          };
+        };
         register.setAttribute("title", "추가하기");
         bottom.appendChild(register);
 
@@ -229,12 +244,16 @@ export default {
         state.tourspot.push([marker, twoDepthCode]);
       }
       kakao.maps.event.addListener(marker, "click", function () {
-        makeCustomOverlay(content, marker.getPosition(), tourSpotId, tourSpotName);
+        makeCustomOverlay(
+          content,
+          marker.getPosition(),
+          tourSpotId,
+          tourSpotName
+        );
         displayCustomOverlay();
       });
     };
-    const removeMarker = () => {
-    }
+    const removeMarker = () => {};
     const makeCustomOverlay = (content, position, tourSpotId, tourSpotName) => {
       var overlay = new kakao.maps.CustomOverlay({
         content: content,
@@ -242,11 +261,11 @@ export default {
         zIndex: 100,
       });
       state.customOverlay.push([overlay, tourSpotId, tourSpotName]);
-    }
+    };
     const displayCustomOverlay = () => {
-      if(state.customOverlay.length === 1 ){
+      if (state.customOverlay.length === 1) {
         state.customOverlay[0][0].setMap(state.map);
-      }else{
+      } else {
         state.customOverlay[0][0].setMap(null);
         state.customOverlay[1][0].setMap(state.map);
         state.customOverlay.shift();
@@ -434,39 +453,39 @@ export default {
       var ps = new kakao.maps.services.Places();
       state.ps = ps;
       ps.setMap(state.map);
-      var infowindow = new kakao.maps.InfoWindow({zIndex:1,});
+      var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
       state.infowindow = infowindow;
       infowindow.setMap(state.map);
       searchPlaces();
     };
     const searchPlaces = () => {
-      var keyword = document.getElementById('keyword').value;
+      var keyword = document.getElementById("keyword").value;
 
-       if (!keyword.replace(/^\s+|\s+$/g, '')) {
-        alert('키워드를 입력해주세요!');
+      if (!keyword.replace(/^\s+|\s+$/g, "")) {
+        alert("키워드를 입력해주세요!");
         return false;
       }
-      
+
       state.ps.keywordSearch(keyword, placesearch);
     };
     const placesearch = (data, sta, pagination) => {
       console.log(data);
       console.log(sta);
       console.log(pagination);
-      if(sta === kakao.maps.services.Status.OK) {
+      if (sta === kakao.maps.services.Status.OK) {
         displayPlaces(data);
         displayPagination(pagination);
       } else if (sta === kakao.maps.services.Status.ZERO_RESULT) {
-        alert('검색 결과가 존재하지 않습니다.');
+        alert("검색 결과가 존재하지 않습니다.");
         return;
       } else if (sta === kakao.maps.services.Status.ERROR) {
-        alert('검색 결과 중 오류가 발생했습니다.');
+        alert("검색 결과 중 오류가 발생했습니다.");
         return;
       }
     };
     const displayPlaces = (tourspot) => {
-      var listEl = document.getElementById('placesList');
-      var menuEl = document.getElementById('menu_wrap');
+      var listEl = document.getElementById("placesList");
+      var menuEl = document.getElementById("menu_wrap");
       //var fragment = document.createDocumentFragment();
       //var bounds = new kakao.maps.LatLngBounds();
       //var listStr = '';
@@ -495,46 +514,52 @@ export default {
       var htag = document.createElement("h5");
       htag.innerText = tourspot.getPosition();
       info.appendChild(htag);
-      
+
       var spantag = document.createElement("span");
       spantag.innerText = tourspot.getPosition();
       info.appendChild(spantag);
       el.appendChild(itemStr);
-      el.className = 'item';
+      el.className = "item";
       return el;
-    }
+    };
     const displayPagination = (pagination) => {
-      var paginationEl = document.getElementById('pagination');
+      var paginationEl = document.getElementById("pagination");
       var fragment = document.createDocumentFragment();
 
       while (paginationEl.hasChildNodes()) {
-        paginationEl.removeChild (paginationEl.lastChild);
+        paginationEl.removeChild(paginationEl.lastChild);
       }
       for (var i = 1; i <= pagination.last; i++) {
-        var el = document.createElement('a');
+        var el = document.createElement("a");
         el.href = "#";
         el.innerHTML = i;
 
-        if (i===pagination.current) {
-            el.className = 'on';
+        if (i === pagination.current) {
+          el.className = "on";
         } else {
-            el.onclick = (function(i) {
-                return function() {
-                    pagination.gotoPage(i);
-                }
-            })(i);
+          el.onclick = (function (i) {
+            return function () {
+              pagination.gotoPage(i);
+            };
+          })(i);
         }
         fragment.appendChild(fragment);
       }
       paginationEl.appendChild(fragment);
     };
     const removeAllChildNods = () => {
-      var listEl = document.getElementById('placesList');
-      while(listEl.firstChild){
+      var listEl = document.getElementById("placesList");
+      while (listEl.firstChild) {
         listEl.removeChild(listEl.firstChild);
       }
-    }
-    
+    };
+    const emitList = function (abc) {
+      console.log(abc);
+    };
+    const emitDay = (day) => {
+      console.log(day);
+      state.tmpDay = day;
+    };
     return {
       state,
       initMap,
@@ -555,17 +580,33 @@ export default {
       getListItem,
       displayPagination,
       removeAllChildNods,
+      emitList,
+      emitDay,
     };
   },
 };
 </script>
 
 <style>
-.bg_white {background:#fff;}
-#menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
-#menu_wrap .option{text-align: center;}
-#menu_wrap .option p {margin:10px 0;}  
-#menu_wrap .option button {margin-left:5px;}/*
+.bg_white {
+  background: #fff;
+}
+#menu_wrap hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 2px solid #5f5f5f;
+  margin: 3px 0;
+}
+#menu_wrap .option {
+  text-align: center;
+}
+#menu_wrap .option p {
+  margin: 10px 0;
+}
+#menu_wrap .option button {
+  margin-left: 5px;
+} /*
 #placesList li {list-style: none;}
 #placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;}
 #placesList .item span {display: block;margin-top:4px;}
@@ -694,5 +735,4 @@ export default {
   height: 100vh;
   top: 90%;
 }
-
 </style>
