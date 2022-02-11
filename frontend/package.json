@@ -23,6 +23,7 @@
     "openvidu-browser": "^2.21.0-beta1",
     "sass-loader": "^10.2.1",
     "sockjs": "^0.3.24",
+    "stomp-websocket": "^2.3.4-next",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",
     "vue-websocket": "^0.2.3",

@@ -12,8 +12,8 @@
     <router-link to="#" v-show="accessToken" v-on:click="unlink()">
       | Kakao Unlink</router-link
     >
+    <router-view />
   </div>
-  <router-view />
 </template>
 
 <script>
@@ -46,11 +46,11 @@ export default {
           alert("Logout Account!");
         }
         router.push("");
-        store.commit("setUserLoginPlatform", '')
-        store.commit("setUserClientId", '')
-        store.commit("setUserNickname", '')
-        store.commit("setUserInputNickname", '')
-        store.commit("setUserProfileImage", '')
+        store.commit("setUserLoginPlatform", "");
+        store.commit("setUserClientId", "");
+        store.commit("setUserNickname", "");
+        store.commit("setUserInputNickname", "");
+        store.commit("setUserProfileImage", "");
       });
     };
 
@@ -97,8 +97,8 @@ export default {
       });
     });
 
-    return { state, counter, login, logout, accessToken}
-  }
+    return { state, counter, login, logout, accessToken };
+  },
   // methods: {
   //   unlink() {  // 카카오 계정 연결끊기
   //     let logout = this.logout;
