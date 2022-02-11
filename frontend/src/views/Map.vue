@@ -128,136 +128,149 @@ export default {
           tourSpotList[i].tourSpotLatitude,
           tourSpotList[i].tourSpotLongitude
         );
-
-        var overlay_info = document.createElement("div");
-        overlay_info.className = "overlay_info";
-
-        var title = document.createElement("div");
-        title.className = "title";
-        title.innerText = tourSpotList[i].tourSpotName;
-        overlay_info.appendChild(title);
-        // var name = tourSpotList[i].tourSpotName;/
-        var close = document.createElement("div");
-        close.onclick = function () {
-          state.customOverlay[0][0].setMap(null);
-        };
-        close.className = "close";
-        close.setAttribute("title", "닫기");
-        title.appendChild(close);
-
-        var desc = document.createElement("div");
-        desc.className = "desc";
-        overlay_info.appendChild(desc);
-
-        var address = document.createElement("div");
-        address.className = "address";
-        address.innerHTML = "주소 : " + tourSpotList[i].tourSpotAddress;
-        desc.appendChild(address);
-
-        if (tourSpotList[i].tourSpotHoliday) {
-          var holiday = document.createElement("div");
-          holiday.className = "holiday";
-          holiday.innerHTML = "쉬는날 : " + tourSpotList[i].tourSpotHoliday;
-          desc.appendChild(holiday);
+        var marker = new kakao.maps.Marker({
+          position: position,
+          clickable: true,
+        });
+        if (tourSpotList[i].tourSpotIsTop100 === true) {
+          var markerImage = new kakao.maps.MarkerImage(
+            "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
+            new kakao.maps.Size(31, 35),
+            new kakao.maps.Point(13, 34)
+          );
+          marker.setImage(markerImage);
+          state.tourspot_top100.push([
+            marker,
+            tourSpotList[i].tourSpotTwoDepthCode,
+          ]);
+        } else {
+          state.tourspot.push([marker, tourSpotList[i].tourSpotTwoDepthCode]);
         }
-
-        if (tourSpotList[i].tourSpotTime) {
-          var time = document.createElement("div");
-          time.className = "time";
-          time.innerHTML = "이용시간 : " + tourSpotList[i].tourSpotTime;
-          desc.appendChild(time);
-        }
-
-        if (tourSpotList[i].tourSpotParking) {
-          var parking = document.createElement("div");
-          parking.className = "parking";
-          parking.innerHTML = "주차시설 : " + tourSpotList[i].tourSpotParking;
-          desc.appendChild(parking);
-        }
-
-        var bottom = document.createElement("div");
-        bottom.className = "bottom";
-        desc.appendChild(bottom);
-
-        var selectbar = document.createElement("select");
-        selectbar.className = "selectbar";
-
-        for (var j = 1; j <= 3; j++) {
-          var tmp = document.createElement("option");
-          tmp.value = j;
-          tmp.innerHTML = j;
-          selectbar.appendChild(tmp);
-        }
-        selectbar.onchange = function () {
-          selectbar.value = this.options[this.selectedIndex].value;
-        };
-        bottom.appendChild(selectbar);
-
-        var register = document.createElement("div");
-        register.className = "register";
-
-        register.onclick = () => {
-          state.tmp = {
-            name: state.customOverlay[0][2],
-            day: Number(selectbar.value),
-            lat: state.customOverlay[0][0].getPosition().getLat(),
-            lng: state.customOverlay[0][0].getPosition().getLng(),
-          };
-        };
-        register.setAttribute("title", "추가하기");
-        bottom.appendChild(register);
-
-        displayMarker(
-          position,
-          overlay_info,
-          tourSpotList[i].tourSpotIsTop100,
-          tourSpotList[i].tourSpotTwoDepthCode,
-          tourSpotList[i].tourSpotId,
-          tourSpotList[i].tourSpotName
-        );
+        let event = click(marker, tourSpotList[i]);
+        kakao.maps.event.addListener(marker, "click", event);
       }
     };
-    const displayMarker = (
-      position,
-      content,
-      isTop100,
-      twoDepthCode,
-      tourSpotId,
-      tourSpotName
-    ) => {
-      var marker = new kakao.maps.Marker({
-        position: position,
-        clickable: true,
-      });
-      if (isTop100 === true) {
-        var markerImage = new kakao.maps.MarkerImage(
-          "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
-          new kakao.maps.Size(31, 35),
-          new kakao.maps.Point(13, 34)
-        );
-        marker.setImage(markerImage);
-        state.tourspot_top100.push([marker, twoDepthCode]);
-      } else {
-        state.tourspot.push([marker, twoDepthCode]);
-      }
+    const click = (marker, tourlist) => {
       kakao.maps.event.addListener(marker, "click", function () {
-        makeCustomOverlay(
-          content,
-          marker.getPosition(),
-          tourSpotId,
-          tourSpotName
-        );
+        makeCustomOverlay(marker.getPosition(), tourlist);
         displayCustomOverlay();
       });
     };
-    const removeMarker = () => {};
-    const makeCustomOverlay = (content, position, tourSpotId, tourSpotName) => {
+    const displayMarker = (depth, areaNum) => {
+      removeAllChildNods(); // list 초기화
+      if (depth > 1) {
+        removeMarker(depth);
+        for (i = 0; i < state.tourspot.length; i++) {
+          console.log(state.tourspot[i][0]);
+          if (String(state.tourspot[i][1]) !== areaNum) {
+            continue;
+          }
+          displayPlaces(state.tourspot[i][0]); //300번 더돌아
+          state.tourspot[i][0].setMap(state.map);
+        }
+      } else if (depth > 0) {
+        for (var i = 0; i < state.tourspot_top100.length; i++) {
+          if (String(state.tourspot_top100[i][1]).substr(0, 2) !== areaNum) {
+            continue;
+          }
+          displayPlaces(state.tourspot_top100[i][0]); //4700번 더돌고
+          state.tourspot_top100[i][0].setMap(state.map);
+        }
+      }
+    };
+    const removeMarker = (depth) => {
+      if (depth === 2) {
+        for (var i = 0; i < state.tourspot.length; i++) {
+          state.tourspot[i][0].setMap(null);
+        }
+      }
+    };
+    const makeCustomOverlay = (position, tourSpot) => {
+      var overlay_info = document.createElement("div");
+      overlay_info.className = "overlay_info";
+
+      var title = document.createElement("div");
+      title.className = "title";
+      title.innerText = tourSpot.tourSpotName;
+      overlay_info.appendChild(title);
+      // var name = tourSpotList[i].tourSpotName;/
+      var close = document.createElement("div");
+      close.onclick = function () {
+        state.customOverlay[0][0].setMap(null);
+      };
+      close.className = "close";
+      close.setAttribute("title", "닫기");
+      title.appendChild(close);
+
+      var desc = document.createElement("div");
+      desc.className = "desc";
+      overlay_info.appendChild(desc);
+
+      var address = document.createElement("div");
+      address.className = "address";
+      address.innerHTML = "주소 : " + tourSpot.tourSpotAddress;
+      desc.appendChild(address);
+
+      if (tourSpot.tourSpotHoliday) {
+        var holiday = document.createElement("div");
+        holiday.className = "holiday";
+        holiday.innerHTML = "쉬는날 : " + tourSpot.tourSpotHoliday;
+        desc.appendChild(holiday);
+      }
+
+      if (tourSpot.tourSpotTime) {
+        var time = document.createElement("div");
+        time.className = "time";
+        time.innerHTML = "이용시간 : " + tourSpot.tourSpotTime;
+        desc.appendChild(time);
+      }
+
+      if (tourSpot.tourSpotParking) {
+        var parking = document.createElement("div");
+        parking.className = "parking";
+        parking.innerHTML = "주차시설 : " + tourSpot.tourSpotParking;
+        desc.appendChild(parking);
+      }
+
+      var bottom = document.createElement("div");
+      bottom.className = "bottom";
+      desc.appendChild(bottom);
+
+      var selectbar = document.createElement("select");
+      selectbar.className = "selectbar";
+
+      for (var j = 1; j <= state.day; j++) {
+        var tmp = document.createElement("option");
+        tmp.value = j;
+        tmp.innerHTML = j;
+        selectbar.appendChild(tmp);
+      }
+      selectbar.onchange = function () {
+        selectbar.value = this.options[this.selectedIndex].value;
+      };
+      bottom.appendChild(selectbar);
+      var register = document.createElement("div");
+      register.className = "register";
+      register.setAttribute("title", "추가하기");
+      bottom.appendChild(register);
       var overlay = new kakao.maps.CustomOverlay({
-        content: content,
+        content: overlay_info,
         position: position,
         zIndex: 100,
       });
-      state.customOverlay.push([overlay, tourSpotId, tourSpotName]);
+      state.customOverlay.push([
+        overlay,
+        tourSpot.tourSpotId,
+        tourSpot.tourSpotName,
+      ]);
+      register.onclick = () => {
+        state.tmp = {
+          name: state.customOverlay[0][2],
+          day: Number(selectbar.value),
+          lat: state.customOverlay[0][0].getPosition().getLat(),
+          lng: state.customOverlay[0][0].getPosition().getLng(),
+        };
+      };
     };
     const displayCustomOverlay = () => {
       if (state.customOverlay.length === 1) {
@@ -336,19 +349,12 @@ export default {
       kakao.maps.event.addListener(polygon, "click", function (mouseEvent) {
         state.num = area.num;
         state.map.setLevel(10);
-        removeAllChildNods(); // list 초기화
+        displayMarker(1, area.num);
         for (var i = 0; i < state.sigungu_polygon.length; i++) {
           if (state.sigungu_polygon[i][1].substr(0, 2) !== area.num) {
             continue;
           }
           state.sigungu_polygon[i][2].setMap(state.map);
-        }
-        for (i = 0; i < state.tourspot_top100.length; i++) {
-          if (String(state.tourspot_top100[i][1]).substr(0, 2) !== area.num) {
-            continue;
-          }
-          displayPlaces(state.tourspot_top100[i][0]);
-          state.tourspot_top100[i][0].setMap(state.map);
         }
         var mousePoint = mouseEvent.latLng;
         state.map.setCenter(
@@ -426,13 +432,7 @@ export default {
         fillOpacity: 0.1,
       });
       kakao.maps.event.addListener(polygon, "click", function (mouseEvent) {
-        displayPolyline();
-        for (var i = 0; i < state.tourspot.length; i++) {
-          if (String(state.tourspot[i][1]) !== area.num) {
-            continue;
-          }
-          state.tourspot[i][0].setMap(state.map);
-        }
+        displayMarker(2, area.num);
         state.map.setLevel(8);
         var mousePoint = mouseEvent.latLng;
         state.map.setCenter(
@@ -618,6 +618,7 @@ export default {
       removeAllChildNods,
       emitList,
       emitDay,
+      click,
     };
   },
 };
