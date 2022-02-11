@@ -1,12 +1,11 @@
 <template>
   <h1>일정</h1>
   <div id="memoConnect">
-      <button @click="connectSocket()">일정 시작하기</button>
+    <button @click="connectSocket()">일정 시작하기</button>
   </div>
 
   <div class="row">
     <div class="col-2">
-
       <div class="form-group">
         <div
           class="btn-group-vertical buttons"
@@ -16,11 +15,9 @@
           <button class="btn btn-secondary" @click="add">Add</button>
         </div>
       </div>
-
     </div>
 
     <div class="col-6">
-
       <draggable
         :list="list"
         :disabled="!enabled"
@@ -54,7 +51,7 @@ export default {
   display: "Simple",
   order: 0,
   components: {
-    draggable
+    draggable,
   },
   data() {
     return {
@@ -62,36 +59,34 @@ export default {
       list: [
         { name: "1번", id: 0 },
         { name: "2번", id: 1 },
-        { name: "3번", id: 2 }
+        { name: "3번", id: 2 },
       ],
-      dragging: false
+      dragging: false,
     };
   },
-  computed: {
-
-  },
+  computed: {},
   methods: {
-      connectSocket() {
+    connectSocket() {
       this.sockjs = new SockJS("http://localhost:8081/schedule");
       console.log(this.sockjs);
       this.sockjs.onopen = function () {
         console.log("연결");
         alert("연결 성공");
         document.getElementById("memoConnect").setAttribute("hidden", "hidden");
-      }
+      };
       this.sockjs.onmessage = function (data) {
         console.log("data받음" + data);
         console.log(data);
-      }
+      };
       this.sockjs.onerror = function (e) {
-          alert('연결에 실패하였습니다.');
-          console.log(e);
-        }
+        alert("연결에 실패하였습니다.");
+        console.log(e);
+      };
     },
-    add: function() {
+    add: function () {
       this.list.push({ name: "Juan " + id, id: id++ });
     },
-    checkMove: function(e) {
+    checkMove: function (e) {
       window.console.log("Future index: " + e.draggedContext.futureIndex);
       this.sockjs.send(JSON.stringify(e.relatedContext.list));
       console.log(JSON.stringify(e.relatedContext.list)); // string
@@ -100,7 +95,7 @@ export default {
       console.log("실행");
       console.log("sendMessage: " + this.list);
     },
-  }
+  },
 };
 </script>
 <style scoped>

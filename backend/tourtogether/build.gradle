@@ -50,10 +50,8 @@ dependencies {
     // https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa
     implementation 'com.querydsl:querydsl-jpa:5.0.0'
     
-<<<<<<< HEAD
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-=======
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-websocket
 	implementation 'org.springframework.boot:spring-boot-starter-websocket:2.6.3'
     
@@ -64,7 +62,6 @@ dependencies {
     // https://mvnrepository.com/artifact/com.github.kstyrc/embedded-redis
 	implementation 'com.github.kstyrc:embedded-redis:0.6'
     
->>>>>>> origin/feature/develop-frontend-memo
 }
 
 //이클립스인 경우를 위한 QueryDSL 플러그인. IntelliJ는 불필요.
