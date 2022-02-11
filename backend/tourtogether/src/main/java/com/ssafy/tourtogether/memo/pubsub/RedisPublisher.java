@@ -5,7 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
-import com.ssafy.tourtogether.memo.model.MemoMessage;
+import com.ssafy.tourtogether.db.entity.MemoMessage;
 
 @RequiredArgsConstructor
 @Service

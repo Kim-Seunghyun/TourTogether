@@ -1,4 +1,4 @@
-package com.ssafy.tourtogether.memo.config;
+package com.ssafy.tourtogether.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;

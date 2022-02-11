@@ -1,4 +1,4 @@
-package com.ssafy.tourtogether.memo.model;
+package com.ssafy.tourtogether.db.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,4 +18,5 @@ public class MemoMessage {
     private String roomId; // 방번호
     private String user;
     private Object delta; // 메시지
+    private String content;
 }

@@ -55,6 +55,7 @@ dependencies {
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis:2.6.3'
     
+    // 로컬에서 사용하는 redis
     // https://mvnrepository.com/artifact/com.github.kstyrc/embedded-redis
 	implementation 'com.github.kstyrc:embedded-redis:0.6'
     

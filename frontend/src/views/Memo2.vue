@@ -31,9 +31,10 @@ export default {
       quill: null,
       my: true,
       user: "임의의 사용자1",
+      id: "abc-1234",
 
       // dynamicComponent: null,
-      content: "qwe",
+      content: "",
       editorOption: {
         placeholder: "core",
         modules: {
@@ -78,20 +79,21 @@ export default {
       state.quill = quill;
       // sendText(html);
       quill.once("text-change", function (...args) {
-        if (state.my) sendMessage(args[0]);
+        if (state.my) sendMessage(args[0], state.content);
         // console.log(args[2]); // user
       });
     };
 
-    const sendMessage = function (delta) {
+    const sendMessage = function (delta, content) {
       console.log("sendMessage", delta);
       state.ws.send(
         "/pub/memo",
         {},
         JSON.stringify({
-          roomId: 1,
+          roomId: state.id,
           user: state.user,
           delta: delta,
+          content: content,
         })
       );
     };
@@ -114,12 +116,10 @@ export default {
       console.log("recvMessage", message);
       if (message.user !== this.state.user) {
         this.state.my = false;
-        this.state.quill.enable(false);
         this.state.quill.updateContents(message.delta);
-        this.state.quill.enable();
+        // this.state.content = message.content;
         this.state.my = true;
       }
-      // this.state.quill.enable(true);
     },
     initRecv() {
       // 접속시 처음 값을 받아오도록 하기
@@ -139,14 +139,18 @@ export default {
         method: "POST",
         url: "http://localhost:8081/memo/room",
         params: {
-          name: 1,
+          id: this.state.id,
+          user: this.state.user,
         },
         // data: {
-        // name: "1",
+        // id: "1",
         // },
       })
         .then((response) => {
-          console.log(response);
+          console.log("@@@@return: ", response);
+          this.state.my = false;
+          this.state.content = response.data.memo.memoContent;
+          this.state.my = true;
         })
         .catch((error) => {
           console.log(error);
@@ -155,7 +159,7 @@ export default {
       var ws = Stomp.over(sock);
       var _this = this;
       this.ws = ws;
-      var subUrl = "/sub/memo";
+      var subUrl = "/sub/memo/" + _this.state.id;
       console.log("채널 구독하기: ", subUrl);
       ws.connect(
         {

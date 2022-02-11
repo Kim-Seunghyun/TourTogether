@@ -1,7 +1,7 @@
 package com.ssafy.tourtogether.memo.pubsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.tourtogether.memo.model.MemoMessage;
+import com.ssafy.tourtogether.db.entity.MemoMessage;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,13 +26,12 @@ public class RedisSubscriber implements MessageListener {
     @Override
     public void onMessage(Message message, byte[] pattern) {
         try {
-        	System.out.println("Message: "+message.toString());
             // redis에서 발행된 데이터를 받아 deserialize
             String publishMessage = (String) redisTemplate.getStringSerializer().deserialize(message.getBody());
             // MemoMessage 객채로 맵핑
             MemoMessage roomMessage = objectMapper.readValue(publishMessage, MemoMessage.class);
             // Websocket 구독자에게 채팅 메시지 Send
-            messagingTemplate.convertAndSend("/sub/memo", roomMessage);
+            messagingTemplate.convertAndSend("/sub/memo/"+roomMessage.getRoomId(), roomMessage);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
