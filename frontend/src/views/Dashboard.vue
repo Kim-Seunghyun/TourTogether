@@ -1,5 +1,5 @@
 <template>
-  <div class="py-4 container-fluid">
+  <div class="py-4 container-fluid" ref="pdfarea">
     <div class="row">
       <div class="col-lg-7 mb-lg-0 mb-4">
         <div class="card">
@@ -139,26 +139,52 @@
         <h4>여행지 추천</h4>
         <div class="card z-index-2">
           <div class="p-3 card-body">
-            <div class="col-lg-4 col-sm-8">
-              <category-with-whom />
-            </div>
-            <br />
-            <div class="col-lg-4 col-sm-8">
-              <category-season />
-            </div>
-            <br />
+            <button
+              type="button"
+              class="btn btn-secondary"
+              @click="getAllBoards"
+            >
+              전체 일정 보기
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              @click="getSelectedBoards"
+            >
+              선택한 유형의 일정 보기
+            </button>
+
+            <button
+              type="button"
+              class="btn btn-secondary"
+              @click="exportToPDF"
+            >
+              PDF로 내보내기
+            </button>
+            <!-- <div data-html2canvas-ignore="true">
+              출력하지 않고 싶은 영역은 태그에 'data-html2canvas-ignore'
+              attribute를 넣어주면된다.
+            </div> -->
 
             <div class="col-lg-4 col-sm-8">
-              <category-area />
+              <board-category />
             </div>
             <br />
-            <div class="col-lg-4 col-sm-8">
-              <category-theme />
-            </div>
           </div>
           <div v-for="(board, index) in boards" :key="index">
-            보드 이름 : {{ board.boardName }} // 좋아요 수 :
-            {{ board.boardLikesCount }}
+            <div class="col-lg-6 col-sm-8">
+              {{ board.boardName }} //
+              {{ board.boardLikesCount }}
+              <button
+                type="button"
+                class="btn_like"
+                @click="likeClick(board.boardId, $event)"
+              >
+                <span class="img_emoti">좋아요</span>
+                <span class="ani_heart_m"></span>
+              </button>
+            </div>
+            <div class="col-lg-6 col-sm-8"></div>
           </div>
         </div>
       </div>
@@ -166,10 +192,10 @@
   </div>
 </template>
 <script>
-import CategoryWithWhom from "./components/CategoryWithWhom.vue";
-import CategorySeason from "./components/CategorySeason.vue";
-import CategoryArea from "./components/CategoryArea.vue";
-import CategoryTheme from "./components/CategoryTheme.vue";
+import BoardCategory from "./components/BoardCategory.vue";
+
+import html2pdf from "html2pdf.js";
+
 import { mapMutations, mapState } from "vuex";
 import axios from "axios";
 
@@ -183,6 +209,7 @@ export default {
       boards: [],
       boardName: "",
       // userId: "",
+      propTitle: "mypdf",
       stats: {
         iconBackground: "bg-gradient-success",
       },
@@ -193,30 +220,47 @@ export default {
     ...mapState(userStore, ["userId"]),
     // ...mapState(boardStore, ["boards"]),
   },
+  watch: {
+    boards() {
+      console.log("데이터 변경!!!");
+    },
+  },
   created() {
-    this.getAllBoards();
+    // this.getAllBoards();
   },
   methods: {
     ...mapMutations(boardStore, ["setAllBoards"]),
     getAllBoards() {
       axios({
         method: "get",
-        // url: "https://i6a105.p.ssafy.io:8081/board",
-        url: "https://i6a105.p.ssafy.io:8081/board/searchByUserId",
-        data: {
-          userId: 98,
-        },
+        url: "https://i6a105.p.ssafy.io:8081/board",
       }).then((res) => {
         this.boards = res.data.boards;
         this.setAllBoards(res.data.boards);
       });
     },
+    getSelectedBoards() {
+      axios({
+        method: "post",
+        url: "https://i6a105.p.ssafy.io:8081/board/searchByCategory",
+        data: {
+          categoryWithWhom: 2,
+          categorySeason: 3,
+          categoryArea: 0,
+          categoryTheme: 0,
+        },
+      }).then((res) => {
+        this.boards = res.data.boards;
+        // this.setAllBoards(res.data.boards);
+      });
+    },
     startBoard() {
-      console.log("createBoard!!!");
-      console.log("userId는 ", this.userId);
-      console.log("boardName은 ", this.boardName);
+      // console.log("createBoard!!!");
+      // console.log("userId는 ", this.userId);
+      // console.log("boardName은 ", this.boardName);
       this.createBoard();
-      location.href = "/map";
+      this.enterBoard();
+      // location.href = "/map";
     },
     createBoard() {
       // alert("send create board data");
@@ -231,12 +275,74 @@ export default {
         console.log(res);
       });
     },
+    enterBoard() {
+      location.href = `/board/${this.boardName}`;
+    },
+    likeClick(boardId, event) {
+      if (event.target.classList.contains("btn_unlike")) {
+        event.target.classList.toggle("btn_unlike");
+        axios({
+          method: "patch",
+          url: "https://i6a105.p.ssafy.io:8081/board/cancelBoardLike",
+          data: {
+            boardId: boardId,
+            userId: this.userId,
+          },
+        }).then((res) => {
+          console.log(res);
+        });
+        console.log("좋아요 취소하기 ");
+      } else {
+        event.target.classList.toggle("btn_unlike");
+        axios({
+          method: "patch",
+          url: "https://i6a105.p.ssafy.io:8081/board/clickBoardLike",
+          data: {
+            boardId: boardId,
+            userId: this.userId,
+          },
+        }).then((res) => {
+          console.log(res);
+        });
+        console.log("좋아요 누르기 ");
+      }
+      // if (this.class == "btn_unlike") {
+      //   console.log("like");
+      //   // $(this).removeClass("btn_unlike");
+      //   // $(".ani_heart_m").removeClass("hi");
+      //   // $(".ani_heart_m").addClass("bye");
+      // } else {
+      //   // $(this).addClass("btn_unlike");
+      //   // $(".ani_heart_m").addClass("hi");
+      //   // $(".ani_heart_m").removeClass("bye");
+      // }
+    },
+    exportToPDF() {
+      //window.scrollTo(0, 0);
+      html2pdf(this.$refs.pdfarea, {
+        margin: 0,
+        filename: "document.pdf",
+        image: { type: "jpg", quality: 0.95 },
+        //	allowTaint 옵션추가
+        html2canvas: {
+          useCORS: true,
+          scrollY: 0,
+          scale: 1,
+          dpi: 300,
+          letterRendering: true,
+          allowTaint: false, //useCORS를 true로 설정 시 반드시 allowTaint를 false처리 해주어야함
+        },
+        jsPDF: {
+          orientation: "portrait",
+          unit: "mm",
+          format: "a4",
+          compressPDF: true,
+        },
+      });
+    },
   },
   components: {
-    CategoryWithWhom,
-    CategorySeason,
-    CategoryArea,
-    CategoryTheme,
+    BoardCategory,
   },
 };
 </script>

@@ -27,10 +27,19 @@ const routes = [
     redirect: "/dashboard",
   },
   {
-    path: "/map",
+    path: "/board/:boardName",
     name: "Map",
     component: Map,
+    // beforeEnter: (to, from, next) => {
+    //   bus.$emit("start:Loading");
+    //   next();
+    // },
   },
+  // {
+  //   path: "/map",
+  //   name: "Map",
+  //   component: Map,
+  // },
   {
     path: "/login",
     name: "Login",

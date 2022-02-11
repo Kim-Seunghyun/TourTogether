@@ -53,7 +53,7 @@
 
 <script>
 import setTooltip from "@/assets/js/tooltip.js";
-import NavPill from "./components/CategoryWithWhom.vue";
+import NavPill from "./components/BoardCategory.vue";
 import MasterCard from "@/examples/Cards/MasterCard.vue";
 import DefaultInfoCard from "@/examples/Cards/DefaultInfoCard.vue";
 import PaymentCard from "./components/PaymentCard.vue";
