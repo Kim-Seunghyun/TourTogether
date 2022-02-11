@@ -40,6 +40,7 @@ export default {
       infowindow: null,
       listFlag: false,
       areas: [],
+      polyline: null,
       customOverlay: [], //overlay, tourSpotId, tourSpotName
       sido_polygon: [],
       sigungu_polygon: [],
@@ -47,7 +48,7 @@ export default {
       tourspot_top100: [], // {marker, 2depthcode}
       ps: null,
       tmp: Object,
-      tmpDay: null,
+      day: null,
     });
     onMounted(() => {
       window.kakao && window.kakao.maps ? initMap() : addKakaoMapScript();
@@ -150,27 +151,27 @@ export default {
 
         var address = document.createElement("div");
         address.className = "address";
-        address.innerText = "주소 : " + tourSpotList[i].tourSpotAddress;
+        address.innerHTML = "주소 : " + tourSpotList[i].tourSpotAddress;
         desc.appendChild(address);
 
         if (tourSpotList[i].tourSpotHoliday) {
           var holiday = document.createElement("div");
           holiday.className = "holiday";
-          holiday.innerText = "쉬는날 : " + tourSpotList[i].tourSpotHoliday;
+          holiday.innerHTML = "쉬는날 : " + tourSpotList[i].tourSpotHoliday;
           desc.appendChild(holiday);
         }
 
         if (tourSpotList[i].tourSpotTime) {
           var time = document.createElement("div");
           time.className = "time";
-          time.innerText = "이용시간 : " + tourSpotList[i].tourSpotTime;
+          time.innerHTML = "이용시간 : " + tourSpotList[i].tourSpotTime;
           desc.appendChild(time);
         }
 
         if (tourSpotList[i].tourSpotParking) {
           var parking = document.createElement("div");
           parking.className = "parking";
-          parking.innerText = "주차시설 : " + tourSpotList[i].tourSpotParking;
+          parking.innerHTML = "주차시설 : " + tourSpotList[i].tourSpotParking;
           desc.appendChild(parking);
         }
 
@@ -181,14 +182,14 @@ export default {
         var selectbar = document.createElement("select");
         selectbar.className = "selectbar";
 
-        for (var day = 1; day <= 4; day++) {
+        for (var j = 1; j <= 3; j++) {
           var tmp = document.createElement("option");
-          tmp.value = day;
-          tmp.innerHTML = day;
+          tmp.value = j;
+          tmp.innerHTML = j;
           selectbar.appendChild(tmp);
         }
         selectbar.onchange = function () {
-          console.log(this.options[this.selectedIndex].text);
+          selectbar.value = this.options[this.selectedIndex].value;
         };
         bottom.appendChild(selectbar);
 
@@ -196,12 +197,9 @@ export default {
         register.className = "register";
 
         register.onclick = () => {
-          console.log(state.customOverlay);
-          console.log(selectbar.value);
-          // console.log(name);
           state.tmp = {
             name: state.customOverlay[0][2],
-            day: selectbar.value,
+            day: Number(selectbar.value),
             lat: state.customOverlay[0][0].getPosition().getLat(),
             lng: state.customOverlay[0][0].getPosition().getLng(),
           };
@@ -428,6 +426,7 @@ export default {
         fillOpacity: 0.1,
       });
       kakao.maps.event.addListener(polygon, "click", function (mouseEvent) {
+        displayPolyline();
         for (var i = 0; i < state.tourspot.length; i++) {
           if (String(state.tourspot[i][1]) !== area.num) {
             continue;
@@ -447,6 +446,27 @@ export default {
       kakao.maps.event.addListener(polygon, "mouseout", function () {
         polygon.setOptions({ fillColor: "#00CC00" });
       });
+    };
+    const makePolyline = () => {
+      var polyline = new kakao.maps.Polyline({
+        path: [],
+        strokeWeight: 5,
+        strokeOpacity: 1,
+        strokeStyle: "solid",
+      });
+      state.polyline = polyline;
+    };
+    const displayPolyline = () => {
+      state.polyline.setMap(state.map);
+    };
+    const nondisplayPolyline = () => {
+      state.polyline.setMap(null);
+    };
+    const removePolyline = () => {
+      state.polyline = null;
+    };
+    const addPolyline = (path) => {
+      state.polyline.setPath(path);
     };
     const makeSearchBar = () => {
       var ps = new kakao.maps.services.Places();
@@ -553,11 +573,23 @@ export default {
       }
     };
     const emitList = function (abc) {
-      console.log(abc);
+      if (state.polyline) {
+        console.log(state.polyline);
+        nondisplayPolyline();
+        removePolyline();
+      }
+      if (abc) {
+        makePolyline();
+        var path = [];
+        for (var i = 0; i < abc.list.length; i++) {
+          path.push(new kakao.maps.LatLng(abc.list[i].lat, abc.list[i].lng));
+        }
+        addPolyline(path);
+        displayPolyline();
+      }
     };
     const emitDay = (day) => {
-      console.log(day);
-      state.tmpDay = day;
+      state.day = day;
     };
     return {
       state,
@@ -572,6 +604,11 @@ export default {
       makePolygonDepth2,
       displayPolygonDepth1,
       displayPolygonDepth2,
+      makePolyline,
+      displayPolyline,
+      nondisplayPolyline,
+      removePolyline,
+      addPolyline,
       makeSearchBar,
       searchPlaces,
       placesearch,

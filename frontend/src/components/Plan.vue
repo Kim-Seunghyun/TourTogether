@@ -168,7 +168,7 @@ export default {
           lat: props.tourData.lat,
           lng: props.tourData.lng,
         });
-        console.log(state.tourList);
+        //console.log(state.tourList);
         /*
         TODO
         Redis 로 보낼때
