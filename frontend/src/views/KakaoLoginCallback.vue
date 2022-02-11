@@ -6,6 +6,7 @@
 
 <script>
 // import axios from "axios"
+import router from "@/router";
 
 export default {
   methods: {
@@ -24,7 +25,8 @@ export default {
     var details = {
       grant_type: "authorization_code",
       client_id: process.env.VUE_APP_KAKAO_RESTAPI_KEY,
-      redirect_uri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
+      // redirect_uri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
+      redirect_uri: "http://localhost:8080/kakao-login-callback/",
       code: code,
     };
     var formBody = [];
@@ -48,7 +50,7 @@ export default {
         window.Kakao.Auth.setAccessToken(data.access_token);
         // test : Token
         alert(window.Kakao.Auth.getAccessToken());
-        location.href = "/";
+        router.push("/dashboard");
         // axios({
         //   method: 'post',
         //   url: 'http://localhost:3000/user/login',
