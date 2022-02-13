@@ -73,7 +73,7 @@ export default {
       }
     };
     const setUserInputNickname = (event) => {
-      store.commit("setUserInputNickname", event.target.value);
+      store.commit("userStore/setUserInputNickname", event.target.value);
     };
     const submitNickname = () => {
       axios({
