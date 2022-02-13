@@ -22,7 +22,7 @@
       <input
         type="text"
         @keyup="setUserInputNickname"
-        :value="userInputNickname"
+        v-model="userInputNickname"
       />
       <button @click="[toggleChangeNickname(), submitNickname()]">확인</button>
       <button @click="toggleChangeNickname">취소</button>
@@ -81,9 +81,9 @@ export default {
         url: "https://i6a105.p.ssafy.io:8080/api/user/updateNickname",
         // url: "http://localhost:8081/user/updateNickname/",
         data: {
-          userLoginPlatform: getters.getUserLoginPlatform,
-          userNickname: getters.getUserNickname,
-          userClientId: getters.getUserClientId,
+          userLoginPlatform: getters["userStore/getUserLoginPlatform"],
+          userNickname: getters["userStore/getUserNickname"],
+          userClientId: getters["userStore/userClientId"],
           newUserNickname: getters.getUserInputNickname,
         },
       }).then((res) => {
@@ -105,7 +105,7 @@ export default {
           userId: getters["userStore/getUserId"],
         },
       }).then((res) => {
-        console.log(res);
+        console.log("로그인성공", res);
       });
     });
 

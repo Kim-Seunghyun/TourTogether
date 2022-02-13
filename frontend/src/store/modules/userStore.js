@@ -16,8 +16,6 @@ export const userStore = {
       return state.userNickname;
     },
     getUserProfileImage(state) {
-      console.log(state);
-      console.log(state.userProfileImage);
       return state.userProfileImage;
     },
     getUserInputNickname(state) {
@@ -32,7 +30,6 @@ export const userStore = {
   },
   mutations: {
     setUserId(state, userId) {
-      console.log("hihihihihihihihihihih");
       state.userId = userId;
     },
     setUserNickname(state, userNickname) {
