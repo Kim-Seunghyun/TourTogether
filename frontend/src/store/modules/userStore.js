@@ -10,6 +10,9 @@ export const userStore = {
     userClientId: "",
   },
   getters: {
+    getUser(state) {
+      return state.user;
+    },
     getUserId(state) {
       return state.userId;
     },

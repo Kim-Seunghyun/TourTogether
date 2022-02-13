@@ -285,6 +285,19 @@ export default {
   name: "BoardCategory",
   data() {
     return {
+      withWhomArr: [
+        "상관없음",
+        "남자끼리",
+        "여자끼리",
+        "연인끼리",
+        "부모님과",
+        "아이들과",
+        "혼자",
+        "기타",
+      ],
+      seasonArr: ["봄", "여름", "가을", "겨울"],
+      areaArr: ["상관없음", "서울", "부산", "여수", "대구", "제주도", "기타"],
+      themeArr: ["상관없음", "바다,강", "산", "액티비티", "호캉스", "기타"],
       withWhom: "0",
       season: "0",
       area: "0",

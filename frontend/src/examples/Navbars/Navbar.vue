@@ -22,6 +22,7 @@
         <ul class="navbar-nav justify-content-end">
           <li class="nav-item d-flex align-items-center">
             <img
+              v-if="!user"
               alt="Kakao logo"
               src="@/assets/kakao_login_medium_narrow.png"
               @click="login()"
@@ -29,7 +30,7 @@
 
             <router-link
               to="/mypage"
-              v-if="!accessToken"
+              v-if="user"
               class="px-0 nav-link font-weight-bold"
               :class="textWhite ? textWhite : 'text-body'"
               >MyPage &nbsp;</router-link
@@ -37,14 +38,15 @@
 
             <router-link
               to="/favoritepage"
-              v-if="!accessToken"
+              v-if="user"
               class="px-0 nav-link font-weight-bold"
               :class="textWhite ? textWhite : 'text-body'"
               >FavoritePage &nbsp;</router-link
             >
 
             <router-link
-              to="#"
+              to="/dashboard"
+              v-if="user"
               v-on:click="logout()"
               class="px-0 nav-link font-weight-bold"
               :class="textWhite ? textWhite : 'text-body'"
@@ -66,8 +68,10 @@
   </nav>
 </template>
 <script>
-import { mapMutations, mapActions, useStore } from "vuex";
+import { mapMutations, mapActions, useStore, mapState } from "vuex";
 import router from "@/router";
+
+const userStore = "userStore";
 
 export default {
   name: "navbar",
@@ -77,6 +81,7 @@ export default {
     };
   },
   props: ["minNav", "textWhite"],
+
   created() {
     this.minNav;
   },
@@ -109,6 +114,7 @@ export default {
         }
         router.push("");
         console.log(store);
+        store.commit("userStore/setUser", null);
         store.commit("userStore/setUserId", "");
         store.commit("userStore/setUserLoginPlatform", "");
         store.commit("userStore/setUserClientId", "");
@@ -122,6 +128,7 @@ export default {
   },
   components: {},
   computed: {
+    ...mapState(userStore, ["user"]),
     currentRouteName() {
       return this.$route.name;
     },
