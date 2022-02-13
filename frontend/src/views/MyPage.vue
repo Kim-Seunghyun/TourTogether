@@ -88,11 +88,11 @@ export default {
 
     onMounted(() => {
       console.log(getters);
-      console.log(getters.userStore);
-      console.log(getters.getUserClientId);
-      console.log(getters.userStore.getUserClientId);
-      if (!getters.userStore.getUserClientId) {
+      console.log(getters["userStore"]);
+      console.log(getters["userStore/getUserClientId"]);
+      if (!getters["userStore/getUserClientId"]) {
         alert("로그인해주세요!");
+        // TODO 여기에 리다이렉트 해야할듯
       }
       axios({
         method: "get",
