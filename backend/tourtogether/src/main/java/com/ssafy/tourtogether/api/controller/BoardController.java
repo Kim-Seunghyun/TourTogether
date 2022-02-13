@@ -135,7 +135,7 @@ public class BoardController {
 		return ResponseEntity.status(200).body(BoardSearchByBoardIdPostRes.of(200, "Success", board));
 	}
 
-	@PostMapping("/searchByUserId")
+	@GetMapping("/searchByUserId")
 	@ApiOperation(value = "유저 ID로 모든 보드 가져오기", notes = "유저 ID로 모든 보드 가져온다")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),

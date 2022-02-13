@@ -87,10 +87,10 @@ export default {
     };
 
     onMounted(() => {
-      if (!getters.getUserClientId) {
-        console.log(getters);
-        console.log(getters.getUserClientId);
-        console.log(getters.getUserNickname);
+      if (!getters.userStore.getUserClientId) {
+        console.log(getters.userStore);
+        console.log(getters.userStore.getUserClientId);
+        console.log(getters.userStore.getUserNickname);
         alert("로그인해주세요!");
       }
       axios({
