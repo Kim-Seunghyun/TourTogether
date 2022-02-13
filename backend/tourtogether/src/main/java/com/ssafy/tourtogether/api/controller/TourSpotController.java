@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiOperation;
  */
 @Api(value = "관광지 API", tags = { "TourSpot" })
 @RestController
-@RequestMapping("/tourspot")
+@RequestMapping("/api/tourspot")
 public class TourSpotController {
 	@Autowired
 	TourSpotService tourSpotService;

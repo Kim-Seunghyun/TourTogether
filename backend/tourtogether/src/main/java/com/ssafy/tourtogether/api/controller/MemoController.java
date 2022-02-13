@@ -29,7 +29,7 @@ public class MemoController {
 	private final RedisPublisher redisPublisher;
 	private final MemoRepositorySupport memoRoomRepository;
 
-	@PostMapping("/memo/room")
+	@PostMapping("/api/memo/room")
 	@ResponseBody
 	public MemoRoom createRoom(@RequestParam String id, @RequestParam String user) {
 		MemoRoom memoRoom = memoRoomRepository.findRoomById(id);
@@ -43,7 +43,7 @@ public class MemoController {
 	/**
 	 * websocket "/pub/memo"로 들어오는 메시징을 처리한다.
 	 */
-	@MessageMapping("/memo")
+	@MessageMapping("/api/memo")
 	@ApiOperation(value = "메모", notes = "유저가 메모에 입력한 메시지를 받는다.")
 	public void memo(MemoMessage message) {
 		System.out.println("@@@message: " + message.toString());
