@@ -110,7 +110,7 @@ export default {
     });
 
     return {
-      computedGetters,
+      // computedGetters,
       getters,
       state,
       toggleChangeNickname,
