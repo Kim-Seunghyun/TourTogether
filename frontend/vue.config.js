@@ -20,8 +20,8 @@ module.exports = {
   devServer: {
     proxy: {
       "/api": {
-        // '/api' 로 들어오면 포트 8081(스프링 서버)로 보낸다
-        target: "https://i6a105.p.ssafy.io:8081",
+        // '/api' 로 들어오면 포트 8080(스프링 서버)로 보낸다
+        target: "https://i6a105.p.ssafy.io:8080",
         changeOrigin: true, // cross origin 허용
       },
     },

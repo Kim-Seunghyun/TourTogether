@@ -3,7 +3,7 @@ export const userStore = {
   state: {
     user: [],
     userFavoriteBoards: [],
-    userId: "98",
+    userId: "",
     userNickname: "",
     userProfileImage: "",
     userInputNickname: "",
