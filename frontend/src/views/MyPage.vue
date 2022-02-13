@@ -88,13 +88,14 @@ export default {
 
     onMounted(() => {
       if (!getters.getUserClientId) {
+        console.log(getters);
         console.log(getters.getUserClientId);
         console.log(getters.getUserNickname);
         alert("로그인해주세요!");
       }
       axios({
         method: "get",
-        url: "https://i6a105.p.ssafy.io:8080/api/board/user",
+        url: "https://i6a105.p.ssafy.io:8080/api/board/searchByUserId",
         data: {
           userClientId: getters.getUserClientId,
         },
