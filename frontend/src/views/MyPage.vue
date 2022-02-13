@@ -89,7 +89,7 @@ export default {
       }).then((res) => {
         console.log(res);
         console.log(res.data.user.userNickname);
-        store.commit("setUserNickname", res.data.user.userNickname);
+        store.commit("userStore/setUserNickname", res.data.user.userNickname);
       });
     };
 
