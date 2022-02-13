@@ -110,8 +110,8 @@ export default {
               method: "patch",
               url: "https://i6a105.p.ssafy.io:8080/api/user/updateImage/",
               data: {
-                userLoginPlatform: getters["userstore/getUserLoginPlatform"],
-                userClientId: getters["userstore/getUserClientId"],
+                userLoginPlatform: getters["userStore/getUserLoginPlatform"],
+                userClientId: getters["userStore/getUserClientId"],
                 userProfileImage: data.Location,
               },
             })
@@ -121,10 +121,8 @@ export default {
               })
               .catch((error) => {
                 console.log(error);
-                console.log(getters);
-                console.log(getters["userstore"]);
-                console.log(getters["userstore/getUserLoginPlatform"]);
-                console.log(getters["userstore/getUserClientId"]);
+                console.log(getters["userStore/getUserLoginPlatform"]);
+                console.log(getters["userStore/getUserClientId"]);
                 console.log(data.Location);
               });
           },
