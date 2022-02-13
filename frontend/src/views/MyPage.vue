@@ -2,18 +2,18 @@
   <div>
     <div>
       <div class="profile-image">
-        <!-- <img -->
-        <!-- :src="computedGetters.getUserProfileImage" -->
-        <!-- alt="my-profile-image" -->
-        <!-- @click="changeProfileImage" -->
-        <!-- /> -->
+        <img
+          :src="userProfileImage"
+          alt="my-profile-image"
+          @click="changeProfileImage"
+        />
       </div>
       <div>
         <ChangeImage />
       </div>
     </div>
     <div v-if="!state.isChangingNickname">
-      <span>{{ computedGetters.getUserNickname }}</span>
+      <span>{{ userNickname }}</span>
       <button @click="toggleChangeNickname" style="margin-left: 20px">
         닉네임변경
       </button>
@@ -22,7 +22,7 @@
       <input
         type="text"
         @keyup="setUserInputNickname"
-        :value="computedGetters.getUserInputNickname"
+        :value="userInputNickname"
       />
       <button @click="[toggleChangeNickname(), submitNickname()]">확인</button>
       <button @click="toggleChangeNickname">취소</button>
@@ -40,8 +40,8 @@
 </template>
 
 <script>
-import { computed, reactive, onMounted } from "vue";
-import { useStore } from "vuex";
+import { reactive, onMounted } from "vue";
+import { useStore, mapGetters } from "vuex";
 import axios from "axios";
 
 import ChangeImage from "@/components/ChangeImage.vue";
@@ -50,10 +50,17 @@ export default {
   components: {
     ChangeImage,
   },
+  computed: {
+    ...mapGetters({
+      userProfileImage: "getUserProfileImage",
+      userNickname: "getUserNickname",
+      userInputNickname: "getUserInputNickname",
+    }),
+  },
   setup() {
     const store = useStore();
 
-    const computedGetters = computed(() => store.getters.userStore);
+    // const computedGetters = computed(() => store.getters.userStore);
     const getters = store.getters;
     const state = reactive({
       isChangingNickname: false,
@@ -87,9 +94,6 @@ export default {
     };
 
     onMounted(() => {
-      console.log(getters);
-      console.log(getters["userStore"]);
-      console.log(getters["userStore/getUserClientId"]);
       if (!getters["userStore/getUserClientId"]) {
         alert("로그인해주세요!");
         // TODO 여기에 리다이렉트 해야할듯
