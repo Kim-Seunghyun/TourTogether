@@ -52,9 +52,9 @@ export default {
   },
   computed: {
     ...mapGetters({
-      userProfileImage: "getUserProfileImage",
-      userNickname: "getUserNickname",
-      userInputNickname: "getUserInputNickname",
+      userProfileImage: "userStore/getUserProfileImage",
+      userNickname: "userStore/getUserNickname",
+      userInputNickname: "userStore/getUserInputNickname",
     }),
   },
   setup() {
