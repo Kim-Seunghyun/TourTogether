@@ -71,7 +71,7 @@ export default {
     const submitNickname = () => {
       axios({
         method: "patch",
-        url: "https://i6a105.p.ssafy.io:8081/user/updateNickname/",
+        url: "https://i6a105.p.ssafy.io:8080/api/user/updateNickname",
         // url: "http://localhost:8081/user/updateNickname/",
         data: {
           userLoginPlatform: getters.getUserLoginPlatform,
@@ -94,7 +94,7 @@ export default {
       }
       axios({
         method: "get",
-        url: "https://i6a105.p.ssafy.io:8081/board/user",
+        url: "https://i6a105.p.ssafy.io:8080/api/board/user",
         data: {
           userClientId: getters.getUserClientId,
         },

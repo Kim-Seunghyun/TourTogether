@@ -31,7 +31,7 @@ public class RedisSubscriber implements MessageListener {
             // MemoMessage 객채로 맵핑
             MemoMessage roomMessage = objectMapper.readValue(publishMessage, MemoMessage.class);
             // Websocket 구독자에게 채팅 메시지 Send
-            messagingTemplate.convertAndSend("/sub/memo/"+roomMessage.getRoomId(), roomMessage);
+            messagingTemplate.convertAndSend("/api/sub/memo/"+roomMessage.getRoomId(), roomMessage);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
