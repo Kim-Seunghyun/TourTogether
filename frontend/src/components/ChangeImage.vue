@@ -114,15 +114,17 @@ export default {
                 userClientId: getters["userstore/getUserClientId"],
                 userProfileImage: data.Location,
               },
-            }).then((res) => {
-              store.commit("userstore/setUserProfileImage", data.Location);
-              console.log(res);
-            }).catch(error){
-              console.log(error);
-              console.log(getters["userstore/getUserLoginPlatform"]);
-              console.log(getters["userstore/getUserClientId"]);
-              console.log(data.Location);
-            };
+            })
+              .then((res) => {
+                store.commit("userstore/setUserProfileImage", data.Location);
+                console.log(res);
+              })
+              .catch((error) => {
+                console.log(error);
+                console.log(getters["userstore/getUserLoginPlatform"]);
+                console.log(getters["userstore/getUserClientId"]);
+                console.log(data.Location);
+              });
           },
           function (err) {
             return alert(
