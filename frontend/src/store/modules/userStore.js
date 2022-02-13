@@ -1,6 +1,7 @@
 export const userStore = {
   namespaced: true,
   state: {
+    user: [],
     userId: "",
     userNickname: "",
     userProfileImage: "",
@@ -29,10 +30,12 @@ export const userStore = {
     },
   },
   mutations: {
+    setUser(state, user) {
+      state.user = user;
+      console.log("user -> ", state.user);
+    },
     setUserId(state, userId) {
-      alert("userStore -> setUserId : ", userId);
       state.userId = userId;
-      alert("userStore -> state.userId : ", state.userId);
     },
     setUserNickname(state, userNickname) {
       state.userNickname = userNickname;
