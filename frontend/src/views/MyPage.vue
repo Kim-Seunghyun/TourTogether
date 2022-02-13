@@ -98,7 +98,7 @@ export default {
         method: "get",
         url: "https://i6a105.p.ssafy.io:8080/api/board/searchByUserId",
         data: {
-          userClientId: getters.getUserClientId,
+          userClientId: getters["userStore/getUserClientId"],
         },
       }).then((res) => {
         console.log(res);
