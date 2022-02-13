@@ -95,7 +95,7 @@ export default {
         // TODO 여기에 리다이렉트 해야할듯
       }
       axios({
-        method: "get",
+        method: "POST",
         url: "https://i6a105.p.ssafy.io:8080/api/board/searchByUserId",
         data: {
           userId: getters["userStore/getUserId"],
