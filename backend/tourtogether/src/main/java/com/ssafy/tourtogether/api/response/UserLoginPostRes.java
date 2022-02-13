@@ -15,14 +15,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("UserLoginPostResponse")
-public class UserLoginPostRes extends BaseResponseBody{
+public class UserLoginPostRes extends BaseResponseBody {
 	// TODO 토큰 형식 수정
 //	@ApiModelProperty(name="JWT 인증 토큰", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN...")
 //	String accessToken;
-	
+
 	User user;
-	
+
 	public static UserLoginPostRes of(Integer statusCode, String message, User user) {
+		System.out.println(user.getUserId());
 		UserLoginPostRes res = new UserLoginPostRes();
 		res.setStatusCode(statusCode);
 		res.setMessage(message);

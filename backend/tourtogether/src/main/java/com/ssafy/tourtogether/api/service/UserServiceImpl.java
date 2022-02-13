@@ -3,6 +3,7 @@ package com.ssafy.tourtogether.api.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.tourtogether.api.request.UserDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.UserLoginPostReq;
 //import com.ssafy.api.request.UserRegisterPostReq;
 import com.ssafy.tourtogether.db.entity.User;
@@ -82,5 +83,15 @@ public class UserServiceImpl implements UserService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Override
+	public void deleteUser(UserDeleteDeleteReq deleteInfo) {
+		userRepositorySupport.deleteUser(deleteInfo);
+	}
+
+	@Override
+	public boolean checkUser(UserDeleteDeleteReq deleteInfo) {
+		return userRepositorySupport.checkUser(deleteInfo);
 	}
 }

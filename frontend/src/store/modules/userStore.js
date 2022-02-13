@@ -30,8 +30,9 @@ export const userStore = {
   },
   mutations: {
     setUserId(state, userId) {
-      console.log("hihihihihihihihihihih");
+      // alert("userStore -> setUserId : ", userId);
       state.userId = userId;
+      // alert("userStore -> state.userId : ", state.userId);
     },
     setUserNickname(state, userNickname) {
       state.userNickname = userNickname;
