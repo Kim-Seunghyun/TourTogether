@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     connectSocket() {
-      this.sockjs = new SockJS("http://localhost:8081/sch2");
+      this.sockjs = new SockJS("http://localhost:8080/api/sch2");
       this.sockjs.onopen = function () {
         // websocket을 열어줄 때 redis에서 data를 가져와야할거같음
         // console.log(this.arr);
@@ -90,7 +90,7 @@ export default {
         console.log("data받음 > " + data.data);
         axios({
           method: 'get',
-          url: 'http://127.0.0.1:8081/redisschedule/all'
+          url: 'http://127.0.0.1:8080/api/redisschedule/all'
         })
         .then(res => {
           console.log(res.data);
@@ -133,7 +133,7 @@ export default {
     getAllSchedule() {
       axios({
         method: 'get',
-        url: 'https://i6a105.p.ssafy.io:8081/redisschedule/all'
+        url: 'https://i6a105.p.ssafy.io:8080/api/redisschedule/all'
       })
         .then(res => {
           console.log(res.data.redisScheduleList);
@@ -151,7 +151,7 @@ export default {
       // 수정 후 websocket으로 알리기
       axios({
         method: 'delete',
-        url: 'https://i6a105.p.ssafy.io:8081/redisschedule/delete',
+        url: 'https://i6a105.p.ssafy.io:8080/api/redisschedule/delete',
         // headers:{
         //   'Content-Type': 'application/json',
         //   'Accept' : 'application/json',
@@ -173,7 +173,7 @@ export default {
     saveSchedule() {
       axios({
         method: 'post',
-        url: 'https://i6a105.p.ssafy.io:8081/redisschedule/save',
+        url: 'https://i6a105.p.ssafy.io:8080/api/redisschedule/save',
         data: {
           scheduleId: 1,
           boardId: 1,

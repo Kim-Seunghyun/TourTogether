@@ -27,7 +27,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
 @RestController
-@RequestMapping("/redisschedule")
+@RequestMapping("/api/redisschedule")
 @Api(value = "schedule API", tags = { "schedule" })
 public class RedisScheduleController {
 	

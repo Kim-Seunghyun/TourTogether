@@ -67,7 +67,7 @@ export default {
   computed: {},
   methods: {
     connectSocket() {
-      this.sockjs = new SockJS("http://localhost:8081/schedule");
+      this.sockjs = new SockJS("http://localhost:8080/api/schedule");
       console.log(this.sockjs);
       this.sockjs.onopen = function () {
         console.log("연결");

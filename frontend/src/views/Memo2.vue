@@ -19,7 +19,7 @@ import Stomp from "stomp-websocket";
 
 import axios from "axios";
 
-let sock = new SockJS("https://i6a105.p.ssafy.io:8081/ws-stomp");
+let sock = new SockJS("https://i6a105.p.ssafy.io:8080/api/ws-stomp");
 
 export default {
   components: {
@@ -137,7 +137,7 @@ export default {
     init() {
       axios({
         method: "POST",
-        url: "http://localhost:8081/memo/room",
+        url: "http://localhost:8080/api/memo/room",
         params: {
           id: this.state.id,
           user: this.state.user,
@@ -155,11 +155,11 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-      var sock = new SockJS("https://i6a105.p.ssafy.io:8081/ws-stomp");
+      var sock = new SockJS("https://i6a105.p.ssafy.io:8080/api/ws-stomp");
       var ws = Stomp.over(sock);
       var _this = this;
       this.ws = ws;
-      var subUrl = "/sub/memo/" + _this.state.id;
+      var subUrl = "/api/sub/memo/" + _this.state.id;
       console.log("채널 구독하기: ", subUrl);
       ws.connect(
         {
