@@ -139,13 +139,13 @@
         <h4>여행지 추천</h4>
         <div class="card z-index-2">
           <div class="p-3 card-body">
-            <button
+            <!-- <button
               type="button"
               class="btn btn-secondary"
               @click="getAllBoards"
             >
               전체 일정 보기
-            </button>
+            </button> -->
             <button
               type="button"
               class="btn btn-secondary"
@@ -193,7 +193,7 @@
 </template>
 <script>
 import BoardCategory from "./components/BoardCategory.vue";
-
+import { API_BASE_URL } from "@/config/index.js";
 import html2pdf from "html2pdf.js";
 
 import { mapMutations, mapState } from "vuex";
@@ -227,14 +227,14 @@ export default {
     },
   },
   created() {
-    // this.getAllBoards();
+    this.getAllBoards();
   },
   methods: {
     ...mapMutations(boardStore, ["setAllBoards"]),
     getAllBoards() {
       axios({
         method: "get",
-        url: "https://i6a105.p.ssafy.io:8081/board",
+        url: API_BASE_URL + "board",
       }).then((res) => {
         this.boards = res.data.boards;
         this.setAllBoards(res.data.boards);
@@ -243,7 +243,7 @@ export default {
     getSelectedBoards() {
       axios({
         method: "post",
-        url: "https://i6a105.p.ssafy.io:8081/board/searchByCategory",
+        url: API_BASE_URL + "board/searchByCategory",
         data: {
           categoryWithWhom: 2,
           categorySeason: 3,
@@ -267,7 +267,7 @@ export default {
       // alert("send create board data");
       axios({
         method: "post",
-        url: "https://i6a105.p.ssafy.io:8081/board/create",
+        url: API_BASE_URL + "board/create",
         data: {
           boardName: this.boardName,
           userId: this.userId,
@@ -279,16 +279,12 @@ export default {
         location.href = `/board/${this.boardRandom}`;
       });
     },
-    enterBoard() {
-      console.log(`/board/${this.boardRandom}`);
-      //
-    },
     likeClick(boardId, event) {
       if (event.target.classList.contains("btn_unlike")) {
         event.target.classList.toggle("btn_unlike");
         axios({
           method: "patch",
-          url: "https://i6a105.p.ssafy.io:8081/board/cancelBoardLike",
+          url: API_BASE_URL + "board/cancelBoardLike",
           data: {
             boardId: boardId,
             userId: this.userId,
@@ -301,7 +297,7 @@ export default {
         event.target.classList.toggle("btn_unlike");
         axios({
           method: "patch",
-          url: "https://i6a105.p.ssafy.io:8081/board/clickBoardLike",
+          url: API_BASE_URL + "board/clickBoardLike",
           data: {
             boardId: boardId,
             userId: this.userId,

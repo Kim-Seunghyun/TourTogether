@@ -43,6 +43,7 @@
 import { computed, reactive, onMounted } from "vue";
 import { useStore } from "vuex";
 import axios from "axios";
+import { API_BASE_URL } from "@/config/index.js";
 
 import ChangeImage from "@/components/ChangeImage.vue";
 
@@ -71,7 +72,7 @@ export default {
     const submitNickname = () => {
       axios({
         method: "patch",
-        url: "https://i6a105.p.ssafy.io:8081/user/updateNickname/",
+        url: API_BASE_URL + "user/updateNickname/",
         // url: "http://localhost:8081/user/updateNickname/",
         data: {
           userLoginPlatform: getters.getUserLoginPlatform,
@@ -89,7 +90,7 @@ export default {
     onMounted(() => {
       axios({
         method: "get",
-        url: "https://i6a105.p.ssafy.io:8081/board/user",
+        url: API_BASE_URL + "board/user",
         data: {
           userClientId: getters.getUserClientId,
         },

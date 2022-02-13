@@ -38,6 +38,7 @@ import Configurator from "@/examples/Configurator.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
 import axios from "axios";
+import { API_BASE_URL } from "@/config/index.js";
 import { reactive } from "@vue/reactivity";
 import { computed, watch, onMounted } from "vue";
 import { useStore, mapMutations } from "vuex";
@@ -98,7 +99,7 @@ export default {
           }
           axios({
             method: "post",
-            url: "https://i6a105.p.ssafy.io:8081/user/login",
+            url: API_BASE_URL + "user/login",
             data: {
               userLoginPlatform: "kakao",
               userClientId: response.id,
