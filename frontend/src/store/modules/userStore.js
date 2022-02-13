@@ -16,6 +16,8 @@ export const userStore = {
       return state.userNickname;
     },
     getUserProfileImage(state) {
+      console.log(state);
+      console.log(state.userProfileImage);
       return state.userProfileImage;
     },
     getUserInputNickname(state) {
