@@ -2,11 +2,11 @@
   <div>
     <div>
       <div class="profile-image">
-        <img
-          :src="computedGetters.getUserProfileImage"
-          alt="my-profile-image"
-          @click="changeProfileImage"
-        />
+        <!-- <img -->
+        <!-- :src="computedGetters.getUserProfileImage" -->
+        <!-- alt="my-profile-image" -->
+        <!-- @click="changeProfileImage" -->
+        <!-- /> -->
       </div>
       <div>
         <ChangeImage />
