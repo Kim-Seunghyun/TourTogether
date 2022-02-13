@@ -83,8 +83,8 @@ export default {
         data: {
           userLoginPlatform: getters["userStore/getUserLoginPlatform"],
           userNickname: getters["userStore/getUserNickname"],
-          userClientId: getters["userStore/userClientId"],
-          newUserNickname: getters.getUserInputNickname,
+          userClientId: getters["userStore/getUserClientId"],
+          newUserNickname: getters["userStore/getUserInputNickname"],
         },
       }).then((res) => {
         console.log(res);
