@@ -28,13 +28,9 @@
               @click="login()"
             />
 
-            <router-link
-              to="/mypage"
-              v-if="user"
-              class="px-0 nav-link font-weight-bold"
-              :class="textWhite ? textWhite : 'text-body'"
-              >MyPage &nbsp;</router-link
-            >
+            <h6 v-if="user" class="px-0 nav-link font-weight-bold">
+              {{ user.userNickname }} 님 &nbsp;
+            </h6>
 
             <router-link
               to="/favoritepage"
@@ -42,6 +38,14 @@
               class="px-0 nav-link font-weight-bold"
               :class="textWhite ? textWhite : 'text-body'"
               >FavoritePage &nbsp;</router-link
+            >
+
+            <router-link
+              to="/mypage"
+              v-if="user"
+              class="px-0 nav-link font-weight-bold"
+              :class="textWhite ? textWhite : 'text-body'"
+              >MyPage &nbsp;</router-link
             >
 
             <router-link
