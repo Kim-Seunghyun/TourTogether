@@ -91,7 +91,7 @@ export default {
             alert("Successfully uploaded photo.");
             axios({
               method: 'patch',
-              url: 'https://i6a105.p.ssafy.io:8081/api/user/updateImage/',
+              url: 'https://i6a105.p.ssafy.io:8080/api/user/updateImage/',
               data: {
                 userLoginPlatform: getters.getUserLoginPlatform,
                 userClientId: getters.getUserClientId,

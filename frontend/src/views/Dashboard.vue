@@ -234,7 +234,7 @@ export default {
     getAllBoards() {
       axios({
         method: "get",
-        url: "https://i6a105.p.ssafy.io:8081/board",
+        url: "https://i6a105.p.ssafy.io:8080/api/board",
       }).then((res) => {
         this.boards = res.data.boards;
         this.setAllBoards(res.data.boards);
@@ -243,7 +243,7 @@ export default {
     getSelectedBoards() {
       axios({
         method: "post",
-        url: "https://i6a105.p.ssafy.io:8081/board/searchByCategory",
+        url: "https://i6a105.p.ssafy.io:8080/api/board/searchByCategory",
         data: {
           categoryWithWhom: 2,
           categorySeason: 3,
@@ -267,7 +267,7 @@ export default {
       // alert("send create board data");
       axios({
         method: "post",
-        url: "https://i6a105.p.ssafy.io:8081/board/create",
+        url: "https://i6a105.p.ssafy.io:8080/api/board/create",
         data: {
           boardName: this.boardName,
           userId: this.userId,
@@ -288,7 +288,7 @@ export default {
         event.target.classList.toggle("btn_unlike");
         axios({
           method: "patch",
-          url: "https://i6a105.p.ssafy.io:8081/board/cancelBoardLike",
+          url: "https://i6a105.p.ssafy.io:8080/api/board/cancelBoardLike",
           data: {
             boardId: boardId,
             userId: this.userId,
@@ -301,7 +301,7 @@ export default {
         event.target.classList.toggle("btn_unlike");
         axios({
           method: "patch",
-          url: "https://i6a105.p.ssafy.io:8081/board/clickBoardLike",
+          url: "https://i6a105.p.ssafy.io:8080/api/board/clickBoardLike",
           data: {
             boardId: boardId,
             userId: this.userId,

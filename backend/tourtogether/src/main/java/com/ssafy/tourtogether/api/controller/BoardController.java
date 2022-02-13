@@ -41,7 +41,7 @@ import io.swagger.annotations.ApiResponses;
  */
 @Api(value = "게시판 API", tags = { "board" })
 @RestController
-@RequestMapping("/board")
+@RequestMapping("/api/board")
 public class BoardController {
 	@Autowired
 	BoardService boardService;
