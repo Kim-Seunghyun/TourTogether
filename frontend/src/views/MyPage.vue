@@ -87,11 +87,6 @@ export default {
     };
 
     onMounted(() => {
-      if (!getters.getUserClientId) {
-        console.log(getters.getUserClientId);
-        console.log(getters.getUserNickname);
-        alert("로그인해주세요!");
-      }
       axios({
         method: "get",
         url: "https://i6a105.p.ssafy.io:8081/board/user",
