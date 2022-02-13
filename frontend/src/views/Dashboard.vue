@@ -161,13 +161,13 @@
               {{ board.boardId }} // {{ board.boardName }} //
               {{ board.boardLikesCount }}
               <img
-                v-if="this.userFavoriteboardIds.includes(board.boardId)"
+                v-if="this.favoriteBoardId.includes(board.boardId)"
                 src="@/assets/img/full_heart.png"
                 width="30"
                 @click="likeCancel(board.boardId)"
               />
               <img
-                v-if="!this.userFavoriteboardIds.includes(board.boardId)"
+                v-if="!this.favoriteBoardId.includes(board.boardId)"
                 src="@/assets/img/empty_heart.png"
                 width="30"
                 @click="likeClick(board.boardId)"
@@ -196,7 +196,7 @@ export default {
   data() {
     return {
       boards: [],
-      userFavoriteboardIds: [],
+      favoriteBoardId: [],
       boardName: "",
       boardRandom: "",
       // userId: "",
@@ -209,7 +209,8 @@ export default {
   },
   computed: {
     ...mapState(userStore, ["userId"]),
-    ...mapState(boardStore, ["searchByCategoryBoards", "userFavoriteBoards"]),
+    ...mapState(boardStore, ["searchByCategoryBoards"]),
+    ...mapState(boardStore, ["withWhom", "season", "area", "theme"]),
     // ...mapState(boardStore, ["boards"]),
   },
   watch: {
@@ -217,25 +218,21 @@ export default {
       this.boards = this.searchByCategoryBoards;
     },
   },
-  mounted() {
+  created() {
+    // this.getAllBoards();
     this.getUserFavoriteBoards();
   },
-
-  created() {
-    this.getAllBoards();
-  },
   methods: {
-    ...mapState(userStore, ["userFavoriteBoards"]),
-    ...mapMutations(boardStore, ["setAllBoards"]),
-    getAllBoards() {
-      axios({
-        method: "get",
-        url: API_BASE_URL + "board",
-      }).then((res) => {
-        this.boards = res.data.boards;
-        this.setAllBoards(res.data.boards);
-      });
-    },
+    ...mapMutations(boardStore, ["setAllBoards", "setSearchByCategoryBoards"]),
+    // getAllBoards() {
+    //   axios({
+    //     method: "get",
+    //     url: API_BASE_URL + "board",
+    //   }).then((res) => {
+    //     this.boards = res.data.boards;
+    //     this.setAllBoards(res.data.boards);
+    //   });
+    // },
     getUserFavoriteBoards() {
       axios({
         method: "post",
@@ -244,12 +241,9 @@ export default {
           userId: this.userId,
         },
       }).then((res) => {
-        console.log(res);
         for (var i = 0; i < res.data.myBoards.length; i++) {
-          this.userFavoriteboardIds[i] = res.data.myBoards[i].boardId;
+          this.favoriteBoardId[i] = res.data.myBoards[i].boardId;
         }
-        console.log(this.userFavoriteboardIds);
-        this.userFavoriteBoards = this.userFavoriteboardIds;
       });
     },
     createBoard() {
@@ -278,8 +272,13 @@ export default {
           userId: this.userId,
         },
       }).then((res) => {
-        console.log(res);
-        this.getUserFavoriteBoards();
+        this.favoriteBoardId = res.data.favoriteBoardId;
+        this.getListByCategory(
+          this.withWhom,
+          this.season,
+          this.area,
+          this.theme
+        );
       });
     },
     likeCancel(boardId) {
@@ -292,8 +291,27 @@ export default {
           userId: this.userId,
         },
       }).then((res) => {
-        console.log(res);
-        this.getUserFavoriteBoards();
+        this.favoriteBoardId = res.data.favoriteBoardId;
+        this.getListByCategory(
+          this.withWhom,
+          this.season,
+          this.area,
+          this.theme
+        );
+      });
+    },
+    getListByCategory(withWhom, season, area, theme) {
+      axios({
+        method: "post",
+        url: API_BASE_URL + "board/searchByCategory",
+        data: {
+          categoryArea: area,
+          categorySeason: season,
+          categoryTheme: theme,
+          categoryWithWhom: withWhom,
+        },
+      }).then((res) => {
+        this.setSearchByCategoryBoards(res.data.boards);
       });
     },
     exportToPDF() {

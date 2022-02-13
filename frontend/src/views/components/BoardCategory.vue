@@ -114,9 +114,11 @@ export default {
   mounted() {
     setNavPills();
   },
-
+  created() {
+    this.getListByCategory();
+  },
   methods: {
-    ...mapMutations(boardStore, ["setSearchByCategoryBoards"]),
+    ...mapMutations(boardStore, ["setSearchByCategoryBoards", "setCategory"]),
     getListByCategory() {
       axios({
         method: "post",
@@ -129,6 +131,8 @@ export default {
         },
       }).then((res) => {
         this.setSearchByCategoryBoards(res.data.boards);
+        var category = [this.withWhom, this.season, this.area, this.theme];
+        this.setCategory(category);
       });
     },
     selectWithWhom(index) {

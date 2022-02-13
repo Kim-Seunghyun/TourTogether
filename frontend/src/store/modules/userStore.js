@@ -2,7 +2,6 @@ export const userStore = {
   namespaced: true,
   state: {
     user: [],
-    userFavoriteBoards: [],
     userId: "",
     userNickname: "",
     userProfileImage: "",
@@ -13,9 +12,6 @@ export const userStore = {
   getters: {
     getUser(state) {
       return state.user;
-    },
-    getUserFavoriteBoards(state) {
-      return state.userFavoriteBoards;
     },
     getUserId(state) {
       return state.userId;
@@ -40,9 +36,6 @@ export const userStore = {
     setUser(state, user) {
       state.user = user;
       console.log("user -> ", state.user);
-    },
-    getUserFavoriteBoards(state, boards) {
-      state.userFavoriteBoards = boards;
     },
     setUserId(state, userId) {
       state.userId = userId;

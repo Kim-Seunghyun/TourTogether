@@ -1,5 +1,7 @@
 package com.ssafy.tourtogether.db.repository;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -128,14 +130,21 @@ public class BoardRepositorySupport {
 
 		List<Integer> boardIds = jpaQueryFactory.select(qCategory.categoryBoardId).from(qCategory)
 				.where(qCategory.categoryWithWhom.like(withWhom)).where(qCategory.categorySeason.like(season))
-				.where(qCategory.categoryArea.like(area)).where(qCategory.categoryTheme.like(theme))
-				.orderBy(qBoard.boardLikesCount.desc()).fetch();
+				.where(qCategory.categoryArea.like(area)).where(qCategory.categoryTheme.like(theme)).fetch();
 
 		List<Board> boards = new LinkedList<Board>();
 		for (int boardId : boardIds) {
 			Board board = jpaQueryFactory.select(qBoard).from(qBoard).where(qBoard.boardId.eq(boardId)).fetchFirst();
 			boards.add(board);
 		}
+
+		Collections.sort(boards, new Comparator<Board>() {
+			@Override
+			public int compare(Board o1, Board o2) {
+				return o2.getBoardLikesCount() - o1.getBoardLikesCount();
+			}
+		});
+
 		return boards;
 	}
 
