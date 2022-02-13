@@ -3,7 +3,7 @@
     <div>
       <div class="profile-image">
         <img
-          :src="computedGetters.getUserProfileImage"
+          :src="userProfileImage"
           alt="my-profile-image"
           @click="changeProfileImage"
         />
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div v-if="!state.isChangingNickname">
-      <span>{{ computedGetters.getUserNickname }}</span>
+      <span>{{ userNickname }}</span>
       <button @click="toggleChangeNickname" style="margin-left: 20px">
         닉네임변경
       </button>
@@ -22,7 +22,7 @@
       <input
         type="text"
         @keyup="setUserInputNickname"
-        :value="computedGetters.getUserInputNickname"
+        v-model="userInputNickname"
       />
       <button @click="[toggleChangeNickname(), submitNickname()]">확인</button>
       <button @click="toggleChangeNickname">취소</button>
@@ -40,8 +40,8 @@
 </template>
 
 <script>
-import { computed, reactive, onMounted } from "vue";
-import { useStore } from "vuex";
+import { reactive, onMounted } from "vue";
+import { useStore, mapGetters } from "vuex";
 import axios from "axios";
 
 import ChangeImage from "@/components/ChangeImage.vue";
@@ -50,10 +50,17 @@ export default {
   components: {
     ChangeImage,
   },
+  computed: {
+    ...mapGetters({
+      userProfileImage: "userStore/getUserProfileImage",
+      userNickname: "userStore/getUserNickname",
+      userInputNickname: "userStore/getUserInputNickname",
+    }),
+  },
   setup() {
     const store = useStore();
 
-    const computedGetters = computed(() => store.getters.userStore);
+    // const computedGetters = computed(() => store.getters.userStore);
     const getters = store.getters;
     const state = reactive({
       isChangingNickname: false,
@@ -66,7 +73,7 @@ export default {
       }
     };
     const setUserInputNickname = (event) => {
-      store.commit("setUserInputNickname", event.target.value);
+      store.commit("userStore/setUserInputNickname", event.target.value);
     };
     const submitNickname = () => {
       axios({
@@ -74,37 +81,37 @@ export default {
         url: "https://i6a105.p.ssafy.io:8080/api/user/updateNickname",
         // url: "http://localhost:8081/user/updateNickname/",
         data: {
-          userLoginPlatform: getters.getUserLoginPlatform,
-          userNickname: getters.getUserNickname,
-          userClientId: getters.getUserClientId,
-          newUserNickname: getters.getUserInputNickname,
+          userLoginPlatform: getters["userStore/getUserLoginPlatform"],
+          userNickname: getters["userStore/getUserNickname"],
+          userClientId: getters["userStore/getUserClientId"],
+          newUserNickname: getters["userStore/getUserInputNickname"],
         },
       }).then((res) => {
         console.log(res);
         console.log(res.data.user.userNickname);
-        store.commit("setUserNickname", res.data.user.userNickname);
+        store.commit("userStore/setUserNickname", res.data.user.userNickname);
       });
     };
 
     onMounted(() => {
-      if (!getters.getUserClientId) {
-        console.log(getters.getUserClientId);
-        console.log(getters.getUserNickname);
+      // 애초에 여기에 이게 있어야하나?
+      if (!getters["userStore/getUserClientId"]) {
         alert("로그인해주세요!");
+        // TODO 여기에 리다이렉트 해야할듯
       }
       axios({
-        method: "get",
-        url: "https://i6a105.p.ssafy.io:8080/api/board/user",
+        method: "POST",
+        url: "https://i6a105.p.ssafy.io:8080/api/board/searchByUserId",
         data: {
-          userClientId: getters.getUserClientId,
+          userId: getters["userStore/getUserId"],
         },
       }).then((res) => {
-        console.log(res);
+        console.log("로그인성공", res);
       });
     });
 
     return {
-      computedGetters,
+      // computedGetters,
       getters,
       state,
       toggleChangeNickname,

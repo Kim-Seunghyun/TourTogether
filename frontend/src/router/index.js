@@ -19,17 +19,12 @@ import Sch2 from "../views/Sch2.vue";
 import store from "@/store/index.js";
 
 const onlyAuthUser = async (to, from, next) => {
-  // console.log(store);
   const checkUserInfo = store.getters["userStore/getUserId"];
   console.log("checkUserInfo!!!!! -> " + store.getters["userStore/getUserId"]);
-  console.log(checkUserInfo);
   if (!checkUserInfo) {
     alert("로그인이 필요한 페이지입니다..");
-    // next({ name: "SignIn" });
     router.push({ name: "Login" });
-    // location.href = `/login`;
   } else {
-    // console.log("로그인 했다.");
     next();
   }
 };
