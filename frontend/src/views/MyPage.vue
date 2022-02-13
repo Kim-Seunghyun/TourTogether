@@ -94,6 +94,7 @@ export default {
     };
 
     onMounted(() => {
+      // 애초에 여기에 이게 있어야하나?
       if (!getters["userStore/getUserClientId"]) {
         alert("로그인해주세요!");
         // TODO 여기에 리다이렉트 해야할듯

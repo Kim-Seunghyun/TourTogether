@@ -121,6 +121,8 @@ export default {
               })
               .catch((error) => {
                 console.log(error);
+                console.log(getters);
+                console.log(getters["userstore"]);
                 console.log(getters["userstore/getUserLoginPlatform"]);
                 console.log(getters["userstore/getUserClientId"]);
                 console.log(data.Location);
