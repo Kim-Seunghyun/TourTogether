@@ -30,9 +30,9 @@ public interface BoardService {
 
 	List<Board> searchByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo);
 
-	void clickBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo);
+	List<Integer> clickBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo);
 
-	void cancelBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo);
+	List<Integer> cancelBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo);
 
 	List<Board> searchLikeBoardByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo);
 

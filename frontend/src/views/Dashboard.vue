@@ -107,7 +107,7 @@
                 aria-label="Close"
               ></button>
             </div>
-            <form @submit.prevent="startBoard">
+            <form @submit.prevent="createBoard">
               <div class="modal-body">
                 <input
                   type="text"
@@ -115,7 +115,7 @@
                   v-model="boardName"
                   placeholder="여행 제목을 입력해주세요"
                   required
-                  @keyup.enter="startBoard"
+                  @keyup.enter="createBoard"
                 />
               </div>
               <div class="modal-footer">
@@ -139,21 +139,6 @@
         <h4>여행지 추천</h4>
         <div class="card z-index-2">
           <div class="p-3 card-body">
-            <!-- <button
-              type="button"
-              class="btn btn-secondary"
-              @click="getAllBoards"
-            >
-              전체 일정 보기
-            </button> -->
-            <button
-              type="button"
-              class="btn btn-secondary"
-              @click="getSelectedBoards"
-            >
-              선택한 유형의 일정 보기
-            </button>
-
             <button
               type="button"
               class="btn btn-secondary"
@@ -173,16 +158,20 @@
           </div>
           <div v-for="(board, index) in boards" :key="index">
             <div class="col-lg-6 col-sm-8">
-              {{ board.boardName }} //
+              {{ board.boardId }} // {{ board.boardName }} //
               {{ board.boardLikesCount }}
-              <button
-                type="button"
-                class="btn_like"
-                @click="likeClick(board.boardId, $event)"
-              >
-                <span class="img_emoti">좋아요</span>
-                <span class="ani_heart_m"></span>
-              </button>
+              <img
+                v-if="this.userFavoriteboardIds.includes(board.boardId)"
+                src="@/assets/img/full_heart.png"
+                width="30"
+                @click="likeCancel(board.boardId)"
+              />
+              <img
+                v-if="!this.userFavoriteboardIds.includes(board.boardId)"
+                src="@/assets/img/empty_heart.png"
+                width="30"
+                @click="likeClick(board.boardId)"
+              />
             </div>
             <div class="col-lg-6 col-sm-8"></div>
           </div>
@@ -207,6 +196,7 @@ export default {
   data() {
     return {
       boards: [],
+      userFavoriteboardIds: [],
       boardName: "",
       boardRandom: "",
       // userId: "",
@@ -219,17 +209,23 @@ export default {
   },
   computed: {
     ...mapState(userStore, ["userId"]),
+    ...mapState(boardStore, ["searchByCategoryBoards", "userFavoriteBoards"]),
     // ...mapState(boardStore, ["boards"]),
   },
   watch: {
-    boards() {
-      console.log("데이터 변경!!!");
+    searchByCategoryBoards() {
+      this.boards = this.searchByCategoryBoards;
     },
   },
+  mounted() {
+    this.getUserFavoriteBoards();
+  },
+
   created() {
     this.getAllBoards();
   },
   methods: {
+    ...mapState(userStore, ["userFavoriteBoards"]),
     ...mapMutations(boardStore, ["setAllBoards"]),
     getAllBoards() {
       axios({
@@ -240,28 +236,21 @@ export default {
         this.setAllBoards(res.data.boards);
       });
     },
-    getSelectedBoards() {
+    getUserFavoriteBoards() {
       axios({
         method: "post",
-        url: API_BASE_URL + "board/searchByCategory",
+        url: API_BASE_URL + "board/searchLikeBoardByUserId",
         data: {
-          categoryWithWhom: 2,
-          categorySeason: 3,
-          categoryArea: 0,
-          categoryTheme: 0,
+          userId: this.userId,
         },
       }).then((res) => {
-        this.boards = res.data.boards;
-        // this.setAllBoards(res.data.boards);
+        console.log(res);
+        for (var i = 0; i < res.data.myBoards.length; i++) {
+          this.userFavoriteboardIds[i] = res.data.myBoards[i].boardId;
+        }
+        console.log(this.userFavoriteboardIds);
+        this.userFavoriteBoards = this.userFavoriteboardIds;
       });
-    },
-    startBoard() {
-      // console.log("createBoard!!!");
-      // console.log("userId는 ", this.userId);
-      // console.log("boardName은 ", this.boardName);
-      this.createBoard();
-      this.enterBoard();
-      // location.href = "/map";
     },
     createBoard() {
       // alert("send create board data");
@@ -279,44 +268,33 @@ export default {
         location.href = `/board/${this.boardRandom}`;
       });
     },
-    likeClick(boardId, event) {
-      if (event.target.classList.contains("btn_unlike")) {
-        event.target.classList.toggle("btn_unlike");
-        axios({
-          method: "patch",
-          url: API_BASE_URL + "board/cancelBoardLike",
-          data: {
-            boardId: boardId,
-            userId: this.userId,
-          },
-        }).then((res) => {
-          console.log(res);
-        });
-        console.log("좋아요 취소하기 ");
-      } else {
-        event.target.classList.toggle("btn_unlike");
-        axios({
-          method: "patch",
-          url: API_BASE_URL + "board/clickBoardLike",
-          data: {
-            boardId: boardId,
-            userId: this.userId,
-          },
-        }).then((res) => {
-          console.log(res);
-        });
-        console.log("좋아요 누르기 ");
-      }
-      // if (this.class == "btn_unlike") {
-      //   console.log("like");
-      //   // $(this).removeClass("btn_unlike");
-      //   // $(".ani_heart_m").removeClass("hi");
-      //   // $(".ani_heart_m").addClass("bye");
-      // } else {
-      //   // $(this).addClass("btn_unlike");
-      //   // $(".ani_heart_m").addClass("hi");
-      //   // $(".ani_heart_m").removeClass("bye");
-      // }
+    likeClick(boardId) {
+      console.log("좋아요 누르기 ");
+      axios({
+        method: "patch",
+        url: API_BASE_URL + "board/clickBoardLike",
+        data: {
+          boardId: boardId,
+          userId: this.userId,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.getUserFavoriteBoards();
+      });
+    },
+    likeCancel(boardId) {
+      console.log("좋아요 취소하기");
+      axios({
+        method: "patch",
+        url: API_BASE_URL + "board/cancelBoardLike",
+        data: {
+          boardId: boardId,
+          userId: this.userId,
+        },
+      }).then((res) => {
+        console.log(res);
+        this.getUserFavoriteBoards();
+      });
     },
     exportToPDF() {
       //window.scrollTo(0, 0);

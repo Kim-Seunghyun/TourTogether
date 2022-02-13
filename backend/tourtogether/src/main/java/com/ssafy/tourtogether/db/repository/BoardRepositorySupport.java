@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
@@ -50,19 +51,25 @@ public class BoardRepositorySupport {
 	}
 
 	@Transactional
-	public void increaseLike(int boardId) {
-		int curLikes = jpaQueryFactory.select(qBoard.boardLikesCount).from(qBoard).where(qBoard.boardId.eq(boardId))
-				.fetchFirst();
-		jpaQueryFactory.update(qBoard).where(qBoard.boardId.eq(boardId)).set(qBoard.boardLikesCount, curLikes + 1)
-				.execute();
+	public List<Integer> increaseLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
+		int curLikes = jpaQueryFactory.select(qBoard.boardLikesCount).from(qBoard)
+				.where(qBoard.boardId.eq(boardclickBoardLikeInfo.getBoardId())).fetchFirst();
+		jpaQueryFactory.update(qBoard).where(qBoard.boardId.eq(boardclickBoardLikeInfo.getBoardId()))
+				.set(qBoard.boardLikesCount, curLikes + 1).execute();
+		List<Integer> favoritesBoardId = jpaQueryFactory.select(qBoardLikes.boardLikesBoardId).from(qBoardLikes)
+				.where(qBoardLikes.boardLikesUserId.eq(boardclickBoardLikeInfo.getUserId())).fetch();
+		return favoritesBoardId;
 	}
 
 	@Transactional
-	public void decreaseLike(int boardId) {
-		int curLikes = jpaQueryFactory.select(qBoard.boardLikesCount).from(qBoard).where(qBoard.boardId.eq(boardId))
-				.fetchFirst();
-		jpaQueryFactory.update(qBoard).where(qBoard.boardId.eq(boardId)).set(qBoard.boardLikesCount, curLikes - 1)
-				.execute();
+	public List<Integer> decreaseLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
+		int curLikes = jpaQueryFactory.select(qBoard.boardLikesCount).from(qBoard)
+				.where(qBoard.boardId.eq(boardclickBoardLikeInfo.getBoardId())).fetchFirst();
+		jpaQueryFactory.update(qBoard).where(qBoard.boardId.eq(boardclickBoardLikeInfo.getBoardId()))
+				.set(qBoard.boardLikesCount, curLikes - 1).execute();
+		List<Integer> favoritesBoardId = jpaQueryFactory.select(qBoardLikes.boardLikesBoardId).from(qBoardLikes)
+				.where(qBoardLikes.boardLikesUserId.eq(boardclickBoardLikeInfo.getUserId())).fetch();
+		return favoritesBoardId;
 	}
 
 	public List<Board> findLikeBoardByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
@@ -121,7 +128,8 @@ public class BoardRepositorySupport {
 
 		List<Integer> boardIds = jpaQueryFactory.select(qCategory.categoryBoardId).from(qCategory)
 				.where(qCategory.categoryWithWhom.like(withWhom)).where(qCategory.categorySeason.like(season))
-				.where(qCategory.categoryArea.like(area)).where(qCategory.categoryTheme.like(theme)).fetch();
+				.where(qCategory.categoryArea.like(area)).where(qCategory.categoryTheme.like(theme))
+				.orderBy(qBoard.boardLikesCount.desc()).fetch();
 
 		List<Board> boards = new LinkedList<Board>();
 		for (int boardId : boardIds) {
