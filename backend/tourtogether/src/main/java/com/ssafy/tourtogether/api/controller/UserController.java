@@ -33,7 +33,7 @@ import io.swagger.annotations.ApiResponse;
  */
 @Api(value = "유저 API", tags = { "User" })
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/api/user")
 public class UserController {
 	@Autowired
 	UserService userService;
