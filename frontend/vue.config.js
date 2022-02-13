@@ -10,7 +10,7 @@ module.exports = {
         changeOrigin: true,
       },
       "/tourspot": {
-        target: "https://i6a105.p.ssafy.io:8080/tourspot",
+        target: "https://i6a105.p.ssafy.io:8080/api/tourspot",
         changeOrigin: true,
       },
     },
