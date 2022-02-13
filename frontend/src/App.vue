@@ -38,7 +38,7 @@ import Configurator from "@/examples/Configurator.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
 import axios from "axios";
-import { reactive } from "@vue/reactivity";
+import { reactive } from "vue/";
 import { computed, watch, onMounted } from "vue";
 import { useStore, mapMutations } from "vuex";
 
