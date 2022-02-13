@@ -116,7 +116,7 @@ export default {
               },
             })
               .then((res) => {
-                store.commit("userstore/setUserProfileImage", data.Location);
+                store.commit("userStore/setUserProfileImage", data.Location);
                 console.log(res);
               })
               .catch((error) => {
