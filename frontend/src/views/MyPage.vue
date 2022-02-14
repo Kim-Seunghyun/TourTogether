@@ -155,9 +155,6 @@ export default {
     };
 
     onMounted(() => {
-      // if (!getters["userStore/getUserClientId"]) {
-      //   alert("로그인해주세요!");
-      // }
       // axios({
       //   method: "get",
       //   url: API_BASE_URL + "board/user",

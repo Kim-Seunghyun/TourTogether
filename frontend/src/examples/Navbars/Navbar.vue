@@ -73,6 +73,7 @@
 </template>
 <script>
 import { mapMutations, mapActions, useStore, mapState } from "vuex";
+import { onUpdated } from "vue";
 import router from "@/router";
 
 const userStore = "userStore";
@@ -100,11 +101,11 @@ export default {
   },
   setup() {
     const store = useStore();
-    // const getters = store.getters;
+    const getters = store.getters;
     const login = () => {
       window.Kakao.Auth.authorize({
-        redirectUri: "https://i6a105.p.ssafy.io/dashboard",
-        // redirectUri: "http://localhost:8080/dashboard",
+        // redirectUri: "https://i6a105.p.ssafy.io/dashboard",
+        redirectUri: "http://localhost:8080/kakao-login-callback",
       });
     };
     const logout = () => {
@@ -122,8 +123,22 @@ export default {
         // console.log(getters.getUserId);
         alert('로그아웃 되었습니다!')
       });
-    };
-    return { login, logout };
+    }
+    onUpdated(() => {
+      const navbar = document.getElementById("navbarBlur");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 10 && this.$store.state.isNavFixed) {
+          navbar.classList.add("blur");
+          navbar.classList.add("position-sticky");
+          navbar.classList.add("shadow-blur");
+        } else {
+          navbar.classList.remove("blur");
+          navbar.classList.remove("position-sticky");
+          navbar.classList.remove("shadow-blur");
+        }
+      });
+    });
+    return { login, logout, getters };
   },
   components: {},
   computed: {
@@ -131,20 +146,6 @@ export default {
     currentRouteName() {
       return this.$route.name;
     },
-  },
-  updated() {
-    const navbar = document.getElementById("navbarBlur");
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 10 && this.$store.state.isNavFixed) {
-        navbar.classList.add("blur");
-        navbar.classList.add("position-sticky");
-        navbar.classList.add("shadow-blur");
-      } else {
-        navbar.classList.remove("blur");
-        navbar.classList.remove("position-sticky");
-        navbar.classList.remove("shadow-blur");
-      }
-    });
   },
 };
 </script>

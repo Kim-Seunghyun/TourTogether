@@ -28,7 +28,7 @@
         <div class="modal-body">
           <!-- 영화사진 -->
           <div class="me-5">
-            <img :src="image" alt="" class="card-img-top" />
+            <!-- <img :src="image" alt="" class="card-img-top" /> -->
           </div>
         </div>
         <!-- modal-body -->
@@ -106,9 +106,9 @@ export default {
                 userProfileImage: data.Location,
               },
             })
-              .then((res) => {
+              .then(() => {
                 store.commit("userStore/setUserProfileImage", data.Location);
-                console.log(res);
+                state.preview = ''
               })
               .catch((error) => {
                 console.log(error);
