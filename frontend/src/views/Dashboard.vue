@@ -183,9 +183,14 @@
 <script>
 import BoardCategory from "./components/BoardCategory.vue";
 import { API_BASE_URL } from "@/config/index.js";
+import { LOCALHOST } from "@/config/index.js";
 import html2pdf from "html2pdf.js";
 
 import { mapMutations, mapState } from "vuex";
+import { useStore } from "vuex";
+import { reactive, watch } from "vue";
+import { onBeforeMount } from "vue";
+// import { onMounted } from "vue";
 import axios from "axios";
 
 const userStore = "userStore";
@@ -337,6 +342,168 @@ export default {
         },
       });
     },
+  },
+  
+  setup() {
+    const state = reactive({
+      accessToken: window.Kakao.Auth.getAccessToken(),
+    });
+    const store = useStore();
+    const accessToken = watch(console.log(state.accessToken));
+
+    const getParameterByName = (name) => {
+      name = name.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+      return results == null
+        ? ""
+        : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+    onBeforeMount(() => {
+    const code = getParameterByName("code");
+    // alert("this is code:"+code);
+    var details = {
+      grant_type: "authorization_code",
+      client_id: process.env.VUE_APP_KAKAO_RESTAPI_KEY,
+      redirect_uri: "https://i6a105.p.ssafy.io/dashboard",
+      // redirect_uri: "http://localhost:8080/dashboard",
+      code: code,
+    };
+    var formBody = [];
+    for (var property in details) {
+      var encodedKey = encodeURIComponent(property);
+      var encodedValue = encodeURIComponent(details[property]);
+      formBody.push(encodedKey + "=" + encodedValue);
+    }
+    formBody = formBody.join("&");
+    fetch("https://kauth.kakao.com/oauth/token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+      },
+      body: formBody,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(JSON.stringify(data));
+        alert(JSON.stringify(data));
+        window.Kakao.Auth.setAccessToken(data.access_token);
+        alert(window.Kakao.Auth.getAccessToken());
+      })
+      .then(() => {
+        window.Kakao.API.request({
+        url: "/v2/user/me",
+        data: {
+          property_keys: [
+            "properties.nickname",
+            "kakao_account.email",
+            "properties.profile_image",
+          ],
+        },
+        success: function (response) {
+          let email = null;
+          if (
+            response.kakao_account.has_email &
+            !response.kakao_account.email_needs_agreement
+          ) {
+            email = response.kakao_account.email;
+          }
+          axios({
+            method: "post",
+            url: LOCALHOST + "user/login",
+            data: {
+              userLoginPlatform: "kakao",
+              userClientId: response.id,
+              userEmail: email,
+              userName: response.properties.nickname,
+              userProfileImage: response.properties.profile_image,
+            },
+          }).then((res) => {
+            
+            store.commit("userStore/setUser", res.data.user);
+            store.commit("userStore/setUserId", res.data.user.userId);
+            store.commit("userStore/setUserLoginPlatform", "kakao");
+            store.commit(
+              "userStore/setUserClientId",
+              res.data.user.userClientId
+            );
+            store.commit(
+              "userStore/setUserNickname",
+              res.data.user.userNickname
+            );
+            store.commit(
+              "userStore/setUserInputNickname",
+              res.data.user.userNickname
+            );
+            store.commit(
+              "userStore/setUserProfileImage",
+              res.data.user.userProfileImage
+            );
+            });
+        },
+        fail: function (error) {
+          console.log(error);
+        },
+        });
+      })
+  })
+    // onMounted(() => {
+    //   // 우리 api에 id있는지 확인, 있으면 기존 정보 가져오고 없으면 window.Kakao.API.request
+    //   window.Kakao.API.request({
+    //     url: "/v2/user/me",
+    //     data: {
+    //       property_keys: [
+    //         "properties.nickname",
+    //         "kakao_account.email",
+    //         "properties.profile_image",
+    //       ],
+    //     },
+    //     success: function (response) {
+    //       let email = null;
+    //       if (
+    //         response.kakao_account.has_email &
+    //         !response.kakao_account.email_needs_agreement
+    //       ) {
+    //         email = response.kakao_account.email;
+    //       }
+    //       axios({
+    //         method: "post",
+    //         url: LOCALHOST + "user/login",
+    //         data: {
+    //           userLoginPlatform: "kakao",
+    //           userClientId: response.id,
+    //           userEmail: email,
+    //           userName: response.properties.nickname,
+    //           userProfileImage: response.properties.profile_image,
+    //         },
+    //       }).then((res) => {
+    //         store.commit("userStore/setUser", res.data.user);
+    //         store.commit("userStore/setUserId", res.data.user.userId);
+    //         store.commit("userStore/setUserLoginPlatform", "kakao");
+    //         store.commit(
+    //           "userStore/setUserClientId",
+    //           res.data.user.userClientId
+    //         );
+    //         store.commit(
+    //           "userStore/setUserNickname",
+    //           res.data.user.userNickname
+    //         );
+    //         store.commit(
+    //           "userStore/setUserInputNickname",
+    //           res.data.user.userNickname
+    //         );
+    //         store.commit(
+    //           "userStore/setUserProfileImage",
+    //           res.data.user.userProfileImage
+    //         );
+    //       });
+    //     },
+    //     fail: function (error) {
+    //       console.log(error);
+    //     },
+    //   });
+    // });
+    return { state, accessToken };
   },
   components: {
     BoardCategory,
