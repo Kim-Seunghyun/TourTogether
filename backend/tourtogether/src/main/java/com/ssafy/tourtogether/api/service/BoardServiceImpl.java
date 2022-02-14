@@ -91,6 +91,7 @@ public class BoardServiceImpl implements BoardService {
 		}
 
 	}
+
 	private String makeSHA256(String boardRandom) {
 		try {
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -161,22 +162,24 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public void clickBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
+	public List<Integer> clickBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
 		// 좋아요 누른 보드 아이디 저장
 		BoardLikes boardLikes = new BoardLikes();
 		boardLikes.setBoardLikesBoardId(boardclickBoardLikeInfo.getBoardId());
 		boardLikes.setBoardLikesUserId(boardclickBoardLikeInfo.getUserId());
 		boardLikesRepository.save(boardLikes);
 		// 좋아요 누른 보드 아이디의 좋아요 개수 +1
-		boardRepositorySupport.increaseLike(boardclickBoardLikeInfo.getBoardId());
+		List<Integer> favoritesBoardId = boardRepositorySupport.increaseLike(boardclickBoardLikeInfo);
+		return favoritesBoardId;
 	}
 
 	@Override
-	public void cancelBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
+	public List<Integer> cancelBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
 		// 좋아요 누른 보드 아이디 삭제
 		boardLikesRepositorySupport.deleteByBoardId(boardclickBoardLikeInfo);
 		// 좋아요 누른 보드 아이디의 좋아요 개수 -1
-		boardRepositorySupport.decreaseLike(boardclickBoardLikeInfo.getBoardId());
+		List<Integer> favoritesBoardId = boardRepositorySupport.decreaseLike(boardclickBoardLikeInfo);
+		return favoritesBoardId;
 	}
 
 	@Override

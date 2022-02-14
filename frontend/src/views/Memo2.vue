@@ -13,13 +13,14 @@
 <script>
 import { reactive } from "vue";
 import { quillEditor } from "vue3-quill";
+import { API_BASE_URL } from "@/config/index.js";
 
 import SockJS from "sockjs-client";
 import Stomp from "stomp-websocket";
 
 import axios from "axios";
 
-let sock = new SockJS("https://i6a105.p.ssafy.io:8080/api/ws-stomp");
+let sock = new SockJS(API_BASE_URL + "ws-stomp");
 
 export default {
   components: {
@@ -155,7 +156,7 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-      var sock = new SockJS("https://i6a105.p.ssafy.io:8080/api/ws-stomp");
+      var sock = new SockJS(API_BASE_URL + "ws-stomp");
       var ws = Stomp.over(sock);
       var _this = this;
       this.ws = ws;

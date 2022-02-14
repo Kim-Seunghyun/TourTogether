@@ -43,6 +43,7 @@
 <script>
 import draggable from "vuedraggable";
 import SockJS from "sockjs-client";
+import { API_BASE_URL } from "@/config/index.js";
 
 let id = 1;
 
@@ -67,7 +68,7 @@ export default {
   computed: {},
   methods: {
     connectSocket() {
-      this.sockjs = new SockJS("http://localhost:8080/api/schedule");
+      this.sockjs = new SockJS(API_BASE_URL + "schedule");
       console.log(this.sockjs);
       this.sockjs.onopen = function () {
         console.log("연결");

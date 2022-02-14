@@ -25,8 +25,8 @@ import com.ssafy.tourtogether.db.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponses;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 /**
  * 유저 관련 API 요청 처리를 위한 컨트롤러 정의.
@@ -71,25 +71,24 @@ public class UserController {
 
 	@DeleteMapping("/delete")
 	@ApiOperation(value = "회원탈퇴", notes = "소셜로그인 API를 통해 가입한 계정을 탈퇴한다.")
-	@ApiResponses({
-			// TODO 필요한 response 종류와 메시지 작성
-	})
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 	public ResponseEntity<UserDeleteDeleteRes> delete(
 			@RequestBody @ApiParam(value = "회원탈퇴 정보", required = true) UserDeleteDeleteReq deleteInfo) {
-//		String userId = /* deleteInfo.getId() */ ""; // TODO api 전달 방식에 따라 수정
-
-//		User user = userService.getUserByUserId(userId);
-		// TODO delete res 메시지에 따라 수정
-//		return ResponseEntity.ok(UserDeleteDeleteRes.of(200, "Success", JwtTokenUtil.getToken(userId)));
-//		return ResponseEntity.status(401).body(UserLoginPostRes.of(401, "Invalid Password", null));
-		return null;
+		if (userService.checkUser(deleteInfo)) {
+			System.out.println("유저 삭제됨");
+			userService.deleteUser(deleteInfo);
+			return ResponseEntity.ok(UserDeleteDeleteRes.of(200, "Success", true));
+		} else {
+			System.out.println("존재하지 않은 유저");
+			return ResponseEntity.ok(UserDeleteDeleteRes.of(200, "Success", false));
+		}
 	}
 
 	@PatchMapping("/updateImage")
 	@ApiOperation(value = "프로필 이미지 변경", notes = "유저의 프로필 이미지를 변경한다.")
-	@ApiResponses({
-			// TODO 필요한 response 종류와 메시지 작성
-	})
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 	public ResponseEntity<UserUpdateImagePatchRes> updateImage(
 			@RequestBody @ApiParam(value = "프로필 변경 정보", required = true) UserUpdateImagePatchReq updateImageInfo) {
 		String userClientId = updateImageInfo.getUserClientId();
@@ -117,9 +116,8 @@ public class UserController {
 			if (user == null) {
 				System.out.println("잘못된 이미지 링크");
 				return ResponseEntity.status(403).body(UserUpdateImagePatchRes.of(403, "잘못된 이미지 링크", null));
-			}
-			else {
-				System.out.println("이미지 변경 성공 ====> "+user.getUserProfileImage());
+			} else {
+				System.out.println("이미지 변경 성공 ====> " + user.getUserProfileImage());
 				return ResponseEntity.ok().body(UserUpdateImagePatchRes.of(200, "이미지 변경 성공", user));
 			}
 		}
@@ -127,9 +125,8 @@ public class UserController {
 
 	@PatchMapping("/updateNickname")
 	@ApiOperation(value = "프로필 이미지 변경", notes = "유저의 프로필 이미지를 변경한다.")
-	@ApiResponses({
-			// TODO 필요한 response 종류와 메시지 작성
-	})
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 	public ResponseEntity<UserUpdateNicknamePatchRes> updateNickname(
 			@RequestBody @ApiParam(value = "닉네임 변경 정보", required = true) UserUpdateNicknamePatchReq updateNicknameInfo) {
 		String userClientId = updateNicknameInfo.getUserClientId();
@@ -158,9 +155,8 @@ public class UserController {
 			if (user == null) {
 				System.out.println("잘못된 닉네임");
 				return ResponseEntity.status(403).body(UserUpdateNicknamePatchRes.of(403, "잘못된 닉네임", null));
-			}
-			else {
-				System.out.println("닉네임 변경 성공: "+userNickname+" ====> "+user.getUserNickname());
+			} else {
+				System.out.println("닉네임 변경 성공: " + userNickname + " ====> " + user.getUserNickname());
 				return ResponseEntity.ok().body(UserUpdateNicknamePatchRes.of(200, "닉네임 변경 성공", user));
 			}
 		}

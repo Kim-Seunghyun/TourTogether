@@ -22,6 +22,7 @@ import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
+import com.ssafy.tourtogether.api.response.BoardClickBoardLikePatchRes;
 import com.ssafy.tourtogether.api.response.BoardCreatePostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchAllPostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchByBoardIdPostRes;
@@ -175,9 +176,8 @@ public class BoardController {
 	public ResponseEntity<? extends BaseResponseBody> clickBoardLike(
 			@RequestBody @ApiParam(value = "좋아요 누른 보드 아이디와 유저 아이디 정보", required = true) BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
 
-		// 보드 생성
-		boardService.clickBoardLike(boardclickBoardLikeInfo);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		List<Integer> favoriteBoardId = boardService.clickBoardLike(boardclickBoardLikeInfo);
+		return ResponseEntity.status(200).body(BoardClickBoardLikePatchRes.of(200, "Success", favoriteBoardId));
 	}
 
 	@PatchMapping("/cancelBoardLike")
@@ -190,9 +190,8 @@ public class BoardController {
 	public ResponseEntity<? extends BaseResponseBody> cancelBoardLike(
 			@RequestBody @ApiParam(value = "좋아요 취소할 보드 아이디와 유저 아이디 정보", required = true) BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
 
-		// 보드 생성
-		boardService.cancelBoardLike(boardclickBoardLikeInfo);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		List<Integer> favoriteBoardId = boardService.cancelBoardLike(boardclickBoardLikeInfo);
+		return ResponseEntity.status(200).body(BoardClickBoardLikePatchRes.of(200, "Success", favoriteBoardId));
 	}
 
 	@PostMapping("/category")

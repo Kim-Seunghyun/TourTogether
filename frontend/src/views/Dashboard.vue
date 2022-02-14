@@ -107,7 +107,7 @@
                 aria-label="Close"
               ></button>
             </div>
-            <form @submit.prevent="startBoard">
+            <form @submit.prevent="createBoard">
               <div class="modal-body">
                 <input
                   type="text"
@@ -115,7 +115,7 @@
                   v-model="boardName"
                   placeholder="여행 제목을 입력해주세요"
                   required
-                  @keyup.enter="startBoard"
+                  @keyup.enter="createBoard"
                 />
               </div>
               <div class="modal-footer">
@@ -142,21 +142,6 @@
             <button
               type="button"
               class="btn btn-secondary"
-              @click="getAllBoards"
-            >
-              전체 일정 보기
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              @click="getSelectedBoards"
-            >
-              선택한 유형의 일정 보기
-            </button>
-
-            <button
-              type="button"
-              class="btn btn-secondary"
               @click="exportToPDF"
             >
               PDF로 내보내기
@@ -173,16 +158,20 @@
           </div>
           <div v-for="(board, index) in boards" :key="index">
             <div class="col-lg-6 col-sm-8">
-              {{ board.boardName }} //
+              {{ board.boardId }} // {{ board.boardName }} //
               {{ board.boardLikesCount }}
-              <button
-                type="button"
-                class="btn_like"
-                @click="likeClick(board.boardId, $event)"
-              >
-                <span class="img_emoti">좋아요</span>
-                <span class="ani_heart_m"></span>
-              </button>
+              <img
+                v-if="this.favoriteBoardId.includes(board.boardId)"
+                src="@/assets/img/full_heart.png"
+                width="30"
+                @click="likeCancel(board.boardId)"
+              />
+              <img
+                v-if="!this.favoriteBoardId.includes(board.boardId)"
+                src="@/assets/img/empty_heart.png"
+                width="30"
+                @click="likeClick(board.boardId)"
+              />
             </div>
             <div class="col-lg-6 col-sm-8"></div>
           </div>
@@ -193,7 +182,7 @@
 </template>
 <script>
 import BoardCategory from "./components/BoardCategory.vue";
-
+import { API_BASE_URL } from "@/config/index.js";
 import html2pdf from "html2pdf.js";
 
 import { mapMutations, mapState } from "vuex";
@@ -207,6 +196,7 @@ export default {
   data() {
     return {
       boards: [],
+      favoriteBoardId: [],
       boardName: "",
       boardRandom: "",
       // userId: "",
@@ -219,55 +209,48 @@ export default {
   },
   computed: {
     ...mapState(userStore, ["userId"]),
+    ...mapState(boardStore, ["searchByCategoryBoards"]),
+    ...mapState(boardStore, ["withWhom", "season", "area", "theme"]),
     // ...mapState(boardStore, ["boards"]),
   },
   watch: {
-    boards() {
-      console.log("데이터 변경!!!");
+    searchByCategoryBoards() {
+      this.boards = this.searchByCategoryBoards;
     },
   },
   created() {
     // this.getAllBoards();
+    this.getUserFavoriteBoards();
   },
   methods: {
-    ...mapMutations(boardStore, ["setAllBoards"]),
-    getAllBoards() {
-      axios({
-        method: "get",
-        url: "https://i6a105.p.ssafy.io:8080/api/board",
-      }).then((res) => {
-        this.boards = res.data.boards;
-        this.setAllBoards(res.data.boards);
-      });
-    },
-    getSelectedBoards() {
+    ...mapMutations(boardStore, ["setAllBoards", "setSearchByCategoryBoards"]),
+    // getAllBoards() {
+    //   axios({
+    //     method: "get",
+    //     url: API_BASE_URL + "board",
+    //   }).then((res) => {
+    //     this.boards = res.data.boards;
+    //     this.setAllBoards(res.data.boards);
+    //   });
+    // },
+    getUserFavoriteBoards() {
       axios({
         method: "post",
-        url: "https://i6a105.p.ssafy.io:8080/api/board/searchByCategory",
+        url: API_BASE_URL + "board/searchLikeBoardByUserId",
         data: {
-          categoryWithWhom: 2,
-          categorySeason: 3,
-          categoryArea: 0,
-          categoryTheme: 0,
+          userId: this.userId,
         },
       }).then((res) => {
-        this.boards = res.data.boards;
-        // this.setAllBoards(res.data.boards);
+        for (var i = 0; i < res.data.myBoards.length; i++) {
+          this.favoriteBoardId[i] = res.data.myBoards[i].boardId;
+        }
       });
-    },
-    startBoard() {
-      // console.log("createBoard!!!");
-      // console.log("userId는 ", this.userId);
-      // console.log("boardName은 ", this.boardName);
-      this.createBoard();
-      this.enterBoard();
-      // location.href = "/map";
     },
     createBoard() {
       // alert("send create board data");
       axios({
         method: "post",
-        url: "https://i6a105.p.ssafy.io:8080/api/board/create",
+        url: API_BASE_URL + "board/create",
         data: {
           boardName: this.boardName,
           userId: this.userId,
@@ -279,48 +262,57 @@ export default {
         location.href = `/board/${this.boardRandom}`;
       });
     },
-    enterBoard() {
-      console.log(`/board/${this.boardRandom}`);
-      //
+    likeClick(boardId) {
+      console.log("좋아요 누르기 ");
+      axios({
+        method: "patch",
+        url: API_BASE_URL + "board/clickBoardLike",
+        data: {
+          boardId: boardId,
+          userId: this.userId,
+        },
+      }).then((res) => {
+        this.favoriteBoardId = res.data.favoriteBoardId;
+        this.getListByCategory(
+          this.withWhom,
+          this.season,
+          this.area,
+          this.theme
+        );
+      });
     },
-    likeClick(boardId, event) {
-      if (event.target.classList.contains("btn_unlike")) {
-        event.target.classList.toggle("btn_unlike");
-        axios({
-          method: "patch",
-          url: "https://i6a105.p.ssafy.io:8080/api/board/cancelBoardLike",
-          data: {
-            boardId: boardId,
-            userId: this.userId,
-          },
-        }).then((res) => {
-          console.log(res);
-        });
-        console.log("좋아요 취소하기 ");
-      } else {
-        event.target.classList.toggle("btn_unlike");
-        axios({
-          method: "patch",
-          url: "https://i6a105.p.ssafy.io:8080/api/board/clickBoardLike",
-          data: {
-            boardId: boardId,
-            userId: this.userId,
-          },
-        }).then((res) => {
-          console.log(res);
-        });
-        console.log("좋아요 누르기 ");
-      }
-      // if (this.class == "btn_unlike") {
-      //   console.log("like");
-      //   // $(this).removeClass("btn_unlike");
-      //   // $(".ani_heart_m").removeClass("hi");
-      //   // $(".ani_heart_m").addClass("bye");
-      // } else {
-      //   // $(this).addClass("btn_unlike");
-      //   // $(".ani_heart_m").addClass("hi");
-      //   // $(".ani_heart_m").removeClass("bye");
-      // }
+    likeCancel(boardId) {
+      console.log("좋아요 취소하기");
+      axios({
+        method: "patch",
+        url: API_BASE_URL + "board/cancelBoardLike",
+        data: {
+          boardId: boardId,
+          userId: this.userId,
+        },
+      }).then((res) => {
+        this.favoriteBoardId = res.data.favoriteBoardId;
+        this.getListByCategory(
+          this.withWhom,
+          this.season,
+          this.area,
+          this.theme
+        );
+      });
+    },
+    getListByCategory(withWhom, season, area, theme) {
+      axios({
+        method: "post",
+        url: API_BASE_URL + "board/searchByCategory",
+        data: {
+          categoryArea: area,
+          categorySeason: season,
+          categoryTheme: theme,
+          categoryWithWhom: withWhom,
+        },
+      }).then((res) => {
+        this.setSearchByCategoryBoards(res.data.boards);
+      });
     },
     exportToPDF() {
       //window.scrollTo(0, 0);

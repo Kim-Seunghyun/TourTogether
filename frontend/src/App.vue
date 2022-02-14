@@ -38,7 +38,8 @@ import Configurator from "@/examples/Configurator.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
 import axios from "axios";
-import { reactive } from "vue/";
+import { API_BASE_URL } from "@/config/index.js";
+import { reactive } from "vue";
 import { computed, watch, onMounted } from "vue";
 import { useStore, mapMutations } from "vuex";
 
@@ -74,12 +75,7 @@ export default {
     const counter = computed(() => store.state.counter);
     const test = computed(() => store.getters);
     const inc = () => store.commit("setCounter", counter.value + 1);
-    const login = () => {
-      window.Kakao.Auth.authorize({
-        redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
-        // redirectUri: "http://localhost/kakao-login-callback/",
-      });
-    };
+
     const accessToken = watch(console.log(state.accessToken));
 
     onMounted(() => {
@@ -103,7 +99,7 @@ export default {
           }
           axios({
             method: "post",
-            url: "https://i6a105.p.ssafy.io:8080/api/user/login",
+            url: API_BASE_URL + "user/login",
             data: {
               userLoginPlatform: "kakao",
               userClientId: response.id,
@@ -112,12 +108,25 @@ export default {
               userProfileImage: response.properties.profile_image,
             },
           }).then((res) => {
+            store.commit("userStore/setUser", res.data.user);
             store.commit("userStore/setUserId", res.data.user.userId);
             store.commit("userStore/setUserLoginPlatform", "kakao");
-            store.commit("userStore/setUserClientId", res.data.user.userClientId);
-            store.commit("userStore/setUserNickname", res.data.user.userNickname);
-            store.commit("userStore/setUserInputNickname", res.data.user.userNickname);
-            store.commit("userStore/setUserProfileImage", res.data.user.userProfileImage);
+            store.commit(
+              "userStore/setUserClientId",
+              res.data.user.userClientId
+            );
+            store.commit(
+              "userStore/setUserNickname",
+              res.data.user.userNickname
+            );
+            store.commit(
+              "userStore/setUserInputNickname",
+              res.data.user.userNickname
+            );
+            store.commit(
+              "userStore/setUserProfileImage",
+              res.data.user.userProfileImage
+            );
           });
         },
         fail: function (error) {
@@ -126,7 +135,7 @@ export default {
       });
     });
 
-    return { state, counter, inc, test, login, accessToken };
+    return { state, counter, inc, test, accessToken };
   },
   // methods: {
   //   unlink() {  // 카카오 계정 연결끊기

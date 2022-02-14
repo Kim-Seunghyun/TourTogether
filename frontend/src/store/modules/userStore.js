@@ -1,6 +1,7 @@
 export const userStore = {
   namespaced: true,
   state: {
+    user: [],
     userId: "",
     userNickname: "",
     userProfileImage: "",
@@ -9,6 +10,9 @@ export const userStore = {
     userClientId: "",
   },
   getters: {
+    getUser(state) {
+      return state.user;
+    },
     getUserId(state) {
       return state.userId;
     },
@@ -29,6 +33,10 @@ export const userStore = {
     },
   },
   mutations: {
+    setUser(state, user) {
+      state.user = user;
+      console.log("user -> ", state.user);
+    },
     setUserId(state, userId) {
       state.userId = userId;
     },

@@ -43,6 +43,7 @@
 import { reactive, onMounted } from "vue";
 import { useStore, mapGetters } from "vuex";
 import axios from "axios";
+import { API_BASE_URL } from "@/config/index.js";
 
 import ChangeImage from "@/components/ChangeImage.vue";
 
@@ -78,7 +79,7 @@ export default {
     const submitNickname = () => {
       axios({
         method: "patch",
-        url: "https://i6a105.p.ssafy.io:8080/api/user/updateNickname",
+        url: API_BASE_URL + "user/updateNickname/",
         // url: "http://localhost:8081/user/updateNickname/",
         data: {
           userLoginPlatform: getters["userStore/getUserLoginPlatform"],
@@ -94,14 +95,9 @@ export default {
     };
 
     onMounted(() => {
-      // 애초에 여기에 이게 있어야하나?
-      if (!getters["userStore/getUserClientId"]) {
-        alert("로그인해주세요!");
-        // TODO 여기에 리다이렉트 해야할듯
-      }
       axios({
-        method: "POST",
-        url: "https://i6a105.p.ssafy.io:8080/api/board/searchByUserId",
+        method: "get",
+        url: API_BASE_URL + "board/user",
         data: {
           userId: getters["userStore/getUserId"],
         },

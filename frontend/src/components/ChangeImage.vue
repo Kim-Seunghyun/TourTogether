@@ -65,6 +65,7 @@
 import { ref, reactive, onMounted } from "vue";
 import AWS from "aws-sdk";
 import axios from "axios";
+import { API_BASE_URL } from "@/config/index.js";
 import { useStore } from "vuex";
 
 export default {
@@ -108,7 +109,7 @@ export default {
             alert("Successfully uploaded photo.");
             axios({
               method: "patch",
-              url: "https://i6a105.p.ssafy.io:8080/api/user/updateImage/",
+              url: API_BASE_URL + "user/updateImage/",
               data: {
                 userLoginPlatform: getters["userStore/getUserLoginPlatform"],
                 userClientId: getters["userStore/getUserClientId"],
