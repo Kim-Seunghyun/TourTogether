@@ -49,6 +49,14 @@
             >
 
             <router-link
+              to="/memo2"
+              v-if="user"
+              class="px-0 nav-link font-weight-bold"
+              :class="textWhite ? textWhite : 'text-body'"
+              >memo2 &nbsp;</router-link
+            >
+
+            <router-link
               to="/dashboard"
               v-if="user"
               v-on:click="logout()"

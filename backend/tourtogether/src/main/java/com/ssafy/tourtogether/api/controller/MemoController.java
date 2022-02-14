@@ -41,9 +41,9 @@ public class MemoController {
 	}
 
 	/**
-	 * websocket "/pub/memo"로 들어오는 메시징을 처리한다.
+	 * websocket "/api/pub/memo"로 들어오는 메시징을 처리한다.
 	 */
-	@MessageMapping("/api/memo")
+	@MessageMapping("/memo")
 	@ApiOperation(value = "메모", notes = "유저가 메모에 입력한 메시지를 받는다.")
 	public void memo(MemoMessage message) {
 		System.out.println("@@@message: " + message.toString());

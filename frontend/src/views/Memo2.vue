@@ -20,7 +20,10 @@ import Stomp from "stomp-websocket";
 
 import axios from "axios";
 
+import store from "@/store";
+
 let sock = new SockJS(API_BASE_URL + "ws-stomp");
+const getters = store.getters;
 
 export default {
   components: {
@@ -31,7 +34,7 @@ export default {
       ws: Stomp.over(sock),
       quill: null,
       my: true,
-      user: "임의의 사용자1",
+      user: getters["userStore/getUserNickname"],
       id: "abc-1234",
 
       // dynamicComponent: null,
@@ -88,7 +91,7 @@ export default {
     const sendMessage = function (delta, content) {
       console.log("sendMessage", delta);
       state.ws.send(
-        "/pub/memo",
+        "/api/pub/memo",
         {},
         JSON.stringify({
           roomId: state.id,
@@ -138,7 +141,7 @@ export default {
     init() {
       axios({
         method: "POST",
-        url: "http://localhost:8080/api/memo/room",
+        url: API_BASE_URL + "memo/room",
         params: {
           id: this.state.id,
           user: this.state.user,
