@@ -37,11 +37,12 @@
 import Configurator from "@/examples/Configurator.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
-import axios from "axios";
-import { API_BASE_URL } from "@/config/index.js";
+// import axios from "axios";
+// import { API_BASE_URL } from "@/config/index.js";
+// import { LOCALHOST } from "@/config/index.js";
 import { reactive } from "vue";
-import { computed, watch, onMounted } from "vue";
-import { useStore, mapMutations } from "vuex";
+import { watch, onMounted } from "vue";
+import { mapMutations } from "vuex";
 
 export default {
   components: {
@@ -71,88 +72,68 @@ export default {
     const state = reactive({
       accessToken: window.Kakao.Auth.getAccessToken(),
     });
-    const store = useStore();
-    const counter = computed(() => store.state.counter);
-    const test = computed(() => store.getters);
-    const inc = () => store.commit("setCounter", counter.value + 1);
+    // const store = useStore();
     const accessToken = watch(console.log(state.accessToken));
 
     onMounted(() => {
       // 우리 api에 id있는지 확인, 있으면 기존 정보 가져오고 없으면 window.Kakao.API.request
-      window.Kakao.API.request({
-        url: "/v2/user/me",
-        data: {
-          property_keys: [
-            "properties.nickname",
-            "kakao_account.email",
-            "properties.profile_image",
-          ],
-        },
-        success: function (response) {
-          let email = null;
-          if (
-            response.kakao_account.has_email &
-            !response.kakao_account.email_needs_agreement
-          ) {
-            email = response.kakao_account.email;
-          }
-          axios({
-            method: "post",
-            url: API_BASE_URL + "user/login",
-            data: {
-              userLoginPlatform: "kakao",
-              userClientId: response.id,
-              userEmail: email,
-              userName: response.properties.nickname,
-              userProfileImage: response.properties.profile_image,
-            },
-          }).then((res) => {
-            store.commit("userStore/setUser", res.data.user);
-            store.commit("userStore/setUserId", res.data.user.userId);
-            store.commit("userStore/setUserLoginPlatform", "kakao");
-            store.commit(
-              "userStore/setUserClientId",
-              res.data.user.userClientId
-            );
-            store.commit(
-              "userStore/setUserNickname",
-              res.data.user.userNickname
-            );
-            store.commit(
-              "userStore/setUserInputNickname",
-              res.data.user.userNickname
-            );
-            store.commit(
-              "userStore/setUserProfileImage",
-              res.data.user.userProfileImage
-            );
-          });
-        },
-        fail: function (error) {
-          console.log(error);
-        },
-      });
+      // window.Kakao.API.request({
+      //   url: "/v2/user/me",
+      //   data: {
+      //     property_keys: [
+      //       "properties.nickname",
+      //       "kakao_account.email",
+      //       "properties.profile_image",
+      //     ],
+      //   },
+      //   success: function (response) {
+      //     let email = null;
+      //     if (
+      //       response.kakao_account.has_email &
+      //       !response.kakao_account.email_needs_agreement
+      //     ) {
+      //       email = response.kakao_account.email;
+      //     }
+      //     axios({
+      //       method: "post",
+      //       url: LOCALHOST + "user/login",
+      //       data: {
+      //         userLoginPlatform: "kakao",
+      //         userClientId: response.id,
+      //         userEmail: email,
+      //         userName: response.properties.nickname,
+      //         userProfileImage: response.properties.profile_image,
+      //       },
+      //     }).then((res) => {
+      //       store.commit("userStore/setUser", res.data.user);
+      //       store.commit("userStore/setUserId", res.data.user.userId);
+      //       store.commit("userStore/setUserLoginPlatform", "kakao");
+      //       store.commit(
+      //         "userStore/setUserClientId",
+      //         res.data.user.userClientId
+      //       );
+      //       store.commit(
+      //         "userStore/setUserNickname",
+      //         res.data.user.userNickname
+      //       );
+      //       store.commit(
+      //         "userStore/setUserInputNickname",
+      //         res.data.user.userNickname
+      //       );
+      //       store.commit(
+      //         "userStore/setUserProfileImage",
+      //         res.data.user.userProfileImage
+      //       );
+      //     });
+      //   },
+      //   fail: function (error) {
+      //     console.log(error);
+      //   },
+      // });
     });
 
-    return { state, counter, inc, test, accessToken };
+    return { state, accessToken };
   },
-  // methods: {
-  //   unlink() {  // 카카오 계정 연결끊기
-  //     let logout = this.logout;
-  //     window.Kakao.API.request({
-  //       url: "/v1/user/unlink",
-  //       success: function (response) {
-  //         console.log(response);
-  //         logout("unlink");
-  //       },
-  //       fail: function (error) {
-  //         console.log(error);
-  //         alert(error);
-  //         return;
-  //       },
-  //     });
-  //   },
-  // },
   // watch: {
   //   accessToken: function () { // 토큰이 변경 확인
   //     console.log(this.accessToken);

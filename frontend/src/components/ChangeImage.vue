@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import { ref, reactive, onMounted } from "vue";
+import { reactive, onMounted } from "vue";
 import AWS from "aws-sdk";
 import axios from "axios";
 import { API_BASE_URL } from "@/config/index.js";
@@ -130,8 +130,7 @@ export default {
       }
     };
 
-    const imageRef = ref(null);
-    // const hello = ref(null)
+    // const imageRef = ref(null);
     const handleImageUpload = (event) => {
       console.log(event.target.files[0]);
       const imageFile = event.target.files[0];
@@ -149,7 +148,7 @@ export default {
       state,
       uploadImage,
       handleImageUpload,
-      imageRef,
+      // imageRef,
       getters,
     };
   },

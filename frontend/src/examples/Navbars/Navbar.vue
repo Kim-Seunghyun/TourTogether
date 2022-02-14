@@ -49,6 +49,14 @@
             >
 
             <router-link
+              to="/memo2"
+              v-if="user"
+              class="px-0 nav-link font-weight-bold"
+              :class="textWhite ? textWhite : 'text-body'"
+              >memo2 &nbsp;</router-link
+            >
+
+            <router-link
               to="/dashboard"
               v-if="user"
               v-on:click="logout()"
@@ -100,11 +108,11 @@ export default {
   },
   setup() {
     const store = useStore();
-    const getters = store.getters;
+    // const getters = store.getters;
     const login = () => {
       window.Kakao.Auth.authorize({
-        redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
-        // redirectUri: "http://localhost/kakao-login-callback/",
+        redirectUri: "https://i6a105.p.ssafy.io/dashboard",
+        // redirectUri: "http://localhost:8080/dashboard",
       });
     };
     const logout = () => {
@@ -119,7 +127,8 @@ export default {
         store.commit("userStore/setUserNickname", "");
         store.commit("userStore/setUserInputNickname", "");
         store.commit("userStore/setUserProfileImage", "");
-        console.log(getters.getUserId);
+        // console.log(getters.getUserId);
+        alert('로그아웃 되었습니다!')
       });
     };
     return { login, logout };

@@ -45,8 +45,8 @@
       <input
         type="text"
         @keyup="setUserInputEmail"
-        :value="computedGetters['userStore/getUserInputEmail']"
         placeholder="카카오계정 ID를 입력해주세요"
+        v-model="state.userInputEmail"
       />
       <button @click="[toggleDeleteAccount(), deleteAccount()]">
         회원탈퇴
@@ -61,7 +61,7 @@ import { reactive, onMounted, computed } from "vue";
 import { useStore, mapGetters } from "vuex";
 import axios from "axios";
 import { API_BASE_URL } from "@/config/index.js";
-
+import { LOCALHOST } from "@/config/index.js";
 import ChangeImage from "@/components/ChangeImage.vue";
 
 export default {
@@ -83,6 +83,7 @@ export default {
     const state = reactive({
       isChangingNickname: false,
       isDeletingAccount: false,
+      userInputEmail: '',
     });
     const toggleChangeNickname = () => {
       if (state.isChangingNickname) {
@@ -97,7 +98,7 @@ export default {
     const submitNickname = () => {
       axios({
         method: "patch",
-        url: API_BASE_URL + "user/updateNickname/",
+        url: LOCALHOST + "user/updateNickname/",
         // url: "http://localhost:8081/user/updateNickname/",
         data: {
           userLoginPlatform: getters["userStore/getUserLoginPlatform"],
@@ -116,17 +117,20 @@ export default {
       } else {
         state.isDeletingAccount = true;
       }
+      console.log(state.userInputEmail)
     };
     const setUserInputEmail = (event) => {
       store.commit("userStore/setUserInputEmail", event.target.value);
+      state.userInputEmail
     };
     const deleteAccount = () => {
+      console.log(state.userInputEmail)
       axios({
         method: "delete",
         url: API_BASE_URL + "user/delete",
         data: {
           userId: getters["userStore/getUserId"],
-          userEmail: getters["userStore/getUserInputEmail"],
+          userEmail: state.userInputEmail
         },
       })
         .then(() => {
@@ -154,15 +158,15 @@ export default {
       // if (!getters["userStore/getUserClientId"]) {
       //   alert("로그인해주세요!");
       // }
-      axios({
-        method: "get",
-        url: API_BASE_URL + "board/user",
-        data: {
-          userId: getters["userStore/getUserId"],
-        },
-      }).then((res) => {
-        console.log("로그인성공", res);
-      });
+      // axios({
+      //   method: "get",
+      //   url: API_BASE_URL + "board/user",
+      //   data: {
+      //     userId: getters["userStore/getUserId"],
+      //   },
+      // }).then((res) => {
+      //   console.log("로그인성공", res);
+      // });
     });
 
     return {
