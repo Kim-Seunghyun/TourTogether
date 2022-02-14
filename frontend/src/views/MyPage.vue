@@ -122,8 +122,8 @@ export default {
     };
     const deleteAccount = () => {
       axios({
-        method: 'delete',
-        url: API_BASE_URL + 'user/delete',
+        method: "delete",
+        url: API_BASE_URL + "user/delete",
         data: {
           userId: getters["userStore/getUserId"],
           userEmail: getters["userStore/getUserInputEmail"],
