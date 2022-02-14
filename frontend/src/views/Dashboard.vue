@@ -176,7 +176,6 @@
 <script>
 import BoardCategory from "./components/BoardCategory.vue";
 import { API_BASE_URL } from "@/config/index.js";
-import html2pdf from "html2pdf.js";
 
 import { mapMutations, mapState } from "vuex";
 // import { useStore } from "vuex";
@@ -190,9 +189,7 @@ export default {
   setup() {
     // const store = useStore();
     // const getters = store.getters;
-    onMounted(() => {
-
-    })
+    onMounted(() => {});
   },
   name: "dashboard",
   data() {
