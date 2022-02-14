@@ -91,7 +91,7 @@ export default {
     const sendMessage = function (delta, content) {
       console.log("sendMessage", delta);
       state.ws.send(
-        "/pub/memo",
+        "/api/pub/memo",
         {},
         JSON.stringify({
           roomId: state.id,
