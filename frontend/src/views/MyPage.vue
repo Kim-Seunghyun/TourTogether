@@ -55,15 +55,23 @@
 </template>
 
 <script>
-import { computed, reactive, onMounted } from "vue";
-import { useStore } from "vuex";
+import { reactive, onMounted } from "vue";
+import { useStore, mapGetters } from "vuex";
 import axios from "axios";
+import { API_BASE_URL } from "@/config/index.js";
 
 import ChangeImage from "@/components/ChangeImage.vue";
 
 export default {
   components: {
     ChangeImage,
+  },
+  computed: {
+    ...mapGetters({
+      userProfileImage: "userStore/getUserProfileImage",
+      userNickname: "userStore/getUserNickname",
+      userInputNickname: "userStore/getUserInputNickname",
+    }),
   },
   setup() {
     const store = useStore();
@@ -87,7 +95,7 @@ export default {
     const submitNickname = () => {
       axios({
         method: "patch",
-        url: "/user/updateNickname/",
+        url: API_BASE_URL + "user/updateNickname/",
         // url: "http://localhost:8081/user/updateNickname/",
         data: {
           userLoginPlatform: getters["userStore/getUserLoginPlatform"],
@@ -146,12 +154,12 @@ export default {
       // }
       axios({
         method: "get",
-        url: "https://i6a105.p.ssafy.io:8081/board/user",
+        url: API_BASE_URL + "board/user",
         data: {
-          userClientId: getters.getUserClientId,
+          userId: getters["userStore/getUserId"],
         },
       }).then((res) => {
-        console.log(res);
+        console.log("로그인성공", res);
       });
     });
 

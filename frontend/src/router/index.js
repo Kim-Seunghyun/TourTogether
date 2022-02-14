@@ -7,10 +7,7 @@ import KakaoLoginCallback from "../views/KakaoLoginCallback.vue";
 import FavoritePage from "../views/FavoritePage.vue";
 import Dashboard from "@/views/Dashboard.vue";
 import Tables from "@/views/Tables.vue";
-import Billing from "@/views/Billing.vue";
-import VirtualReality from "@/views/VirtualReality.vue";
 import Profile from "@/views/Profile.vue";
-import Rtl from "@/views/Rtl.vue";
 import SignIn from "@/views/SignIn.vue";
 import SignUp from "@/views/SignUp.vue";
 import Memo from "../views/Memo.vue";
@@ -18,6 +15,19 @@ import Memo2 from "../views/Memo2.vue";
 import Memo3 from "../views/Memo3.vue";
 import Schedule from "../views/Schedule.vue";
 import Sch2 from "../views/Sch2.vue";
+
+import store from "@/store/index.js";
+
+const onlyAuthUser = async (to, from, next) => {
+  const checkUserInfo = store.getters["userStore/getUserId"];
+  console.log("checkUserInfo!!!!! -> " + store.getters["userStore/getUserId"]);
+  if (!checkUserInfo) {
+    alert("로그인이 필요한 페이지입니다..");
+    router.push({ name: "Login" });
+  } else {
+    next();
+  }
+};
 
 const routes = [
   {
@@ -27,8 +37,9 @@ const routes = [
     redirect: "/dashboard",
   },
   {
-    path: "/map",
+    path: "/board/:boardRandom",
     name: "Map",
+    beforeEnter: onlyAuthUser,
     component: Map,
   },
   {
@@ -39,11 +50,13 @@ const routes = [
   {
     path: "/mypage",
     name: "MyPage",
+    beforeEnter: onlyAuthUser,
     component: MyPage,
   },
   {
     path: "/favoritepage",
     name: "FavoritePage",
+    beforeEnter: onlyAuthUser,
     component: FavoritePage,
   },
   {
@@ -62,24 +75,10 @@ const routes = [
     component: Tables,
   },
   {
-    path: "/billing",
-    name: "Billing",
-    component: Billing,
-  },
-  {
-    path: "/virtual-reality",
-    name: "Virtual Reality",
-    component: VirtualReality,
-  },
-  {
     path: "/profile",
     name: "Profile",
+    beforeEnter: onlyAuthUser,
     component: Profile,
-  },
-  {
-    path: "/rtl-page",
-    name: "Rtl",
-    component: Rtl,
   },
   {
     path: "/sign-in",
@@ -94,21 +93,25 @@ const routes = [
   {
     path: "/memo",
     name: "Memo",
+    beforeEnter: onlyAuthUser,
     component: Memo,
   },
   {
     path: "/memo2",
     name: "Memo2",
+    beforeEnter: onlyAuthUser,
     component: Memo2,
   },
   {
     path: "/memo3",
     name: "Memo3",
+    beforeEnter: onlyAuthUser,
     component: Memo3,
   },
   {
     path: "/schedule",
     name: "Schedule",
+    beforeEnter: onlyAuthUser,
     component: Schedule,
   },
   {
