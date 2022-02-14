@@ -20,7 +20,10 @@ import Stomp from "stomp-websocket";
 
 import axios from "axios";
 
+import store from "@/store";
+
 let sock = new SockJS(API_BASE_URL + "ws-stomp");
+const getters = store.getters;
 
 export default {
   components: {
@@ -31,7 +34,7 @@ export default {
       ws: Stomp.over(sock),
       quill: null,
       my: true,
-      user: "임의의 사용자1",
+      user: getters["userStore/getUserNickname"],
       id: "abc-1234",
 
       // dynamicComponent: null,
@@ -160,7 +163,7 @@ export default {
       var ws = Stomp.over(sock);
       var _this = this;
       this.ws = ws;
-      var subUrl = API_BASE_URL + "api/sub/memo/" + _this.state.id;
+      var subUrl = API_BASE_URL + "sub/memo/" + _this.state.id;
       console.log("채널 구독하기: ", subUrl);
       ws.connect(
         {
