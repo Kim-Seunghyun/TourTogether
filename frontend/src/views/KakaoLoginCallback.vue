@@ -344,7 +344,7 @@ export default {
       });
     },
   },
-  
+
   setup() {
     const state = reactive({
       accessToken: window.Kakao.Auth.getAccessToken(),
@@ -360,21 +360,19 @@ export default {
       return results == null
         ? ""
         : decodeURIComponent(results[1].replace(/\+/g, " "));
-    }
-    onUpdated(() => {
-      
-    })
+    };
+    onUpdated(() => {});
 
     onMounted(() => {
       // console.log(getters["userStore/getUserId"])
-      if(!getters["userStore/getUserId"]) {
+      if (!getters["userStore/getUserId"]) {
         const code = getParameterByName("code");
         // alert("this is code:"+code);
         var details = {
           grant_type: "authorization_code",
           client_id: process.env.VUE_APP_KAKAO_RESTAPI_KEY,
-          // redirect_uri: "https://i6a105.p.ssafy.io/dashboard",
-          redirect_uri: "http://localhost:8080/kakao-login-callback",
+          redirect_uri: "https://i6a105.p.ssafy.io/kakao-login-callback",
+          // redirect_uri: "http://localhost:8080/kakao-login-callback",
           code: code,
         };
         var formBody = [];
@@ -384,7 +382,7 @@ export default {
           formBody.push(encodedKey + "=" + encodedValue);
         }
         formBody = formBody.join("&");
-        
+
         fetch("https://kauth.kakao.com/oauth/token", {
           method: "POST",
           headers: {
@@ -401,63 +399,63 @@ export default {
           })
           .then(() => {
             window.Kakao.API.request({
-            url: "/v2/user/me",
-            data: {
-              property_keys: [
-                "properties.nickname",
-                "kakao_account.email",
-                "properties.profile_image",
-              ],
-            },
-            success: function (response) {
-              let email = null;
-              if (
-                response.kakao_account.has_email &
-                !response.kakao_account.email_needs_agreement
-              ) {
-                email = response.kakao_account.email;
-              }
-              axios({
-                method: "post",
-                url: API_BASE_URL + "user/login",
-                data: {
-                  userLoginPlatform: "kakao",
-                  userClientId: response.id,
-                  userEmail: email,
-                  userName: response.properties.nickname,
-                  userProfileImage: response.properties.profile_image,
-                },
-              }).then((res) => {
-                store.commit("userStore/setUser", res.data.user);
-                store.commit("userStore/setUserId", res.data.user.userId);
-                store.commit("userStore/setUserLoginPlatform", "kakao");
-                store.commit(
-                  "userStore/setUserClientId",
-                  res.data.user.userClientId
-                );
-                store.commit(
-                  "userStore/setUserNickname",
-                  res.data.user.userNickname
-                );
-                store.commit(
-                  "userStore/setUserInputNickname",
-                  res.data.user.userNickname
-                );
-                store.commit(
-                  "userStore/setUserProfileImage",
-                  res.data.user.userProfileImage
-                );
-                console.log(getters["userStore/getUserId"])
+              url: "/v2/user/me",
+              data: {
+                property_keys: [
+                  "properties.nickname",
+                  "kakao_account.email",
+                  "properties.profile_image",
+                ],
+              },
+              success: function (response) {
+                let email = null;
+                if (
+                  response.kakao_account.has_email &
+                  !response.kakao_account.email_needs_agreement
+                ) {
+                  email = response.kakao_account.email;
+                }
+                axios({
+                  method: "post",
+                  url: API_BASE_URL + "user/login",
+                  data: {
+                    userLoginPlatform: "kakao",
+                    userClientId: response.id,
+                    userEmail: email,
+                    userName: response.properties.nickname,
+                    userProfileImage: response.properties.profile_image,
+                  },
+                }).then((res) => {
+                  store.commit("userStore/setUser", res.data.user);
+                  store.commit("userStore/setUserId", res.data.user.userId);
+                  store.commit("userStore/setUserLoginPlatform", "kakao");
+                  store.commit(
+                    "userStore/setUserClientId",
+                    res.data.user.userClientId
+                  );
+                  store.commit(
+                    "userStore/setUserNickname",
+                    res.data.user.userNickname
+                  );
+                  store.commit(
+                    "userStore/setUserInputNickname",
+                    res.data.user.userNickname
+                  );
+                  store.commit(
+                    "userStore/setUserProfileImage",
+                    res.data.user.userProfileImage
+                  );
+                  console.log(getters["userStore/getUserId"]);
                 });
-            },
-            fail: function (error) {
-              console.log(error);
-            },
+              },
+              fail: function (error) {
+                console.log(error);
+              },
             });
-          })
+          });
         router.push("/dashboard");
       }
-  })
+    });
     return { state, accessToken, getters };
   },
   components: {
