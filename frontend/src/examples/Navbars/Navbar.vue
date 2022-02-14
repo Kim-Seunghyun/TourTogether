@@ -103,8 +103,8 @@ export default {
     // const getters = store.getters;
     const login = () => {
       window.Kakao.Auth.authorize({
-        // redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
-        redirectUri: "http://localhost:8080/dashboard",
+        redirectUri: "https://i6a105.p.ssafy.io/dashboard",
+        // redirectUri: "http://localhost:8080/dashboard",
       });
     };
     const logout = () => {
