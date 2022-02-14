@@ -14,6 +14,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
+import com.ssafy.tourtogether.api.request.BoardSearchBoardIdByBoardRandomPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
 import com.ssafy.tourtogether.db.entity.Board;
@@ -156,5 +157,11 @@ public class BoardRepositorySupport {
 		else
 			return false;
 
+	}
+
+	public int findBoardIdByBoardRandom(BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo) {
+		int boardId = jpaQueryFactory.select(qBoard.boardId).from(qBoard)
+				.where(qBoard.boardRandom.eq(searchBoardIdByBoardRandomInfo.getBoardRandom())).fetchFirst();
+		return boardId;
 	}
 }

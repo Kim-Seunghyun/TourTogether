@@ -19,12 +19,14 @@ import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
+import com.ssafy.tourtogether.api.request.BoardSearchBoardIdByBoardRandomPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
 import com.ssafy.tourtogether.api.response.BoardClickBoardLikePatchRes;
 import com.ssafy.tourtogether.api.response.BoardCreatePostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchAllPostRes;
+import com.ssafy.tourtogether.api.response.BoardSearchBoardIdByBoardRandomPostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchByBoardIdPostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchByUserIdPostRes;
 import com.ssafy.tourtogether.api.service.BoardService;
@@ -149,6 +151,20 @@ public class BoardController {
 		// 보드 ID로 불러오기
 		List<Board> myBoards = boardService.searchByUserId(boardSearchByUserIdInfo);
 		return ResponseEntity.status(200).body(BoardSearchByUserIdPostRes.of(200, "Success", myBoards));
+	}
+
+	@PostMapping("/searchBoardIdByBoardRandom")
+	@ApiOperation(value = "보드 랜덤값으로 보드 아이디 가져오기", notes = "보드 랜덤값으로 보드 아이디 가져온다")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+
+	public ResponseEntity<? extends BaseResponseBody> searchByUserId(
+			@RequestBody @ApiParam(value = "보드 랜덤값", required = true) BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo) {
+
+		int boardId = boardService.searchByBoardRandom(searchBoardIdByBoardRandomInfo);
+		return ResponseEntity.status(200).body(BoardSearchBoardIdByBoardRandomPostRes.of(200, "Success", boardId));
 	}
 
 	@PostMapping("/searchLikeBoardByUserId")

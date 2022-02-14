@@ -139,13 +139,6 @@
         <h4>여행지 추천</h4>
         <div class="card z-index-2">
           <div class="p-3 card-body">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              @click="exportToPDF"
-            >
-              PDF로 내보내기
-            </button>
             <!-- <div data-html2canvas-ignore="true">
               출력하지 않고 싶은 영역은 태그에 'data-html2canvas-ignore'
               attribute를 넣어주면된다.
@@ -265,7 +258,7 @@ export default {
           userId: this.userId,
         },
       }).then((res) => {
-        console.log(res.data.boardRandom);
+        console.log(res.data);
         this.boardRandom = res.data.boardRandom;
         console.log(this.boardRandom);
         location.href = `/board/${this.boardRandom}`;
@@ -321,29 +314,6 @@ export default {
         },
       }).then((res) => {
         this.setSearchByCategoryBoards(res.data.boards);
-      });
-    },
-    exportToPDF() {
-      //window.scrollTo(0, 0);
-      html2pdf(this.$refs.pdfarea, {
-        margin: 0,
-        filename: "document.pdf",
-        image: { type: "jpg", quality: 0.95 },
-        //	allowTaint 옵션추가
-        html2canvas: {
-          useCORS: true,
-          scrollY: 0,
-          scale: 1,
-          dpi: 300,
-          letterRendering: true,
-          allowTaint: false, //useCORS를 true로 설정 시 반드시 allowTaint를 false처리 해주어야함
-        },
-        jsPDF: {
-          orientation: "portrait",
-          unit: "mm",
-          format: "a4",
-          compressPDF: true,
-        },
       });
     },
   },
