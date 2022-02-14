@@ -107,7 +107,7 @@ export default {
         // redirectUri: "http://localhost/kakao-login-callback/",
       });
     };
-    const logout = (type) => {
+    const logout = () => {
       // 카카오 로그아웃
       window.Kakao.Auth.logout(function () {
         router.push("");
