@@ -75,7 +75,6 @@ export default {
     const counter = computed(() => store.state.counter);
     const test = computed(() => store.getters);
     const inc = () => store.commit("setCounter", counter.value + 1);
-
     const accessToken = watch(console.log(state.accessToken));
 
     onMounted(() => {

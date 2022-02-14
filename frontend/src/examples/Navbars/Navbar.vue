@@ -110,12 +110,6 @@ export default {
     const logout = (type) => {
       // 카카오 로그아웃
       window.Kakao.Auth.logout(function () {
-        if (type) {
-          // "unlink"
-          alert("Unlinked Kakao Account!");
-        } else {
-          alert("Logout Account!");
-        }
         router.push("");
         console.log(store);
         store.commit("userStore/setUser", null);

@@ -3,9 +3,9 @@
     <div>
       <div class="profile-image">
         <img
-          :src="userProfileImage"
+          class="object-fit-contain "
+          :src="computedGetters['userStore/getUserProfileImage']"
           alt="my-profile-image"
-          @click="changeProfileImage"
         />
       </div>
       <div>
@@ -13,7 +13,7 @@
       </div>
     </div>
     <div v-if="!state.isChangingNickname">
-      <span>{{ userNickname }}</span>
+      <span>{{ computedGetters["userStore/getUserNickname"] }}</span>
       <button @click="toggleChangeNickname" style="margin-left: 20px">
         닉네임변경
       </button>
@@ -22,7 +22,7 @@
       <input
         type="text"
         @keyup="setUserInputNickname"
-        v-model="userInputNickname"
+        :value="computedGetters['userStore/getUserNickname']"
       />
       <button @click="[toggleChangeNickname(), submitNickname()]">확인</button>
       <button @click="toggleChangeNickname">취소</button>
@@ -35,6 +35,21 @@
       </span>
       <span> 완료된 일정 |</span>
       <span> 좋아요 누른 일정</span>
+    </div>
+    <div v-if="!state.isDeletingAccount">
+      <button @click="toggleDeleteAccount" style="margin-left: 20px">
+        회원탈퇴
+      </button>
+    </div>
+    <div v-else>
+      <input
+        type="text"
+        @keyup="setUserInputEmail"
+        :value="computedGetters['userStore/getUserInputEmail']"
+        placeholder="카카오계정 ID를 입력해주세요"
+      />
+      <button @click="[toggleDeleteAccount(), deleteAccount()]">회원탈퇴</button>
+      <button @click="toggleDeleteAccount">취소</button>
     </div>
   </div>
 </template>
@@ -61,10 +76,11 @@ export default {
   setup() {
     const store = useStore();
 
-    // const computedGetters = computed(() => store.getters.userStore);
+    const computedGetters = computed(() => store.getters);
     const getters = store.getters;
     const state = reactive({
       isChangingNickname: false,
+      isDeletingAccount: false,
     });
     const toggleChangeNickname = () => {
       if (state.isChangingNickname) {
@@ -88,13 +104,54 @@ export default {
           newUserNickname: getters["userStore/getUserInputNickname"],
         },
       }).then((res) => {
-        console.log(res);
-        console.log(res.data.user.userNickname);
         store.commit("userStore/setUserNickname", res.data.user.userNickname);
       });
     };
 
+    const toggleDeleteAccount = () => {
+      if (state.isDeletingAccount) {
+        state.isDeletingAccount = false;
+      } else {
+        state.isDeletingAccount = true;
+      }
+    };
+    const setUserInputEmail = (event) => {
+      store.commit("userStore/setUserInputEmail", event.target.value);
+    };
+    const deleteAccount = () => {
+      axios({
+        method: 'delete',
+        url: '/user/delete',
+        data: {
+          userId: getters["userStore/getUserId"], 
+          userEmail: getters["userStore/getUserInputEmail"],
+        }
+      })
+        .then(() => {
+          // unlink() {  // 카카오 계정 연결끊기
+          window.Kakao.API.request({
+            url: "/v1/user/unlink",
+            success: function (response) {
+              console.log(response);
+              window.Kakao.Auth.logout()
+            },
+            fail: function (error) {
+              console.log(error);
+              alert(error);
+              return;
+            },
+          });
+          alert('회원탈퇴되었습니다!')
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    };
+
     onMounted(() => {
+      // if (!getters["userStore/getUserClientId"]) {
+      //   alert("로그인해주세요!");
+      // }
       axios({
         method: "get",
         url: API_BASE_URL + "board/user",
@@ -107,12 +164,15 @@ export default {
     });
 
     return {
-      // computedGetters,
+      computedGetters,
       getters,
       state,
       toggleChangeNickname,
       setUserInputNickname,
       submitNickname,
+      toggleDeleteAccount,
+      deleteAccount,
+      setUserInputEmail,
     };
   },
 };
@@ -120,9 +180,15 @@ export default {
 
 <style scoped>
 .profile-image {
+  border: 1px solid gray;
   width: 290px;
   height: 290px;
   border-radius: 60%;
   overflow: hidden;
+}
+.object-fit-contain {
+  width: 290px;
+  height: 290px;
+  object-fit: contain;
 }
 </style>
