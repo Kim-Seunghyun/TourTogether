@@ -30,7 +30,6 @@ public class RedisSubscriber implements MessageListener {
             String publishMessage = (String) redisTemplate.getStringSerializer().deserialize(message.getBody());
             // MemoMessage 객채로 맵핑
             MemoMessage roomMessage = objectMapper.readValue(publishMessage, MemoMessage.class);
-            System.out.println("@@@@@@onMessage: "+roomMessage.toString());
             // Websocket 구독자에게 채팅 메시지 Send
             messagingTemplate.convertAndSend("/api/sub/memo/"+roomMessage.getRoomId(), roomMessage);
         } catch (Exception e) {
