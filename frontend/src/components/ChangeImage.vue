@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div>
-      <label for="chooseFile">
-        Click
-      </label>
+    <div class="changeImageButton">
+      <img src="../assets/circularplusbutton_121982.png" alt="uploadNewImage"
+        @click="$refs.imageUpload.click()"/>
     </div>
-    <input ref="image" @change="handleImageUpload" type="file" id="chooseFile" name="chooseFile" accept="image/*">
+    <input class="display-none" ref="imageUpload" @change="handleImageUpload" type="file" id="chooseFile" name="chooseFile" accept="image/*">
+    <!-- 여기선 object-fit이 적용된다 왜 그럴까 -->
     <img v-if="state.preview" :src="state.preview" class="profile-image" alt="Preview">
   </div>
   
@@ -144,9 +144,14 @@ export default {
 
 <style scoped>
 .profile-image {
+  border: 1px solid gray;
   width: 290px;
   height: 290px;
   border-radius: 60%;
   overflow: hidden;
+  object-fit: contain;
+}
+.display-none {
+  display: none;
 }
 </style>

@@ -243,23 +243,17 @@ export default {
   setup() {
     const store = useStore();
     const getters = store.getters;
-    const logout = type => {
+    const logout = () => {
       // 카카오 로그아웃
       window.Kakao.Auth.logout(function () {
-        if (type) {
-          // "unlink"
-          alert("Unlinked Kakao Account!");
-        } else {
-          alert("Logout Account!");
-        }
         router.push("");
         console.log(store)
-        store.commit("userStore/setUserId", "");
-        store.commit("userStore/setUserLoginPlatform", "");
-        store.commit("userStore/setUserClientId", "");
-        store.commit("userStore/setUserNickname", "");
-        store.commit("userStore/setUserInputNickname", "");
-        store.commit("userStore/setUserProfileImage", "");
+        store.commit("userStore/logout")
+        // store.commit("userStore/setUserId", "");
+        // store.commit("userStore/setUserLoginPlatform", "");
+        // store.commit("userStore/setUserClientId", "");
+        // store.commit("userStore/setUserNickname", "");
+        // store.commit("userStore/setUserProfileImage", "");
         console.log(getters.getUserId)
       });
     }

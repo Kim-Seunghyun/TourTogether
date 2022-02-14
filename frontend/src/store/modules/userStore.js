@@ -7,6 +7,7 @@ export const userStore = {
     userInputNickname: "",
     userLoginPlatform: "",
     userClientId: "",
+    userInputEmail: "",
   },
   getters: {
     getUserId(state) {
@@ -27,10 +28,12 @@ export const userStore = {
     getUserClientId(state) {
       return state.userClientId;
     },
+    getUserInpuEmail(state) {
+      return state.userInputEmail;
+    },
   },
   mutations: {
     setUserId(state, userId) {
-      console.log("hihihihihihihihihihih");
       state.userId = userId;
     },
     setUserNickname(state, userNickname) {
@@ -48,6 +51,16 @@ export const userStore = {
     setUserClientId(state, userClientId) {
       state.userClientId = userClientId;
     },
+    setUserInputEmail(state, value) {
+      state.userInputEmail = value;
+    },
+    logout() {
+      this.setUserId("")
+      this.setUserLoginPlatform("")
+      this.setUserClientId("")
+      this.setUserNickname("")
+      this.setUserProfileImage("")
+    }
   },
   actions: {},
   // modules: {},

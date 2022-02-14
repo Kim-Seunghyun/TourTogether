@@ -13,6 +13,18 @@ module.exports = {
         target: "https://i6a105.p.ssafy.io:8081/tourspot",
         changeOrigin: true,
       },
+      "/user/login": {
+        target: "https://i6a105.p.ssafy.io:8090",
+        changeOrigin: true,
+      },
+      "/user/updateNickname/": {
+        target: "https://i6a105.p.ssafy.io:8090",
+        changeOrigin: true,
+      },
+      "/user/delete": {
+        target: "https://i6a105.p.ssafy.io:8090",
+        changeOrigin: true,
+      },
     },
   },
 };
