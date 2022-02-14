@@ -43,4 +43,8 @@ public interface BoardService {
 
 	int searchByBoardRandom(BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo);
 
+	List<Board> searchByUserIdFinish(BoardSearchByUserIdPostReq boardSearchByUserIdInfo);
+
+	List<Board> searchByUserIdProceeding(BoardSearchByUserIdPostReq boardSearchByUserIdInfo);
+
 }

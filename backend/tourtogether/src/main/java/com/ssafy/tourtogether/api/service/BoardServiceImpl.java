@@ -135,12 +135,6 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<Board> searchByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
-		List<Board> myBoards = boardRepositorySupport.findByUserId(boardSearchByUserIdInfo);
-		return myBoards;
-	}
-
-	@Override
 	public List<Board> searchLikeBoardByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
 		List<Board> myLikeBoards = boardRepositorySupport.findLikeBoardByUserId(boardSearchByUserIdInfo);
 		return myLikeBoards;
@@ -204,6 +198,24 @@ public class BoardServiceImpl implements BoardService {
 	public int searchByBoardRandom(BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo) {
 		int boardId = boardRepositorySupport.findBoardIdByBoardRandom(searchBoardIdByBoardRandomInfo);
 		return boardId;
+	}
+
+	@Override
+	public List<Board> searchByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
+		List<Board> myBoards = boardRepositorySupport.findByUserId(boardSearchByUserIdInfo);
+		return myBoards;
+	}
+
+	@Override
+	public List<Board> searchByUserIdFinish(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
+		List<Board> myBoards = boardRepositorySupport.findByUserIdFinish(boardSearchByUserIdInfo);
+		return myBoards;
+	}
+
+	@Override
+	public List<Board> searchByUserIdProceeding(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
+		List<Board> myBoards = boardRepositorySupport.findByUserIdProceeding(boardSearchByUserIdInfo);
+		return myBoards;
 	}
 
 }
