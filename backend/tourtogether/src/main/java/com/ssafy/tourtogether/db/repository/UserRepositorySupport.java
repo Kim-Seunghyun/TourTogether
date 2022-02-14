@@ -63,6 +63,7 @@ public class UserRepositorySupport {
 
 	@Transactional
 	public void deleteUser(UserDeleteDeleteReq deleteInfo) {
+		System.out.println(deleteInfo.getUserId() + " , " + deleteInfo.getUserEmail());
 		jpaQueryFactory.delete(qUser).where(qUser.userId.eq(deleteInfo.getUserId()))
 				.where(qUser.userEmail.eq(deleteInfo.getUserEmail())).execute();
 
