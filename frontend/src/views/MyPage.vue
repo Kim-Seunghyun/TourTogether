@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { reactive, onMounted } from "vue";
+import { reactive, onMounted, computed } from "vue";
 import { useStore, mapGetters } from "vuex";
 import axios from "axios";
 import { API_BASE_URL } from "@/config/index.js";
@@ -121,7 +121,7 @@ export default {
     const deleteAccount = () => {
       axios({
         method: 'delete',
-        url: '/user/delete',
+        url: API_BASE_URL + 'user/delete',
         data: {
           userId: getters["userStore/getUserId"], 
           userEmail: getters["userStore/getUserInputEmail"],

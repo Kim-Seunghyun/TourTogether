@@ -32,7 +32,7 @@ module.exports = {
         target: "https://i6a105.p.ssafy.io:8090",
         changeOrigin: true,
       },
-      "/user/delete": {
+      "/api/user/delete": {
         target: "https://i6a105.p.ssafy.io:8090",
         changeOrigin: true,
       },
