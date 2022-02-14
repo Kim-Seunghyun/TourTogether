@@ -48,14 +48,8 @@ export default {
         console.log(JSON.stringify(data));
         alert(JSON.stringify(data));
         window.Kakao.Auth.setAccessToken(data.access_token);
-        // test : Token
         alert(window.Kakao.Auth.getAccessToken());
         router.push("/dashboard");
-        // axios({
-        //   method: 'post',
-        //   url: 'http://localhost:3000/user/login',
-        //   data:
-        // })
       });
   },
 };

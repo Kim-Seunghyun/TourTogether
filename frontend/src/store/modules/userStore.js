@@ -8,7 +8,6 @@ export const userStore = {
     userInputNickname: "",
     userLoginPlatform: "",
     userClientId: "",
-    userInputEmail: "",
   },
   getters: {
     getUser(state) {
@@ -31,9 +30,6 @@ export const userStore = {
     },
     getUserClientId(state) {
       return state.userClientId;
-    },
-    getUserInpuEmail(state) {
-      return state.userInputEmail;
     },
   },
   mutations: {
@@ -58,9 +54,6 @@ export const userStore = {
     },
     setUserClientId(state, userClientId) {
       state.userClientId = userClientId;
-    },
-    setUserInputEmail(state, value) {
-      state.userInputEmail = value;
     },
     logout() {
       this.setUserId("")

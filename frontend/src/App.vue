@@ -39,8 +39,9 @@ import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
 import axios from "axios";
 import { API_BASE_URL } from "@/config/index.js";
+// import { LOCALHOST } from "@/config/index.js";
 import { reactive } from "vue";
-import { computed, watch, onMounted } from "vue";
+import { watch, onMounted } from "vue";
 import { useStore, mapMutations } from "vuex";
 
 export default {
@@ -72,9 +73,6 @@ export default {
       accessToken: window.Kakao.Auth.getAccessToken(),
     });
     const store = useStore();
-    const counter = computed(() => store.state.counter);
-    const test = computed(() => store.getters);
-    const inc = () => store.commit("setCounter", counter.value + 1);
     const accessToken = watch(console.log(state.accessToken));
 
     onMounted(() => {
@@ -134,25 +132,8 @@ export default {
       });
     });
 
-    return { state, counter, inc, test, accessToken };
+    return { state, accessToken };
   },
-  // methods: {
-  //   unlink() {  // 카카오 계정 연결끊기
-  //     let logout = this.logout;
-  //     window.Kakao.API.request({
-  //       url: "/v1/user/unlink",
-  //       success: function (response) {
-  //         console.log(response);
-  //         logout("unlink");
-  //       },
-  //       fail: function (error) {
-  //         console.log(error);
-  //         alert(error);
-  //         return;
-  //       },
-  //     });
-  //   },
-  // },
   // watch: {
   //   accessToken: function () { // 토큰이 변경 확인
   //     console.log(this.accessToken);
