@@ -18,7 +18,7 @@ import Sch2 from "../views/Sch2.vue";
 import store from "@/store/index.js";
 
 const onlyAuthUser = async (to, from, next) => {
-  const checkUserInfo = store.getters["userStore/getUser"];
+  const checkUserInfo = store.getters["userStore/getUserId"];
   console.log("checkUserInfo!!!!! -> " + checkUserInfo);
   if (!checkUserInfo) {
     alert("로그인이 필요한 페이지입니다..");

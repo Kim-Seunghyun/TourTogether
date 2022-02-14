@@ -63,12 +63,12 @@ export const userStore = {
       state.userInputEmail = value;
     },
     logout() {
-      this.setUserId("")
-      this.setUserLoginPlatform("")
-      this.setUserClientId("")
-      this.setUserNickname("")
-      this.setUserProfileImage("")
-    }
+      this.setUserId("");
+      this.setUserLoginPlatform("");
+      this.setUserClientId("");
+      this.setUserNickname("");
+      this.setUserProfileImage("");
+    },
   },
   actions: {},
   // modules: {},

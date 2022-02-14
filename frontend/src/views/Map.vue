@@ -16,6 +16,7 @@
   </div>
   <div id="webrtc-wrapper">
     <WebRTC />
+    <board-buttons />
   </div>
 </template>
 
@@ -23,6 +24,7 @@
 import { reactive } from "vue";
 import { onMounted } from "vue";
 import WebRTC from "@/views/WebRTC.vue";
+import BoardButtons from "@/views/components/BoardButtons.vue";
 import Plan from "@/components/Plan.vue";
 import { API_BASE_URL } from "@/config/index.js";
 import axios from "axios";
@@ -31,6 +33,7 @@ export default {
   components: {
     WebRTC,
     Plan,
+    BoardButtons,
   },
   setup() {
     const sido_json = require("../assets/sido.json");

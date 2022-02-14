@@ -24,18 +24,18 @@ module.exports = {
         target: "https://i6a105.p.ssafy.io:8080",
         changeOrigin: true, // cross origin 허용
       },
-      "/user/login": {
-        target: "https://i6a105.p.ssafy.io:8090",
-        changeOrigin: true,
-      },
-      "/user/updateNickname/": {
-        target: "https://i6a105.p.ssafy.io:8090",
-        changeOrigin: true,
-      },
-      "/api/user/delete": {
-        target: "https://i6a105.p.ssafy.io:8090",
-        changeOrigin: true,
-      },
+      // "/user/login": {
+      //   target: "https://i6a105.p.ssafy.io:8090",
+      //   changeOrigin: true,
+      // },
+      // "/user/updateNickname/": {
+      //   target: "https://i6a105.p.ssafy.io:8090",
+      //   changeOrigin: true,
+      // },
+      // "/api/user/delete": {
+      //   target: "https://i6a105.p.ssafy.io:8090",
+      //   changeOrigin: true,
+      // },
     },
   },
 };

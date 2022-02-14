@@ -13,6 +13,7 @@ import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
+import com.ssafy.tourtogether.api.request.BoardSearchBoardIdByBoardRandomPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
@@ -197,6 +198,12 @@ public class BoardServiceImpl implements BoardService {
 	public List<Board> searchByCategory(BoardSearchByCategoryPostReq boardSearchByCategoryInfo) {
 		List<Board> boards = boardRepositorySupport.findByCategory(boardSearchByCategoryInfo);
 		return boards;
+	}
+
+	@Override
+	public int searchByBoardRandom(BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo) {
+		int boardId = boardRepositorySupport.findBoardIdByBoardRandom(searchBoardIdByBoardRandomInfo);
+		return boardId;
 	}
 
 }
