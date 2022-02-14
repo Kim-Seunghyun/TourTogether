@@ -38,21 +38,6 @@ public class BoardRepositorySupport {
 		jpaQueryFactory.delete(qBoard).where(qBoard.boardId.eq(boardDeleteInfo.getBoardId())).execute();
 	}
 
-	public List<Board> findByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
-		List<Integer> myBoardIds = jpaQueryFactory.select(qBoardParticipant.boardParticipantBoardId)
-				.from(qBoardParticipant)
-				.where(qBoardParticipant.boardParticipantUserId.eq(boardSearchByUserIdInfo.getUserId())).fetch();
-
-		List<Board> boardList = new LinkedList<Board>();
-
-		for (int boardId : myBoardIds) {
-			Board board = jpaQueryFactory.select(qBoard).from(qBoard).where(qBoard.boardId.eq(boardId)).fetchFirst();
-			boardList.add(board);
-		}
-
-		return boardList;
-	}
-
 	@Transactional
 	public List<Integer> increaseLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
 		int curLikes = jpaQueryFactory.select(qBoard.boardLikesCount).from(qBoard)
@@ -163,5 +148,52 @@ public class BoardRepositorySupport {
 		int boardId = jpaQueryFactory.select(qBoard.boardId).from(qBoard)
 				.where(qBoard.boardRandom.eq(searchBoardIdByBoardRandomInfo.getBoardRandom())).fetchFirst();
 		return boardId;
+	}
+
+	public List<Board> findByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
+		List<Integer> myBoardIds = jpaQueryFactory.select(qBoardParticipant.boardParticipantBoardId)
+				.from(qBoardParticipant)
+				.where(qBoardParticipant.boardParticipantUserId.eq(boardSearchByUserIdInfo.getUserId())).fetch();
+
+		List<Board> boardList = new LinkedList<Board>();
+
+		for (int boardId : myBoardIds) {
+			Board board = jpaQueryFactory.select(qBoard).from(qBoard).where(qBoard.boardId.eq(boardId)).fetchFirst();
+			boardList.add(board);
+		}
+
+		return boardList;
+	}
+
+	public List<Board> findByUserIdFinish(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
+		List<Integer> myBoardIds = jpaQueryFactory.select(qBoardParticipant.boardParticipantBoardId)
+				.from(qBoardParticipant)
+				.where(qBoardParticipant.boardParticipantUserId.eq(boardSearchByUserIdInfo.getUserId())).fetch();
+
+		List<Board> boardList = new LinkedList<Board>();
+
+		for (int boardId : myBoardIds) {
+			Board board = jpaQueryFactory.select(qBoard).from(qBoard).where(qBoard.boardId.eq(boardId))
+					.where(qBoard.boardIsActive.eq(true)).fetchFirst();
+			boardList.add(board);
+		}
+
+		return boardList;
+	}
+
+	public List<Board> findByUserIdProceeding(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
+		List<Integer> myBoardIds = jpaQueryFactory.select(qBoardParticipant.boardParticipantBoardId)
+				.from(qBoardParticipant)
+				.where(qBoardParticipant.boardParticipantUserId.eq(boardSearchByUserIdInfo.getUserId())).fetch();
+
+		List<Board> boardList = new LinkedList<Board>();
+
+		for (int boardId : myBoardIds) {
+			Board board = jpaQueryFactory.select(qBoard).from(qBoard).where(qBoard.boardId.eq(boardId))
+					.where(qBoard.boardIsActive.eq(false)).fetchFirst();
+			boardList.add(board);
+		}
+
+		return boardList;
 	}
 }
