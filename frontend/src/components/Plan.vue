@@ -39,8 +39,8 @@
 </template>
 
 <script>
-import { reactive } from "@vue/reactivity";
-import { onMounted, watch } from "@vue/runtime-core";
+import { reactive } from "vue";
+import { onMounted, watch } from "vue";
 import $ from "jquery";
 import "jquery-ui/ui/widgets/sortable";
 

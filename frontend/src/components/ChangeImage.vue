@@ -111,14 +111,21 @@ export default {
               method: "patch",
               url: API_BASE_URL + "user/updateImage/",
               data: {
-                userLoginPlatform: getters.getUserLoginPlatform,
-                userClientId: getters.getUserClientId,
+                userLoginPlatform: getters["userStore/getUserLoginPlatform"],
+                userClientId: getters["userStore/getUserClientId"],
                 userProfileImage: data.Location,
               },
-            }).then((res) => {
-              store.commit("setUserProfileImage", data.Location);
-              console.log(res);
-            });
+            })
+              .then((res) => {
+                store.commit("userStore/setUserProfileImage", data.Location);
+                console.log(res);
+              })
+              .catch((error) => {
+                console.log(error);
+                console.log(getters["userStore/getUserLoginPlatform"]);
+                console.log(getters["userStore/getUserClientId"]);
+                console.log(data.Location);
+              });
           },
           function (err) {
             return alert(
