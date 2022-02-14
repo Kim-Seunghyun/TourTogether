@@ -378,7 +378,7 @@ export default {
               }
               axios({
                 method: "post",
-                url: LOCALHOST + "user/login",
+                url: API_BASE_URL + "user/login",
                 data: {
                   userLoginPlatform: "kakao",
                   userClientId: response.id,

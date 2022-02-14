@@ -10,8 +10,6 @@ import Profile from "@/views/Profile.vue";
 import SignIn from "@/views/SignIn.vue";
 import SignUp from "@/views/SignUp.vue";
 import Memo from "../views/Memo.vue";
-import Memo2 from "../views/Memo2.vue";
-import Memo3 from "../views/Memo3.vue";
 import Schedule from "../views/Schedule.vue";
 import Sch2 from "../views/Sch2.vue";
 
@@ -89,18 +87,6 @@ const routes = [
     name: "Memo",
     beforeEnter: onlyAuthUser,
     component: Memo,
-  },
-  {
-    path: "/memo2",
-    name: "Memo2",
-    beforeEnter: onlyAuthUser,
-    component: Memo2,
-  },
-  {
-    path: "/memo3",
-    name: "Memo3",
-    beforeEnter: onlyAuthUser,
-    component: Memo3,
   },
   {
     path: "/schedule",

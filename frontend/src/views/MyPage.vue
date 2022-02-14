@@ -61,7 +61,6 @@ import { reactive, onMounted, computed } from "vue";
 import { useStore, mapGetters } from "vuex";
 import axios from "axios";
 import { API_BASE_URL } from "@/config/index.js";
-import { LOCALHOST } from "@/config/index.js";
 import ChangeImage from "@/components/ChangeImage.vue";
 
 export default {
@@ -83,7 +82,7 @@ export default {
     const state = reactive({
       isChangingNickname: false,
       isDeletingAccount: false,
-      userInputEmail: '',
+      userInputEmail: "",
     });
     const toggleChangeNickname = () => {
       if (state.isChangingNickname) {
@@ -98,7 +97,7 @@ export default {
     const submitNickname = () => {
       axios({
         method: "patch",
-        url: LOCALHOST + "user/updateNickname/",
+        url: API_BASE_URL + "user/updateNickname/",
         // url: "http://localhost:8081/user/updateNickname/",
         data: {
           userLoginPlatform: getters["userStore/getUserLoginPlatform"],
@@ -117,20 +116,20 @@ export default {
       } else {
         state.isDeletingAccount = true;
       }
-      console.log(state.userInputEmail)
+      console.log(state.userInputEmail);
     };
     const setUserInputEmail = (event) => {
       store.commit("userStore/setUserInputEmail", event.target.value);
-      state.userInputEmail
+      state.userInputEmail;
     };
     const deleteAccount = () => {
-      console.log(state.userInputEmail)
+      console.log(state.userInputEmail);
       axios({
         method: "delete",
         url: API_BASE_URL + "user/delete",
         data: {
           userId: getters["userStore/getUserId"],
-          userEmail: state.userInputEmail
+          userEmail: state.userInputEmail,
         },
       })
         .then(() => {
