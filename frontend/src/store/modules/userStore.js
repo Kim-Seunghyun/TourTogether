@@ -61,6 +61,8 @@ export const userStore = {
       this.setUserClientId("")
       this.setUserNickname("")
       this.setUserProfileImage("")
+      this.setUser("")
+      console.log(this.getUser)
     }
   },
   actions: {},

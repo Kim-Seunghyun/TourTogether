@@ -186,12 +186,21 @@ import { API_BASE_URL } from "@/config/index.js";
 import html2pdf from "html2pdf.js";
 
 import { mapMutations, mapState } from "vuex";
+// import { useStore } from "vuex";
+import { onMounted } from "vue";
 import axios from "axios";
 
 const userStore = "userStore";
 const boardStore = "boardStore";
 
 export default {
+  setup() {
+    // const store = useStore();
+    // const getters = store.getters;
+    onMounted(() => {
+
+    })
+  },
   name: "dashboard",
   data() {
     return {
