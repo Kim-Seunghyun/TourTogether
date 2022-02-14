@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { reactive } from "@vue/reactivity";
+import { reactive } from "vue";
 import { onMounted } from "vue";
 import WebRTC from "@/views/WebRTC.vue";
 import Plan from "@/components/Plan.vue";
