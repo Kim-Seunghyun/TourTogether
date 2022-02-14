@@ -16,6 +16,7 @@
   </div>
   <div id="webrtc-wrapper">
     <WebRTC />
+    <board-buttons />
   </div>
 </template>
 
@@ -23,13 +24,16 @@
 import { reactive } from "vue";
 import { onMounted } from "vue";
 import WebRTC from "@/views/WebRTC.vue";
+import BoardButtons from "@/views/components/BoardButtons.vue";
 import Plan from "@/components/Plan.vue";
+import { API_BASE_URL } from "@/config/index.js";
 import axios from "axios";
 export default {
   name: "Map",
   components: {
     WebRTC,
     Plan,
+    BoardButtons,
   },
   setup() {
     const sido_json = require("../assets/sido.json");
@@ -107,7 +111,7 @@ export default {
       });
       axios({
         method: "get",
-        url: "https://i6a105.p.ssafy.io:8080/api/tourspot",
+        url: API_BASE_URL + "tourspot",
         // url: "http://localhost:8081/tourspot",
       }).then((res) => {
         makeMarker(res.data.tourSpotList);

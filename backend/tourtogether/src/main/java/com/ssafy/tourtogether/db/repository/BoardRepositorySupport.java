@@ -1,5 +1,7 @@
 package com.ssafy.tourtogether.db.repository;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,8 +11,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
+import com.ssafy.tourtogether.api.request.BoardSearchBoardIdByBoardRandomPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
 import com.ssafy.tourtogether.db.entity.Board;
@@ -50,19 +54,25 @@ public class BoardRepositorySupport {
 	}
 
 	@Transactional
-	public void increaseLike(int boardId) {
-		int curLikes = jpaQueryFactory.select(qBoard.boardLikesCount).from(qBoard).where(qBoard.boardId.eq(boardId))
-				.fetchFirst();
-		jpaQueryFactory.update(qBoard).where(qBoard.boardId.eq(boardId)).set(qBoard.boardLikesCount, curLikes + 1)
-				.execute();
+	public List<Integer> increaseLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
+		int curLikes = jpaQueryFactory.select(qBoard.boardLikesCount).from(qBoard)
+				.where(qBoard.boardId.eq(boardclickBoardLikeInfo.getBoardId())).fetchFirst();
+		jpaQueryFactory.update(qBoard).where(qBoard.boardId.eq(boardclickBoardLikeInfo.getBoardId()))
+				.set(qBoard.boardLikesCount, curLikes + 1).execute();
+		List<Integer> favoritesBoardId = jpaQueryFactory.select(qBoardLikes.boardLikesBoardId).from(qBoardLikes)
+				.where(qBoardLikes.boardLikesUserId.eq(boardclickBoardLikeInfo.getUserId())).fetch();
+		return favoritesBoardId;
 	}
 
 	@Transactional
-	public void decreaseLike(int boardId) {
-		int curLikes = jpaQueryFactory.select(qBoard.boardLikesCount).from(qBoard).where(qBoard.boardId.eq(boardId))
-				.fetchFirst();
-		jpaQueryFactory.update(qBoard).where(qBoard.boardId.eq(boardId)).set(qBoard.boardLikesCount, curLikes - 1)
-				.execute();
+	public List<Integer> decreaseLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
+		int curLikes = jpaQueryFactory.select(qBoard.boardLikesCount).from(qBoard)
+				.where(qBoard.boardId.eq(boardclickBoardLikeInfo.getBoardId())).fetchFirst();
+		jpaQueryFactory.update(qBoard).where(qBoard.boardId.eq(boardclickBoardLikeInfo.getBoardId()))
+				.set(qBoard.boardLikesCount, curLikes - 1).execute();
+		List<Integer> favoritesBoardId = jpaQueryFactory.select(qBoardLikes.boardLikesBoardId).from(qBoardLikes)
+				.where(qBoardLikes.boardLikesUserId.eq(boardclickBoardLikeInfo.getUserId())).fetch();
+		return favoritesBoardId;
 	}
 
 	public List<Board> findLikeBoardByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
@@ -128,6 +138,14 @@ public class BoardRepositorySupport {
 			Board board = jpaQueryFactory.select(qBoard).from(qBoard).where(qBoard.boardId.eq(boardId)).fetchFirst();
 			boards.add(board);
 		}
+
+		Collections.sort(boards, new Comparator<Board>() {
+			@Override
+			public int compare(Board o1, Board o2) {
+				return o2.getBoardLikesCount() - o1.getBoardLikesCount();
+			}
+		});
+
 		return boards;
 	}
 
@@ -139,5 +157,11 @@ public class BoardRepositorySupport {
 		else
 			return false;
 
+	}
+
+	public int findBoardIdByBoardRandom(BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo) {
+		int boardId = jpaQueryFactory.select(qBoard.boardId).from(qBoard)
+				.where(qBoard.boardRandom.eq(searchBoardIdByBoardRandomInfo.getBoardRandom())).fetchFirst();
+		return boardId;
 	}
 }

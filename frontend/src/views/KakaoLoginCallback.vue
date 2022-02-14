@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <h1>Callback</h1>
+    <!-- <h1>Callback</h1> -->
   </div>
 </template>
 
@@ -25,8 +25,8 @@ export default {
     var details = {
       grant_type: "authorization_code",
       client_id: process.env.VUE_APP_KAKAO_RESTAPI_KEY,
-      redirect_uri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
-      // redirect_uri: "http://localhost:8080/kakao-login-callback/",
+      redirect_uri: "https://i6a105.p.ssafy.io/dashboard",
+      // redirect_uri: "http://localhost:8080/dashboard",
       code: code,
     };
     var formBody = [];
@@ -48,14 +48,8 @@ export default {
         console.log(JSON.stringify(data));
         alert(JSON.stringify(data));
         window.Kakao.Auth.setAccessToken(data.access_token);
-        // test : Token
         alert(window.Kakao.Auth.getAccessToken());
         router.push("/dashboard");
-        // axios({
-        //   method: 'post',
-        //   url: 'http://localhost:3000/user/login',
-        //   data:
-        // })
       });
   },
 };

@@ -107,7 +107,7 @@
                 aria-label="Close"
               ></button>
             </div>
-            <form @submit.prevent="startBoard">
+            <form @submit.prevent="createBoard">
               <div class="modal-body">
                 <input
                   type="text"
@@ -115,7 +115,7 @@
                   v-model="boardName"
                   placeholder="여행 제목을 입력해주세요"
                   required
-                  @keyup.enter="startBoard"
+                  @keyup.enter="createBoard"
                 />
               </div>
               <div class="modal-footer">
@@ -139,28 +139,6 @@
         <h4>여행지 추천</h4>
         <div class="card z-index-2">
           <div class="p-3 card-body">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              @click="getAllBoards"
-            >
-              전체 일정 보기
-            </button>
-            <button
-              type="button"
-              class="btn btn-secondary"
-              @click="getSelectedBoards"
-            >
-              선택한 유형의 일정 보기
-            </button>
-
-            <button
-              type="button"
-              class="btn btn-secondary"
-              @click="exportToPDF"
-            >
-              PDF로 내보내기
-            </button>
             <!-- <div data-html2canvas-ignore="true">
               출력하지 않고 싶은 영역은 태그에 'data-html2canvas-ignore'
               attribute를 넣어주면된다.
@@ -173,16 +151,20 @@
           </div>
           <div v-for="(board, index) in boards" :key="index">
             <div class="col-lg-6 col-sm-8">
-              {{ board.boardName }} //
+              {{ board.boardId }} // {{ board.boardName }} //
               {{ board.boardLikesCount }}
-              <button
-                type="button"
-                class="btn_like"
-                @click="likeClick(board.boardId, $event)"
-              >
-                <span class="img_emoti">좋아요</span>
-                <span class="ani_heart_m"></span>
-              </button>
+              <img
+                v-if="this.favoriteBoardId.includes(board.boardId)"
+                src="@/assets/img/full_heart.png"
+                width="30"
+                @click="likeCancel(board.boardId)"
+              />
+              <img
+                v-if="!this.favoriteBoardId.includes(board.boardId)"
+                src="@/assets/img/empty_heart.png"
+                width="30"
+                @click="likeClick(board.boardId)"
+              />
             </div>
             <div class="col-lg-6 col-sm-8"></div>
           </div>
@@ -193,10 +175,13 @@
 </template>
 <script>
 import BoardCategory from "./components/BoardCategory.vue";
-
-import html2pdf from "html2pdf.js";
+import { API_BASE_URL } from "@/config/index.js";
 
 import { mapMutations, mapState } from "vuex";
+import { useStore } from "vuex";
+import { reactive, watch } from "vue";
+import { onBeforeMount } from "vue";
+// import { onMounted } from "vue";
 import axios from "axios";
 
 const userStore = "userStore";
@@ -207,6 +192,7 @@ export default {
   data() {
     return {
       boards: [],
+      favoriteBoardId: [],
       boardName: "",
       boardRandom: "",
       // userId: "",
@@ -219,132 +205,272 @@ export default {
   },
   computed: {
     ...mapState(userStore, ["userId"]),
+    ...mapState(boardStore, ["searchByCategoryBoards"]),
+    ...mapState(boardStore, ["withWhom", "season", "area", "theme"]),
     // ...mapState(boardStore, ["boards"]),
   },
   watch: {
-    boards() {
-      console.log("데이터 변경!!!");
+    searchByCategoryBoards() {
+      this.boards = this.searchByCategoryBoards;
     },
   },
   created() {
     // this.getAllBoards();
+    this.getUserFavoriteBoards();
   },
   methods: {
-    ...mapMutations(boardStore, ["setAllBoards"]),
-    getAllBoards() {
-      axios({
-        method: "get",
-        url: "https://i6a105.p.ssafy.io:8080/api/board",
-      }).then((res) => {
-        this.boards = res.data.boards;
-        this.setAllBoards(res.data.boards);
-      });
-    },
-    getSelectedBoards() {
+    ...mapMutations(boardStore, ["setAllBoards", "setSearchByCategoryBoards"]),
+    // getAllBoards() {
+    //   axios({
+    //     method: "get",
+    //     url: API_BASE_URL + "board",
+    //   }).then((res) => {
+    //     this.boards = res.data.boards;
+    //     this.setAllBoards(res.data.boards);
+    //   });
+    // },
+    getUserFavoriteBoards() {
       axios({
         method: "post",
-        url: "https://i6a105.p.ssafy.io:8080/api/board/searchByCategory",
+        url: API_BASE_URL + "board/searchLikeBoardByUserId",
         data: {
-          categoryWithWhom: 2,
-          categorySeason: 3,
-          categoryArea: 0,
-          categoryTheme: 0,
+          userId: this.userId,
         },
       }).then((res) => {
-        this.boards = res.data.boards;
-        // this.setAllBoards(res.data.boards);
+        for (var i = 0; i < res.data.myBoards.length; i++) {
+          this.favoriteBoardId[i] = res.data.myBoards[i].boardId;
+        }
       });
-    },
-    startBoard() {
-      // console.log("createBoard!!!");
-      // console.log("userId는 ", this.userId);
-      // console.log("boardName은 ", this.boardName);
-      this.createBoard();
-      this.enterBoard();
-      // location.href = "/map";
     },
     createBoard() {
       // alert("send create board data");
       axios({
         method: "post",
-        url: "https://i6a105.p.ssafy.io:8080/api/board/create",
+        url: API_BASE_URL + "board/create",
         data: {
           boardName: this.boardName,
           userId: this.userId,
         },
       }).then((res) => {
-        console.log(res.data.boardRandom);
+        console.log(res.data);
         this.boardRandom = res.data.boardRandom;
         console.log(this.boardRandom);
         location.href = `/board/${this.boardRandom}`;
       });
     },
-    enterBoard() {
-      console.log(`/board/${this.boardRandom}`);
-      //
-    },
-    likeClick(boardId, event) {
-      if (event.target.classList.contains("btn_unlike")) {
-        event.target.classList.toggle("btn_unlike");
-        axios({
-          method: "patch",
-          url: "https://i6a105.p.ssafy.io:8080/api/board/cancelBoardLike",
-          data: {
-            boardId: boardId,
-            userId: this.userId,
-          },
-        }).then((res) => {
-          console.log(res);
-        });
-        console.log("좋아요 취소하기 ");
-      } else {
-        event.target.classList.toggle("btn_unlike");
-        axios({
-          method: "patch",
-          url: "https://i6a105.p.ssafy.io:8080/api/board/clickBoardLike",
-          data: {
-            boardId: boardId,
-            userId: this.userId,
-          },
-        }).then((res) => {
-          console.log(res);
-        });
-        console.log("좋아요 누르기 ");
-      }
-      // if (this.class == "btn_unlike") {
-      //   console.log("like");
-      //   // $(this).removeClass("btn_unlike");
-      //   // $(".ani_heart_m").removeClass("hi");
-      //   // $(".ani_heart_m").addClass("bye");
-      // } else {
-      //   // $(this).addClass("btn_unlike");
-      //   // $(".ani_heart_m").addClass("hi");
-      //   // $(".ani_heart_m").removeClass("bye");
-      // }
-    },
-    exportToPDF() {
-      //window.scrollTo(0, 0);
-      html2pdf(this.$refs.pdfarea, {
-        margin: 0,
-        filename: "document.pdf",
-        image: { type: "jpg", quality: 0.95 },
-        //	allowTaint 옵션추가
-        html2canvas: {
-          useCORS: true,
-          scrollY: 0,
-          scale: 1,
-          dpi: 300,
-          letterRendering: true,
-          allowTaint: false, //useCORS를 true로 설정 시 반드시 allowTaint를 false처리 해주어야함
+    likeClick(boardId) {
+      console.log("좋아요 누르기 ");
+      axios({
+        method: "patch",
+        url: API_BASE_URL + "board/clickBoardLike",
+        data: {
+          boardId: boardId,
+          userId: this.userId,
         },
-        jsPDF: {
-          orientation: "portrait",
-          unit: "mm",
-          format: "a4",
-          compressPDF: true,
-        },
+      }).then((res) => {
+        this.favoriteBoardId = res.data.favoriteBoardId;
+        this.getListByCategory(
+          this.withWhom,
+          this.season,
+          this.area,
+          this.theme
+        );
       });
     },
+    likeCancel(boardId) {
+      console.log("좋아요 취소하기");
+      axios({
+        method: "patch",
+        url: API_BASE_URL + "board/cancelBoardLike",
+        data: {
+          boardId: boardId,
+          userId: this.userId,
+        },
+      }).then((res) => {
+        this.favoriteBoardId = res.data.favoriteBoardId;
+        this.getListByCategory(
+          this.withWhom,
+          this.season,
+          this.area,
+          this.theme
+        );
+      });
+    },
+    getListByCategory(withWhom, season, area, theme) {
+      axios({
+        method: "post",
+        url: API_BASE_URL + "board/searchByCategory",
+        data: {
+          categoryArea: area,
+          categorySeason: season,
+          categoryTheme: theme,
+          categoryWithWhom: withWhom,
+        },
+      }).then((res) => {
+        this.setSearchByCategoryBoards(res.data.boards);
+      });
+    },
+  },
+
+  setup() {
+    const state = reactive({
+      accessToken: window.Kakao.Auth.getAccessToken(),
+    });
+    const store = useStore();
+    const accessToken = watch(console.log(state.accessToken));
+
+    const getParameterByName = (name) => {
+      name = name.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
+      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+        results = regex.exec(location.search);
+      return results == null
+        ? ""
+        : decodeURIComponent(results[1].replace(/\+/g, " "));
+    };
+    onBeforeMount(() => {
+      const code = getParameterByName("code");
+      // alert("this is code:"+code);
+      var details = {
+        grant_type: "authorization_code",
+        client_id: process.env.VUE_APP_KAKAO_RESTAPI_KEY,
+        redirect_uri: "https://i6a105.p.ssafy.io/dashboard",
+        // redirect_uri: "http://localhost:8080/dashboard",
+        code: code,
+      };
+      var formBody = [];
+      for (var property in details) {
+        var encodedKey = encodeURIComponent(property);
+        var encodedValue = encodeURIComponent(details[property]);
+        formBody.push(encodedKey + "=" + encodedValue);
+      }
+      formBody = formBody.join("&");
+      fetch("https://kauth.kakao.com/oauth/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
+        },
+        body: formBody,
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(JSON.stringify(data));
+          alert(JSON.stringify(data));
+          window.Kakao.Auth.setAccessToken(data.access_token);
+          alert(window.Kakao.Auth.getAccessToken());
+        })
+        .then(() => {
+          window.Kakao.API.request({
+            url: "/v2/user/me",
+            data: {
+              property_keys: [
+                "properties.nickname",
+                "kakao_account.email",
+                "properties.profile_image",
+              ],
+            },
+            success: function (response) {
+              let email = null;
+              if (
+                response.kakao_account.has_email &
+                !response.kakao_account.email_needs_agreement
+              ) {
+                email = response.kakao_account.email;
+              }
+              axios({
+                method: "post",
+                url: API_BASE_URL + "user/login",
+                data: {
+                  userLoginPlatform: "kakao",
+                  userClientId: response.id,
+                  userEmail: email,
+                  userName: response.properties.nickname,
+                  userProfileImage: response.properties.profile_image,
+                },
+              }).then((res) => {
+                store.commit("userStore/setUser", res.data.user);
+                store.commit("userStore/setUserId", res.data.user.userId);
+                store.commit("userStore/setUserLoginPlatform", "kakao");
+                store.commit(
+                  "userStore/setUserClientId",
+                  res.data.user.userClientId
+                );
+                store.commit(
+                  "userStore/setUserNickname",
+                  res.data.user.userNickname
+                );
+                store.commit(
+                  "userStore/setUserInputNickname",
+                  res.data.user.userNickname
+                );
+                store.commit(
+                  "userStore/setUserProfileImage",
+                  res.data.user.userProfileImage
+                );
+              });
+            },
+            fail: function (error) {
+              console.log(error);
+            },
+          });
+        });
+    });
+    // onMounted(() => {
+    //   // 우리 api에 id있는지 확인, 있으면 기존 정보 가져오고 없으면 window.Kakao.API.request
+    //   window.Kakao.API.request({
+    //     url: "/v2/user/me",
+    //     data: {
+    //       property_keys: [
+    //         "properties.nickname",
+    //         "kakao_account.email",
+    //         "properties.profile_image",
+    //       ],
+    //     },
+    //     success: function (response) {
+    //       let email = null;
+    //       if (
+    //         response.kakao_account.has_email &
+    //         !response.kakao_account.email_needs_agreement
+    //       ) {
+    //         email = response.kakao_account.email;
+    //       }
+    //       axios({
+    //         method: "post",
+    //         url: LOCALHOST + "user/login",
+    //         data: {
+    //           userLoginPlatform: "kakao",
+    //           userClientId: response.id,
+    //           userEmail: email,
+    //           userName: response.properties.nickname,
+    //           userProfileImage: response.properties.profile_image,
+    //         },
+    //       }).then((res) => {
+    //         store.commit("userStore/setUser", res.data.user);
+    //         store.commit("userStore/setUserId", res.data.user.userId);
+    //         store.commit("userStore/setUserLoginPlatform", "kakao");
+    //         store.commit(
+    //           "userStore/setUserClientId",
+    //           res.data.user.userClientId
+    //         );
+    //         store.commit(
+    //           "userStore/setUserNickname",
+    //           res.data.user.userNickname
+    //         );
+    //         store.commit(
+    //           "userStore/setUserInputNickname",
+    //           res.data.user.userNickname
+    //         );
+    //         store.commit(
+    //           "userStore/setUserProfileImage",
+    //           res.data.user.userProfileImage
+    //         );
+    //       });
+    //     },
+    //     fail: function (error) {
+    //       console.log(error);
+    //     },
+    //   });
+    // });
+    return { state, accessToken };
   },
   components: {
     BoardCategory,
