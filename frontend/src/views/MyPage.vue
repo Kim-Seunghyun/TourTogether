@@ -3,7 +3,7 @@
     <div>
       <div class="profile-image">
         <img
-          class="object-fit-contain "
+          class="object-fit-contain"
           :src="computedGetters['userStore/getUserProfileImage']"
           alt="my-profile-image"
         />
@@ -48,7 +48,9 @@
         :value="computedGetters['userStore/getUserInputEmail']"
         placeholder="카카오계정 ID를 입력해주세요"
       />
-      <button @click="[toggleDeleteAccount(), deleteAccount()]">회원탈퇴</button>
+      <button @click="[toggleDeleteAccount(), deleteAccount()]">
+        회원탈퇴
+      </button>
       <button @click="toggleDeleteAccount">취소</button>
     </div>
   </div>
@@ -123,9 +125,9 @@ export default {
         method: 'delete',
         url: API_BASE_URL + 'user/delete',
         data: {
-          userId: getters["userStore/getUserId"], 
+          userId: getters["userStore/getUserId"],
           userEmail: getters["userStore/getUserInputEmail"],
-        }
+        },
       })
         .then(() => {
           // unlink() {  // 카카오 계정 연결끊기
@@ -133,7 +135,7 @@ export default {
             url: "/v1/user/unlink",
             success: function (response) {
               console.log(response);
-              window.Kakao.Auth.logout()
+              window.Kakao.Auth.logout();
             },
             fail: function (error) {
               console.log(error);
@@ -141,11 +143,11 @@ export default {
               return;
             },
           });
-          alert('회원탈퇴되었습니다!')
+          alert("회원탈퇴되었습니다!");
         })
         .catch((err) => {
-          console.log(err)
-        })
+          console.log(err);
+        });
     };
 
     onMounted(() => {
