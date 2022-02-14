@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 // import Home from "../views/Home.vue";
 import Map from "../views/Map.vue";
-import Login from "../views/Login.vue";
 import MyPage from "../views/MyPage.vue";
 import KakaoLoginCallback from "../views/KakaoLoginCallback.vue";
 import FavoritePage from "../views/FavoritePage.vue";
@@ -20,7 +19,7 @@ import store from "@/store/index.js";
 
 const onlyAuthUser = async (to, from, next) => {
   const checkUserInfo = store.getters["userStore/getUserId"];
-  console.log("checkUserInfo!!!!! -> " + store.getters["userStore/getUserId"]);
+  console.log("checkUserInfo!!!!! -> " + checkUserInfo);
   if (!checkUserInfo) {
     alert("로그인이 필요한 페이지입니다..");
     router.push({ name: "Login" });
@@ -41,11 +40,6 @@ const routes = [
     name: "Map",
     beforeEnter: onlyAuthUser,
     component: Map,
-  },
-  {
-    path: "/login",
-    name: "Login",
-    component: Login,
   },
   {
     path: "/mypage",

@@ -56,12 +56,12 @@ export const userStore = {
       state.userClientId = userClientId;
     },
     logout() {
-      this.setUserId("")
-      this.setUserLoginPlatform("")
-      this.setUserClientId("")
-      this.setUserNickname("")
-      this.setUserProfileImage("")
-    }
+      this.setUserId("");
+      this.setUserLoginPlatform("");
+      this.setUserClientId("");
+      this.setUserNickname("");
+      this.setUserProfileImage("");
+    },
   },
   actions: {},
   // modules: {},

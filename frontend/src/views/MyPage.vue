@@ -126,8 +126,8 @@ export default {
     const deleteAccount = () => {
       console.log(state.userInputEmail)
       axios({
-        method: 'delete',
-        url: API_BASE_URL + 'user/delete',
+        method: "delete",
+        url: API_BASE_URL + "user/delete",
         data: {
           userId: getters["userStore/getUserId"],
           userEmail: state.userInputEmail
