@@ -138,7 +138,7 @@ export default {
     init() {
       axios({
         method: "POST",
-        url: "https://i6a105.p.ssafy.io/api/memo/room",
+        url: API_BASE_URL + "memo/room",
         params: {
           id: this.state.id,
           user: this.state.user,
@@ -160,7 +160,7 @@ export default {
       var ws = Stomp.over(sock);
       var _this = this;
       this.ws = ws;
-      var subUrl = "/api/sub/memo/" + _this.state.id;
+      var subUrl = API_BASE_URL + "api/sub/memo/" + _this.state.id;
       console.log("채널 구독하기: ", subUrl);
       ws.connect(
         {
