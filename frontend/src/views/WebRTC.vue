@@ -1,18 +1,48 @@
 <template>
   <div id="main-container" class="container">
-    <button v-if="!session" class="btn btn-success" @click="joinSession()">
-      Join!
-    </button>
+    <div id="join" v-if="!session">
+      <div id="img-div"></div>
+      <div id="join-dialog" class="jumbotron vertical-center">
+        <h1>Tour Together</h1>
+        <div class="form-group">
+          <p>
+            <label>Participant</label>
+            <input
+              v-model="myUserName"
+              class="form-control"
+              type="text"
+              required
+            />
+          </p>
+          <p>
+            <label>Session</label>
+            <input
+              v-model="mySessionId"
+              class="form-control"
+              type="text"
+              required
+            />
+          </p>
+          <p class="text-center">
+            <button class="btn btn-lg btn-success" @click="joinSession()">
+              Join!
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
 
-    <div v-if="session" id="session">
-      <input
-        class="btn btn-large btn-danger"
-        type="button"
-        id="buttonLeaveSession"
-        @click="leaveSession"
-        value="Leave session"
-      />
-
+    <div id="session" v-if="session">
+      <div id="session-header">
+        <h1 id="session-title">{{ mySessionId }}</h1>
+        <input
+          class="btn btn-large btn-danger"
+          type="button"
+          id="buttonLeaveSession"
+          @click="leaveSession"
+          value="Leave session"
+        />
+      </div>
       <div id="video_wrapper">
         <user-video :stream-manager="mainStreamManager" class="box" />
         <user-video
@@ -44,6 +74,11 @@
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/UserVideo";
+// import { useStore } from "vuex";
+// import { mapState } from "vuex";
+
+// const userStore = "userStore";
+// const boardStore = "boardStore";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
