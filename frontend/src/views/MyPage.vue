@@ -98,7 +98,6 @@ export default {
       axios({
         method: "patch",
         url: API_BASE_URL + "user/updateNickname/",
-        // url: "http://localhost:8081/user/updateNickname/",
         data: {
           userLoginPlatform: getters["userStore/getUserLoginPlatform"],
           userNickname: getters["userStore/getUserNickname"],

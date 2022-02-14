@@ -107,7 +107,6 @@ export default {
       axios({
         method: "get",
         url: API_BASE_URL + "tourspot",
-        // url: "http://localhost:8081/tourspot",
       }).then((res) => {
         makeMarker(res.data.tourSpotList);
       });
