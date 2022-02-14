@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="map" style="height: 1000px" class="map">
+    <div id="map" class="map" style="width: 100%">
       <div id="selectedApt_wrap" style="display: block">
         <Plan
           v-on:getLine="emitList"
@@ -14,26 +14,18 @@
       <div id="pagination"></div>
     </div>
   </div>
-  <div id="webrtc-wrapper">
-    <WebRTC />
-    <board-buttons />
-  </div>
 </template>
 
 <script>
 import { reactive } from "vue";
 import { onMounted } from "vue";
-import WebRTC from "@/views/WebRTC.vue";
-import BoardButtons from "@/views/components/BoardButtons.vue";
 import Plan from "@/components/Plan.vue";
 import { API_BASE_URL } from "@/config/index.js";
 import axios from "axios";
 export default {
   name: "Map",
   components: {
-    WebRTC,
     Plan,
-    BoardButtons,
   },
   setup() {
     const sido_json = require("../assets/sido.json");
@@ -772,9 +764,9 @@ export default {
   /* font-size: 12px; */
   border-radius: 10px;
 }
-#webrtc-wrapper {
+#map {
   width: 100vw;
   height: 100vh;
-  top: 90%;
+  position: relative;
 }
 </style>
