@@ -1,15 +1,19 @@
 export const userStore = {
   namespaced: true,
   state: {
-    // userId: "",
-    userId: "1",
+    user: [],
+    userId: "",
     userNickname: "",
     userProfileImage: "",
     userInputNickname: "",
     userLoginPlatform: "",
     userClientId: "",
+    userInputEmail: "",
   },
   getters: {
+    getUser(state) {
+      return state.user;
+    },
     getUserId(state) {
       return state.userId;
     },
@@ -28,8 +32,15 @@ export const userStore = {
     getUserClientId(state) {
       return state.userClientId;
     },
+    getUserInpuEmail(state) {
+      return state.userInputEmail;
+    },
   },
   mutations: {
+    setUser(state, user) {
+      state.user = user;
+      console.log("user -> ", state.user);
+    },
     setUserId(state, userId) {
       state.userId = userId;
     },
@@ -48,6 +59,16 @@ export const userStore = {
     setUserClientId(state, userClientId) {
       state.userClientId = userClientId;
     },
+    setUserInputEmail(state, value) {
+      state.userInputEmail = value;
+    },
+    logout() {
+      this.setUserId("")
+      this.setUserLoginPlatform("")
+      this.setUserClientId("")
+      this.setUserNickname("")
+      this.setUserProfileImage("")
+    }
   },
   actions: {},
   // modules: {},

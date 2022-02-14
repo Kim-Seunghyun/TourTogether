@@ -1,5 +1,5 @@
 <template>
-  <div class="py-4 container-fluid">
+  <div class="py-4 container-fluid" ref="pdfarea">
     <div class="row">
       <div class="col-lg-7 mb-lg-0 mb-4">
         <div class="card">
@@ -107,7 +107,7 @@
                 aria-label="Close"
               ></button>
             </div>
-            <form @submit.prevent="startBoard">
+            <form @submit.prevent="createBoard">
               <div class="modal-body">
                 <input
                   type="text"
@@ -115,7 +115,7 @@
                   v-model="boardName"
                   placeholder="여행 제목을 입력해주세요"
                   required
-                  @keyup.enter="startBoard"
+                  @keyup.enter="createBoard"
                 />
               </div>
               <div class="modal-footer">
@@ -139,26 +139,41 @@
         <h4>여행지 추천</h4>
         <div class="card z-index-2">
           <div class="p-3 card-body">
-            <div class="col-lg-4 col-sm-8">
-              <category-with-whom />
-            </div>
-            <br />
-            <div class="col-lg-4 col-sm-8">
-              <category-season />
-            </div>
-            <br />
+            <button
+              type="button"
+              class="btn btn-secondary"
+              @click="exportToPDF"
+            >
+              PDF로 내보내기
+            </button>
+            <!-- <div data-html2canvas-ignore="true">
+              출력하지 않고 싶은 영역은 태그에 'data-html2canvas-ignore'
+              attribute를 넣어주면된다.
+            </div> -->
 
             <div class="col-lg-4 col-sm-8">
-              <category-area />
+              <board-category />
             </div>
             <br />
-            <div class="col-lg-4 col-sm-8">
-              <category-theme />
-            </div>
           </div>
           <div v-for="(board, index) in boards" :key="index">
-            보드 이름 : {{ board.boardName }} // 좋아요 수 :
-            {{ board.boardLikesCount }}
+            <div class="col-lg-6 col-sm-8">
+              {{ board.boardId }} // {{ board.boardName }} //
+              {{ board.boardLikesCount }}
+              <img
+                v-if="this.favoriteBoardId.includes(board.boardId)"
+                src="@/assets/img/full_heart.png"
+                width="30"
+                @click="likeCancel(board.boardId)"
+              />
+              <img
+                v-if="!this.favoriteBoardId.includes(board.boardId)"
+                src="@/assets/img/empty_heart.png"
+                width="30"
+                @click="likeClick(board.boardId)"
+              />
+            </div>
+            <div class="col-lg-6 col-sm-8"></div>
           </div>
         </div>
       </div>
@@ -166,10 +181,10 @@
   </div>
 </template>
 <script>
-import CategoryWithWhom from "./components/CategoryWithWhom.vue";
-import CategorySeason from "./components/CategorySeason.vue";
-import CategoryArea from "./components/CategoryArea.vue";
-import CategoryTheme from "./components/CategoryTheme.vue";
+import BoardCategory from "./components/BoardCategory.vue";
+import { API_BASE_URL } from "@/config/index.js";
+import html2pdf from "html2pdf.js";
+
 import { mapMutations, mapState } from "vuex";
 import axios from "axios";
 
@@ -181,8 +196,11 @@ export default {
   data() {
     return {
       boards: [],
+      favoriteBoardId: [],
       boardName: "",
+      boardRandom: "",
       // userId: "",
+      propTitle: "mypdf",
       stats: {
         iconBackground: "bg-gradient-success",
       },
@@ -191,48 +209,137 @@ export default {
   },
   computed: {
     ...mapState(userStore, ["userId"]),
+    ...mapState(boardStore, ["searchByCategoryBoards"]),
+    ...mapState(boardStore, ["withWhom", "season", "area", "theme"]),
     // ...mapState(boardStore, ["boards"]),
   },
+  watch: {
+    searchByCategoryBoards() {
+      this.boards = this.searchByCategoryBoards;
+    },
+  },
   created() {
-    this.getAllBoards();
+    // this.getAllBoards();
+    this.getUserFavoriteBoards();
   },
   methods: {
-    ...mapMutations(boardStore, ["setAllBoards"]),
-    getAllBoards() {
+    ...mapMutations(boardStore, ["setAllBoards", "setSearchByCategoryBoards"]),
+    // getAllBoards() {
+    //   axios({
+    //     method: "get",
+    //     url: API_BASE_URL + "board",
+    //   }).then((res) => {
+    //     this.boards = res.data.boards;
+    //     this.setAllBoards(res.data.boards);
+    //   });
+    // },
+    getUserFavoriteBoards() {
       axios({
-        method: "get",
-        url: "https://i6a105.p.ssafy.io:8081/board",
+        method: "post",
+        url: API_BASE_URL + "board/searchLikeBoardByUserId",
+        data: {
+          userId: this.userId,
+        },
       }).then((res) => {
-        this.boards = res.data.boards;
-        this.setAllBoards(res.data.boards);
+        for (var i = 0; i < res.data.myBoards.length; i++) {
+          this.favoriteBoardId[i] = res.data.myBoards[i].boardId;
+        }
       });
-    },
-    startBoard() {
-      console.log("createBoard!!!");
-      console.log("userId는 ", this.userId);
-      console.log("boardName은 ", this.boardName);
-      this.createBoard();
-      location.href = "/map";
     },
     createBoard() {
       // alert("send create board data");
       axios({
         method: "post",
-        url: "https://i6a105.p.ssafy.io:8081/board/create",
+        url: API_BASE_URL + "board/create",
         data: {
           boardName: this.boardName,
           userId: this.userId,
         },
       }).then((res) => {
-        console.log(res);
+        console.log(res.data.boardRandom);
+        this.boardRandom = res.data.boardRandom;
+        console.log(this.boardRandom);
+        location.href = `/board/${this.boardRandom}`;
+      });
+    },
+    likeClick(boardId) {
+      console.log("좋아요 누르기 ");
+      axios({
+        method: "patch",
+        url: API_BASE_URL + "board/clickBoardLike",
+        data: {
+          boardId: boardId,
+          userId: this.userId,
+        },
+      }).then((res) => {
+        this.favoriteBoardId = res.data.favoriteBoardId;
+        this.getListByCategory(
+          this.withWhom,
+          this.season,
+          this.area,
+          this.theme
+        );
+      });
+    },
+    likeCancel(boardId) {
+      console.log("좋아요 취소하기");
+      axios({
+        method: "patch",
+        url: API_BASE_URL + "board/cancelBoardLike",
+        data: {
+          boardId: boardId,
+          userId: this.userId,
+        },
+      }).then((res) => {
+        this.favoriteBoardId = res.data.favoriteBoardId;
+        this.getListByCategory(
+          this.withWhom,
+          this.season,
+          this.area,
+          this.theme
+        );
+      });
+    },
+    getListByCategory(withWhom, season, area, theme) {
+      axios({
+        method: "post",
+        url: API_BASE_URL + "board/searchByCategory",
+        data: {
+          categoryArea: area,
+          categorySeason: season,
+          categoryTheme: theme,
+          categoryWithWhom: withWhom,
+        },
+      }).then((res) => {
+        this.setSearchByCategoryBoards(res.data.boards);
+      });
+    },
+    exportToPDF() {
+      //window.scrollTo(0, 0);
+      html2pdf(this.$refs.pdfarea, {
+        margin: 0,
+        filename: "document.pdf",
+        image: { type: "jpg", quality: 0.95 },
+        //	allowTaint 옵션추가
+        html2canvas: {
+          useCORS: true,
+          scrollY: 0,
+          scale: 1,
+          dpi: 300,
+          letterRendering: true,
+          allowTaint: false, //useCORS를 true로 설정 시 반드시 allowTaint를 false처리 해주어야함
+        },
+        jsPDF: {
+          orientation: "portrait",
+          unit: "mm",
+          format: "a4",
+          compressPDF: true,
+        },
       });
     },
   },
   components: {
-    CategoryWithWhom,
-    CategorySeason,
-    CategoryArea,
-    CategoryTheme,
+    BoardCategory,
   },
 };
 </script>

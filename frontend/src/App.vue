@@ -37,9 +37,9 @@
 import Configurator from "@/examples/Configurator.vue";
 import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
-import router from "./router";
 import axios from "axios";
-import { reactive } from "@vue/reactivity";
+import { API_BASE_URL } from "@/config/index.js";
+import { reactive } from "vue";
 import { computed, watch, onMounted } from "vue";
 import { useStore, mapMutations } from "vuex";
 
@@ -75,30 +75,7 @@ export default {
     const counter = computed(() => store.state.counter);
     const test = computed(() => store.getters);
     const inc = () => store.commit("setCounter", counter.value + 1);
-    const login = () => {
-      window.Kakao.Auth.authorize({
-        // redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
-        redirectUri: "http://localhost/kakao-login-callback/",
-      });
-    };
     const accessToken = watch(console.log(state.accessToken));
-    const logout = (type) => {
-      // 카카오 로그아웃
-      window.Kakao.Auth.logout(function () {
-        if (type) {
-          // "unlink"
-          alert("Unlinked Kakao Account!");
-        } else {
-          alert("Logout Account!");
-        }
-        router.push("");
-        store.commit("setUserLoginPlatform", '')
-        store.commit("setUserClientId", '')
-        store.commit("setUserNickname", '')
-        store.commit("setUserInputNickname", '')
-        store.commit("setUserProfileImage", '')
-      });
-    };
 
     onMounted(() => {
       // 우리 api에 id있는지 확인, 있으면 기존 정보 가져오고 없으면 window.Kakao.API.request
@@ -121,7 +98,7 @@ export default {
           }
           axios({
             method: "post",
-            url: "https://i6a105.p.ssafy.io:8081/user/login",
+            url: API_BASE_URL + "user/login",
             data: {
               userLoginPlatform: "kakao",
               userClientId: response.id,
@@ -130,11 +107,25 @@ export default {
               userProfileImage: response.properties.profile_image,
             },
           }).then((res) => {
-            store.commit("setUserLoginPlatform", "kakao");
-            store.commit("setUserClientId", res.data.user.userClientId);
-            store.commit("setUserNickname", res.data.user.userNickname);
-            store.commit("setUserInputNickname", res.data.user.userNickname);
-            store.commit("setUserProfileImage", res.data.user.userProfileImage);
+            store.commit("userStore/setUser", res.data.user);
+            store.commit("userStore/setUserId", res.data.user.userId);
+            store.commit("userStore/setUserLoginPlatform", "kakao");
+            store.commit(
+              "userStore/setUserClientId",
+              res.data.user.userClientId
+            );
+            store.commit(
+              "userStore/setUserNickname",
+              res.data.user.userNickname
+            );
+            store.commit(
+              "userStore/setUserInputNickname",
+              res.data.user.userNickname
+            );
+            store.commit(
+              "userStore/setUserProfileImage",
+              res.data.user.userProfileImage
+            );
           });
         },
         fail: function (error) {
@@ -143,7 +134,7 @@ export default {
       });
     });
 
-    return { state, counter, inc, test, login, logout, accessToken };
+    return { state, counter, inc, test, accessToken };
   },
   // methods: {
   //   unlink() {  // 카카오 계정 연결끊기

@@ -2,7 +2,11 @@
   <div>
     <div id="map" style="height: 1000px" class="map">
       <div id="selectedApt_wrap" style="display: block">
-        <Plan />
+        <Plan
+          v-on:getLine="emitList"
+          :tourData="state.tmp"
+          v-on:getDay="emitDay"
+        />
       </div>
     </div>
     <div id="menu_wrap" class="bg_white">
@@ -16,10 +20,11 @@
 </template>
 
 <script>
-import { reactive } from "@vue/reactivity";
+import { reactive } from "vue";
 import { onMounted } from "vue";
 import WebRTC from "@/views/WebRTC.vue";
 import Plan from "@/components/Plan.vue";
+import { API_BASE_URL } from "@/config/index.js";
 import axios from "axios";
 export default {
   name: "Map",
@@ -36,12 +41,15 @@ export default {
       infowindow: null,
       listFlag: false,
       areas: [],
+      polyline: null,
       customOverlay: [], //overlay, tourSpotId, tourSpotName
       sido_polygon: [],
       sigungu_polygon: [],
       tourspot: [],
       tourspot_top100: [], // {marker, 2depthcode}
       ps: null,
+      tmp: Object,
+      day: null,
     });
     onMounted(() => {
       window.kakao && window.kakao.maps ? initMap() : addKakaoMapScript();
@@ -100,7 +108,7 @@ export default {
       });
       axios({
         method: "get",
-        url: "https://i6a105.p.ssafy.io:8081/tourspot",
+        url: API_BASE_URL + "tourspot",
         // url: "http://localhost:8081/tourspot",
       }).then((res) => {
         makeMarker(res.data.tourSpotList);
@@ -122,131 +130,154 @@ export default {
           tourSpotList[i].tourSpotLatitude,
           tourSpotList[i].tourSpotLongitude
         );
-
-        var overlay_info = document.createElement("div");
-        overlay_info.className = "overlay_info";
-
-        var title = document.createElement("div");
-        title.className = "title";
-        title.innerText = tourSpotList[i].tourSpotName;
-        overlay_info.appendChild(title);
-
-        var close = document.createElement("div");
-        close.onclick = function () {
-          state.customOverlay[0][0].setMap(null);
-        };
-        close.className = "close";
-        close.setAttribute("title", "닫기");
-        title.appendChild(close);
-
-        var desc = document.createElement("div");
-        desc.className = "desc";
-        overlay_info.appendChild(desc);
-
-        var address = document.createElement("div");
-        address.className = "address";
-        address.innerText = "주소 : " + tourSpotList[i].tourSpotAddress;
-        desc.appendChild(address);
-
-        if (tourSpotList[i].tourSpotHoliday) {
-          var holiday = document.createElement("div");
-          holiday.className = "holiday";
-          holiday.innerText = "쉬는날 : " + tourSpotList[i].tourSpotHoliday;
-          desc.appendChild(holiday);
+        var marker = new kakao.maps.Marker({
+          position: position,
+          clickable: true,
+        });
+        if (tourSpotList[i].tourSpotIsTop100 === true) {
+          var markerImage = new kakao.maps.MarkerImage(
+            "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
+            new kakao.maps.Size(31, 35),
+            new kakao.maps.Point(13, 34)
+          );
+          marker.setImage(markerImage);
+          state.tourspot_top100.push([
+            marker,
+            tourSpotList[i].tourSpotTwoDepthCode,
+          ]);
+        } else {
+          state.tourspot.push([marker, tourSpotList[i].tourSpotTwoDepthCode]);
         }
-
-        if (tourSpotList[i].tourSpotTime) {
-          var time = document.createElement("div");
-          time.className = "time";
-          time.innerText = "이용시간 : " + tourSpotList[i].tourSpotTime;
-          desc.appendChild(time);
-        }
-
-        if (tourSpotList[i].tourSpotParking) {
-          var parking = document.createElement("div");
-          parking.className = "parking";
-          parking.innerText = "주차시설 : " + tourSpotList[i].tourSpotParking;
-          desc.appendChild(parking);
-        }
-
-        var bottom = document.createElement("div");
-        bottom.className = "bottom";
-        desc.appendChild(bottom);
-
-        var selectbar = document.createElement("select");
-        selectbar.className = "selectbar";
-
-        for (var day = 1; day <= 4; day++) {
-          var tmp = document.createElement("option");
-          tmp.value = day;
-          tmp.innerHTML = day;
-          selectbar.appendChild(tmp);
-        }
-        selectbar.onchange = function () {
-          console.log(this.options[this.selectedIndex].text);
-        };
-        bottom.appendChild(selectbar);
-
-        var register = document.createElement("div");
-        register.className = "register";
-        register.onclick = function () {
-          console.log(selectbar.value);
-        }; 
-        register.setAttribute("title", "추가하기");
-        bottom.appendChild(register);
-
-        displayMarker(
-          position,
-          overlay_info,
-          tourSpotList[i].tourSpotIsTop100,
-          tourSpotList[i].tourSpotTwoDepthCode,
-          tourSpotList[i].tourSpotId,
-          tourSpotList[i].tourSpotName
-        );
+        let event = click(marker, tourSpotList[i]);
+        kakao.maps.event.addListener(marker, "click", event);
       }
     };
-    const displayMarker = (
-      position,
-      content,
-      isTop100,
-      twoDepthCode,
-      tourSpotId,
-      tourSpotName
-    ) => {
-      var marker = new kakao.maps.Marker({
-        position: position,
-        clickable: true,
-      });
-      if (isTop100 === true) {
-        var markerImage = new kakao.maps.MarkerImage(
-          "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
-          new kakao.maps.Size(31, 35),
-          new kakao.maps.Point(13, 34)
-        );
-        marker.setImage(markerImage);
-        state.tourspot_top100.push([marker, twoDepthCode]);
-      } else {
-        state.tourspot.push([marker, twoDepthCode]);
-      }
+    const click = (marker, tourlist) => {
       kakao.maps.event.addListener(marker, "click", function () {
-        makeCustomOverlay(content, marker.getPosition(), tourSpotId, tourSpotName);
+        makeCustomOverlay(marker.getPosition(), tourlist);
         displayCustomOverlay();
       });
     };
-    const removeMarker = () => {
-    }
-    const makeCustomOverlay = (content, position, tourSpotId, tourSpotName) => {
+    const displayMarker = (depth, areaNum) => {
+      removeAllChildNods(); // list 초기화
+      if (depth > 1) {
+        removeMarker(depth);
+        for (i = 0; i < state.tourspot.length; i++) {
+          console.log(state.tourspot[i][0]);
+          if (String(state.tourspot[i][1]) !== areaNum) {
+            continue;
+          }
+          displayPlaces(state.tourspot[i][0]); //300번 더돌아
+          state.tourspot[i][0].setMap(state.map);
+        }
+      } else if (depth > 0) {
+        for (var i = 0; i < state.tourspot_top100.length; i++) {
+          if (String(state.tourspot_top100[i][1]).substr(0, 2) !== areaNum) {
+            continue;
+          }
+          displayPlaces(state.tourspot_top100[i][0]); //4700번 더돌고
+          state.tourspot_top100[i][0].setMap(state.map);
+        }
+      }
+    };
+    const removeMarker = (depth) => {
+      if (depth === 2) {
+        for (var i = 0; i < state.tourspot.length; i++) {
+          state.tourspot[i][0].setMap(null);
+        }
+      }
+    };
+    const makeCustomOverlay = (position, tourSpot) => {
+      var overlay_info = document.createElement("div");
+      overlay_info.className = "overlay_info";
+
+      var title = document.createElement("div");
+      title.className = "title";
+      title.innerText = tourSpot.tourSpotName;
+      overlay_info.appendChild(title);
+      // var name = tourSpotList[i].tourSpotName;/
+      var close = document.createElement("div");
+      close.onclick = function () {
+        state.customOverlay[0][0].setMap(null);
+      };
+      close.className = "close";
+      close.setAttribute("title", "닫기");
+      title.appendChild(close);
+
+      var desc = document.createElement("div");
+      desc.className = "desc";
+      overlay_info.appendChild(desc);
+
+      var address = document.createElement("div");
+      address.className = "address";
+      address.innerHTML = "주소 : " + tourSpot.tourSpotAddress;
+      desc.appendChild(address);
+
+      if (tourSpot.tourSpotHoliday) {
+        var holiday = document.createElement("div");
+        holiday.className = "holiday";
+        holiday.innerHTML = "쉬는날 : " + tourSpot.tourSpotHoliday;
+        desc.appendChild(holiday);
+      }
+
+      if (tourSpot.tourSpotTime) {
+        var time = document.createElement("div");
+        time.className = "time";
+        time.innerHTML = "이용시간 : " + tourSpot.tourSpotTime;
+        desc.appendChild(time);
+      }
+
+      if (tourSpot.tourSpotParking) {
+        var parking = document.createElement("div");
+        parking.className = "parking";
+        parking.innerHTML = "주차시설 : " + tourSpot.tourSpotParking;
+        desc.appendChild(parking);
+      }
+
+      var bottom = document.createElement("div");
+      bottom.className = "bottom";
+      desc.appendChild(bottom);
+
+      var selectbar = document.createElement("select");
+      selectbar.className = "selectbar";
+
+      for (var j = 1; j <= state.day; j++) {
+        var tmp = document.createElement("option");
+        tmp.value = j;
+        tmp.innerHTML = j;
+        selectbar.appendChild(tmp);
+      }
+      selectbar.onchange = function () {
+        selectbar.value = this.options[this.selectedIndex].value;
+      };
+      bottom.appendChild(selectbar);
+      var register = document.createElement("div");
+      register.className = "register";
+      register.setAttribute("title", "추가하기");
+      bottom.appendChild(register);
       var overlay = new kakao.maps.CustomOverlay({
-        content: content,
+        content: overlay_info,
         position: position,
         zIndex: 100,
       });
-      state.customOverlay.push([overlay, tourSpotId, tourSpotName]);
-    }
+      state.customOverlay.push([
+        overlay,
+        tourSpot.tourSpotId,
+        tourSpot.tourSpotName,
+      ]);
+      register.onclick = () => {
+        state.tmp = {
+          name: state.customOverlay[0][2],
+          day: Number(selectbar.value),
+          lat: state.customOverlay[0][0].getPosition().getLat(),
+          lng: state.customOverlay[0][0].getPosition().getLng(),
+        };
+      };
+    };
     const displayCustomOverlay = () => {
-      if(state.customOverlay.length === 1 ){
+      if (state.customOverlay.length === 1) {
         state.customOverlay[0][0].setMap(state.map);
-      }else{
+      } else {
         state.customOverlay[0][0].setMap(null);
         state.customOverlay[1][0].setMap(state.map);
         state.customOverlay.shift();
@@ -320,19 +351,12 @@ export default {
       kakao.maps.event.addListener(polygon, "click", function (mouseEvent) {
         state.num = area.num;
         state.map.setLevel(10);
-        removeAllChildNods(); // list 초기화
+        displayMarker(1, area.num);
         for (var i = 0; i < state.sigungu_polygon.length; i++) {
           if (state.sigungu_polygon[i][1].substr(0, 2) !== area.num) {
             continue;
           }
           state.sigungu_polygon[i][2].setMap(state.map);
-        }
-        for (i = 0; i < state.tourspot_top100.length; i++) {
-          if (String(state.tourspot_top100[i][1]).substr(0, 2) !== area.num) {
-            continue;
-          }
-          displayPlaces(state.tourspot_top100[i][0]);
-          state.tourspot_top100[i][0].setMap(state.map);
         }
         var mousePoint = mouseEvent.latLng;
         state.map.setCenter(
@@ -410,12 +434,7 @@ export default {
         fillOpacity: 0.1,
       });
       kakao.maps.event.addListener(polygon, "click", function (mouseEvent) {
-        for (var i = 0; i < state.tourspot.length; i++) {
-          if (String(state.tourspot[i][1]) !== area.num) {
-            continue;
-          }
-          state.tourspot[i][0].setMap(state.map);
-        }
+        displayMarker(2, area.num);
         state.map.setLevel(8);
         var mousePoint = mouseEvent.latLng;
         state.map.setCenter(
@@ -430,43 +449,64 @@ export default {
         polygon.setOptions({ fillColor: "#00CC00" });
       });
     };
+    const makePolyline = () => {
+      var polyline = new kakao.maps.Polyline({
+        path: [],
+        strokeWeight: 5,
+        strokeOpacity: 1,
+        strokeStyle: "solid",
+      });
+      state.polyline = polyline;
+    };
+    const displayPolyline = () => {
+      state.polyline.setMap(state.map);
+    };
+    const nondisplayPolyline = () => {
+      state.polyline.setMap(null);
+    };
+    const removePolyline = () => {
+      state.polyline = null;
+    };
+    const addPolyline = (path) => {
+      state.polyline.setPath(path);
+    };
     const makeSearchBar = () => {
       var ps = new kakao.maps.services.Places();
       state.ps = ps;
       ps.setMap(state.map);
-      var infowindow = new kakao.maps.InfoWindow({zIndex:1,});
+      var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
       state.infowindow = infowindow;
       infowindow.setMap(state.map);
       searchPlaces();
     };
     const searchPlaces = () => {
-      var keyword = document.getElementById('keyword').value;
+      var keyword = document.getElementById("keyword").value;
 
-       if (!keyword.replace(/^\s+|\s+$/g, '')) {
-        alert('키워드를 입력해주세요!');
+      if (!keyword.replace(/^\s+|\s+$/g, "")) {
+        alert("키워드를 입력해주세요!");
         return false;
       }
-      
+
       state.ps.keywordSearch(keyword, placesearch);
     };
     const placesearch = (data, sta, pagination) => {
       console.log(data);
       console.log(sta);
       console.log(pagination);
-      if(sta === kakao.maps.services.Status.OK) {
+      if (sta === kakao.maps.services.Status.OK) {
         displayPlaces(data);
         displayPagination(pagination);
       } else if (sta === kakao.maps.services.Status.ZERO_RESULT) {
-        alert('검색 결과가 존재하지 않습니다.');
+        alert("검색 결과가 존재하지 않습니다.");
         return;
       } else if (sta === kakao.maps.services.Status.ERROR) {
-        alert('검색 결과 중 오류가 발생했습니다.');
+        alert("검색 결과 중 오류가 발생했습니다.");
         return;
       }
     };
     const displayPlaces = (tourspot) => {
-      var listEl = document.getElementById('placesList');
-      var menuEl = document.getElementById('menu_wrap');
+      var listEl = document.getElementById("placesList");
+      var menuEl = document.getElementById("menu_wrap");
       //var fragment = document.createDocumentFragment();
       //var bounds = new kakao.maps.LatLngBounds();
       //var listStr = '';
@@ -495,46 +535,64 @@ export default {
       var htag = document.createElement("h5");
       htag.innerText = tourspot.getPosition();
       info.appendChild(htag);
-      
+
       var spantag = document.createElement("span");
       spantag.innerText = tourspot.getPosition();
       info.appendChild(spantag);
       el.appendChild(itemStr);
-      el.className = 'item';
+      el.className = "item";
       return el;
-    }
+    };
     const displayPagination = (pagination) => {
-      var paginationEl = document.getElementById('pagination');
+      var paginationEl = document.getElementById("pagination");
       var fragment = document.createDocumentFragment();
 
       while (paginationEl.hasChildNodes()) {
-        paginationEl.removeChild (paginationEl.lastChild);
+        paginationEl.removeChild(paginationEl.lastChild);
       }
       for (var i = 1; i <= pagination.last; i++) {
-        var el = document.createElement('a');
+        var el = document.createElement("a");
         el.href = "#";
         el.innerHTML = i;
 
-        if (i===pagination.current) {
-            el.className = 'on';
+        if (i === pagination.current) {
+          el.className = "on";
         } else {
-            el.onclick = (function(i) {
-                return function() {
-                    pagination.gotoPage(i);
-                }
-            })(i);
+          el.onclick = (function (i) {
+            return function () {
+              pagination.gotoPage(i);
+            };
+          })(i);
         }
         fragment.appendChild(fragment);
       }
       paginationEl.appendChild(fragment);
     };
     const removeAllChildNods = () => {
-      var listEl = document.getElementById('placesList');
-      while(listEl.firstChild){
+      var listEl = document.getElementById("placesList");
+      while (listEl.firstChild) {
         listEl.removeChild(listEl.firstChild);
       }
-    }
-    
+    };
+    const emitList = function (abc) {
+      if (state.polyline) {
+        console.log(state.polyline);
+        nondisplayPolyline();
+        removePolyline();
+      }
+      if (abc) {
+        makePolyline();
+        var path = [];
+        for (var i = 0; i < abc.list.length; i++) {
+          path.push(new kakao.maps.LatLng(abc.list[i].lat, abc.list[i].lng));
+        }
+        addPolyline(path);
+        displayPolyline();
+      }
+    };
+    const emitDay = (day) => {
+      state.day = day;
+    };
     return {
       state,
       initMap,
@@ -548,6 +606,11 @@ export default {
       makePolygonDepth2,
       displayPolygonDepth1,
       displayPolygonDepth2,
+      makePolyline,
+      displayPolyline,
+      nondisplayPolyline,
+      removePolyline,
+      addPolyline,
       makeSearchBar,
       searchPlaces,
       placesearch,
@@ -555,17 +618,34 @@ export default {
       getListItem,
       displayPagination,
       removeAllChildNods,
+      emitList,
+      emitDay,
+      click,
     };
   },
 };
 </script>
 
 <style>
-.bg_white {background:#fff;}
-#menu_wrap hr {display: block; height: 1px;border: 0; border-top: 2px solid #5F5F5F;margin:3px 0;}
-#menu_wrap .option{text-align: center;}
-#menu_wrap .option p {margin:10px 0;}  
-#menu_wrap .option button {margin-left:5px;}/*
+.bg_white {
+  background: #fff;
+}
+#menu_wrap hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 2px solid #5f5f5f;
+  margin: 3px 0;
+}
+#menu_wrap .option {
+  text-align: center;
+}
+#menu_wrap .option p {
+  margin: 10px 0;
+}
+#menu_wrap .option button {
+  margin-left: 5px;
+} /*
 #placesList li {list-style: none;}
 #placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;}
 #placesList .item span {display: block;margin-top:4px;}
@@ -694,5 +774,4 @@ export default {
   height: 100vh;
   top: 90%;
 }
-
 </style>

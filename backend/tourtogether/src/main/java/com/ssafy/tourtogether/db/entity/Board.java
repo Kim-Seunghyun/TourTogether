@@ -29,4 +29,6 @@ public class Board extends BaseEntity {
 	boolean boardIsActive;
 
 	int boardLikesCount;
+
+	String boardRandom;
 }

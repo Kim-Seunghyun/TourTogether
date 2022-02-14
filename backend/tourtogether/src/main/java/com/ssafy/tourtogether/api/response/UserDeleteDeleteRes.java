@@ -14,16 +14,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("UserDeleteDeleteResponse")
-public class UserDeleteDeleteRes extends BaseResponseBody{
-	// TODO 토큰 형식 수정
-//	@ApiModelProperty(name="JWT 인증 토큰", example="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN...")
-	String accessToken;
-	
-	public static UserDeleteDeleteRes of(Integer statusCode, String message, String accessToken) {
+public class UserDeleteDeleteRes extends BaseResponseBody {
+	boolean successDelete;
+
+	public static UserDeleteDeleteRes of(Integer statusCode, String message, Boolean successDelete) {
 		UserDeleteDeleteRes res = new UserDeleteDeleteRes();
 		res.setStatusCode(statusCode);
 		res.setMessage(message);
-		res.setAccessToken(accessToken);
+		res.setSuccessDelete(successDelete);
 		return res;
 	}
 }
