@@ -138,7 +138,7 @@ export default {
     init() {
       axios({
         method: "POST",
-        url: "http://localhost:8080/api/memo/room",
+        url: "https://i6a105.p.ssafy.io/api/memo/room",
         params: {
           id: this.state.id,
           user: this.state.user,
