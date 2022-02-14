@@ -163,7 +163,7 @@ export default {
       var ws = Stomp.over(sock);
       var _this = this;
       this.ws = ws;
-      var subUrl = API_BASE_URL + "sub/memo/" + _this.state.id;
+      var subUrl = "api/sub/memo/" + _this.state.id;
       console.log("채널 구독하기: ", subUrl);
       ws.connect(
         {
