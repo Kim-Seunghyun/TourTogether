@@ -39,7 +39,6 @@ import Navbar from "@/examples/Navbars/Navbar.vue";
 import AppFooter from "@/examples/Footer.vue";
 // import axios from "axios";
 // import { API_BASE_URL } from "@/config/index.js";
-// import { LOCALHOST } from "@/config/index.js";
 // import { reactive } from "vue";
 // import { watch, onMounted } from "vue";
 import { mapMutations } from "vuex";

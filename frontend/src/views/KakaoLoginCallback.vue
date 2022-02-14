@@ -183,7 +183,6 @@
 <script>
 import BoardCategory from "./components/BoardCategory.vue";
 import { API_BASE_URL } from "@/config/index.js";
-import { LOCALHOST } from "@/config/index.js";
 import html2pdf from "html2pdf.js";
 
 import { mapMutations, mapState } from "vuex";
@@ -420,7 +419,7 @@ export default {
               }
               axios({
                 method: "post",
-                url: LOCALHOST + "user/login",
+                url: API_BASE_URL + "user/login",
                 data: {
                   userLoginPlatform: "kakao",
                   userClientId: response.id,
