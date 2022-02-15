@@ -8,6 +8,7 @@
     </div>
     <div id="webrtc_wrapper">
       <webRTC />
+      <board-buttons />
     </div>
   </div>
 </template>
@@ -16,12 +17,56 @@
 import Map from "@/views/Map.vue";
 import Memo from "@/views/Memo.vue";
 import webRTC from "@/views/WebRTC.vue";
+import BoardButtons from "@/views/components/BoardButtons.vue";
+import { mapState } from "vuex";
+import axios from "axios";
+import { API_BASE_URL } from "@/config/index.js";
 
+const userStore = "userStore";
 export default {
+  data() {
+    return {
+      boardId: "",
+    };
+  },
   components: {
     Map,
     Memo,
     webRTC,
+    BoardButtons,
+  },
+  created() {
+    var boardRandom = window.location.pathname.substr(7);
+    this.findBoardId(boardRandom);
+    // this.checkUser();
+  },
+  methods: {
+    ...mapState(userStore, "userId"),
+    findBoardId(boardRandom) {
+      axios({
+        method: "post",
+        url: API_BASE_URL + "board/searchBoardIdByBoardRandom",
+        data: {
+          boardRandom: boardRandom,
+        },
+      }).then((res) => {
+        // console.log(res.data);
+        this.boardId = res.data.boardId;
+        this.checkUser();
+      });
+    },
+    checkUser() {
+      axios({
+        method: "post",
+        url: API_BASE_URL + "board/searchParticipant",
+        data: {
+          boardId: this.boardId,
+          userId: this.userId,
+        },
+      }).then((res) => {
+        console.log(res.data.isIncluded);
+      });
+    },
   },
 };
 </script>

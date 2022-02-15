@@ -17,6 +17,7 @@ import com.ssafy.tourtogether.api.request.BoardSearchBoardIdByBoardRandomPostReq
 import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchParticipantPostReq;
 import com.ssafy.tourtogether.db.entity.Board;
 import com.ssafy.tourtogether.db.entity.BoardLikes;
 import com.ssafy.tourtogether.db.entity.BoardParticipant;
@@ -216,6 +217,12 @@ public class BoardServiceImpl implements BoardService {
 	public List<Board> searchByUserIdProceeding(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
 		List<Board> myBoards = boardRepositorySupport.findByUserIdProceeding(boardSearchByUserIdInfo);
 		return myBoards;
+	}
+
+	@Override
+	public Boolean searchParticipant(BoardSearchParticipantPostReq boardSearchParticipantInfo) {
+		Boolean isIncluded = boardParticipantRepositorySupport.findByUserId(boardSearchParticipantInfo);
+		return isIncluded;
 	}
 
 }

@@ -13,6 +13,7 @@ import com.ssafy.tourtogether.api.request.BoardSearchBoardIdByBoardRandomPostReq
 import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchParticipantPostReq;
 import com.ssafy.tourtogether.db.entity.Board;
 
 public interface BoardService {
@@ -46,5 +47,7 @@ public interface BoardService {
 	List<Board> searchByUserIdFinish(BoardSearchByUserIdPostReq boardSearchByUserIdInfo);
 
 	List<Board> searchByUserIdProceeding(BoardSearchByUserIdPostReq boardSearchByUserIdInfo);
+
+	Boolean searchParticipant(BoardSearchParticipantPostReq boardSearchParticipantInfo);
 
 }

@@ -13,14 +13,13 @@
       <ul id="placesList"></ul>
       <div id="pagination"></div>
     </div>
-    <board-buttons />
   </div>
 </template>
 
 <script>
 import { reactive } from "vue";
 import { onMounted } from "vue";
-import BoardButtons from "@/views/components/BoardButtons.vue";
+
 import Plan from "@/components/Plan.vue";
 import { API_BASE_URL } from "@/config/index.js";
 import axios from "axios";
@@ -28,7 +27,6 @@ export default {
   name: "Map",
   components: {
     Plan,
-    BoardButtons,
   },
   setup() {
     const sido_json = require("../assets/sido.json");
@@ -749,7 +747,7 @@ export default {
 } */
 /* .map {
   width: 1900px;
-  height: 800px;
+  height: 800px;bo
 } */
 #selectedApt_wrap {
   position: absolute;
