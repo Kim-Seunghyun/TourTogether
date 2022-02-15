@@ -428,6 +428,7 @@ export default {
                 }).then((res) => {
                   store.commit("userStore/setUser", res.data.user);
                   store.commit("userStore/setUserId", res.data.user.userId);
+                  console.log(">>>>>>>>>>>>", res.data.user.userId);
                   store.commit("userStore/setUserLoginPlatform", "kakao");
                   store.commit(
                     "userStore/setUserClientId",

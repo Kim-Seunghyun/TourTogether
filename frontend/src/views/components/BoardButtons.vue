@@ -241,7 +241,7 @@ export default {
         },
       }).then((res) => {
         console.log(res.data);
-        this.boardId = res.data.boardId;
+        this.boardId = res.data.board.boardId;
       });
     },
     selectWithWhom(index) {

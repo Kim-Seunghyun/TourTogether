@@ -42,7 +42,7 @@ public interface BoardService {
 
 	List<Board> searchByCategory(BoardSearchByCategoryPostReq boardSearchByCategoryInfo);
 
-	int searchByBoardRandom(BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo);
+	Board searchByBoardRandom(BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo);
 
 	List<Board> searchByUserIdFinish(BoardSearchByUserIdPostReq boardSearchByUserIdInfo);
 

@@ -195,8 +195,8 @@ public class BoardController {
 	public ResponseEntity<? extends BaseResponseBody> searchByUserId(
 			@RequestBody @ApiParam(value = "보드 랜덤값", required = true) BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo) {
 
-		int boardId = boardService.searchByBoardRandom(searchBoardIdByBoardRandomInfo);
-		return ResponseEntity.status(200).body(BoardSearchBoardIdByBoardRandomPostRes.of(200, "Success", boardId));
+		Board board = boardService.searchByBoardRandom(searchBoardIdByBoardRandomInfo);
+		return ResponseEntity.status(200).body(BoardSearchBoardIdByBoardRandomPostRes.of(200, "Success", board));
 	}
 
 	@PostMapping("/searchLikeBoardByUserId")

@@ -196,9 +196,9 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public int searchByBoardRandom(BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo) {
-		int boardId = boardRepositorySupport.findBoardIdByBoardRandom(searchBoardIdByBoardRandomInfo);
-		return boardId;
+	public Board searchByBoardRandom(BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo) {
+		Board board = boardRepositorySupport.findBoardIdByBoardRandom(searchBoardIdByBoardRandomInfo);
+		return board;
 	}
 
 	@Override
