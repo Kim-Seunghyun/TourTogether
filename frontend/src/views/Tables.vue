@@ -18,7 +18,7 @@ import AuthorsTable from "./components/AuthorsTable";
 import ProjectsTable from "./components/ProjectsTable";
 
 export default {
-  name: "tables",
+  name: "Tables",
   components: {
     AuthorsTable,
     ProjectsTable,
