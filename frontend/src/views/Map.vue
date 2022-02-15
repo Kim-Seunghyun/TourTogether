@@ -35,8 +35,22 @@ export default {
     const sido_json = require("../assets/sido.json");
     const sigungu_json = require("../assets/sigungu.json");
     const state = reactive({
+      index: 0,
+      page: 0,
       num: null,
       map: null,
+      src: [
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%ED%94%BC%EC%B9%B4%EC%B8%84.png",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%ED%81%AC%EB%AA%BD.png",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EC%A7%B1%EA%B5%AC.png",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EC%97%BD%EA%B8%B0%ED%86%A0%EB%81%BC.jfif",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EC%8A%A4%ED%8F%B0%EC%A7%80%EB%B0%A5.jfif",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%BD%80%EB%A1%9C%EB%A1%9C.jfif",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%B3%B4%EB%85%B8%EB%B3%B4%EB%85%B8.jfif",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%B0%B0%EC%B0%8C.jfif",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%9D%BC%EC%9D%B4%EC%96%B8.jpg",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%8F%84%EB%9D%BC%EC%97%90%EB%AA%BD.jfif",
+      ],
       infowindow: null,
       listFlag: false,
       areas: [],
@@ -44,8 +58,9 @@ export default {
       customOverlay: [], //overlay, tourSpotId, tourSpotName
       sido_polygon: [],
       sigungu_polygon: [],
-      tourspot: [],
-      tourspot_top100: [], // {marker, 2depthcode}
+      spot: [], // {marker, tourspotList}
+      tourspot: [], // {marker, tourSpotList[i]} index,
+      tourspot_top100: [], // {marker, tourSpotList[i]}
       ps: null,
       tmp: Object,
       day: null,
@@ -95,10 +110,12 @@ export default {
             state.sigungu_polygon[i][2].setMap(null);
           }
           for (i = 0; i < state.tourspot_top100.length; i++) {
-            state.tourspot_top100[i][0].setMap(null);
+            var index = state.tourspot_top100[i];
+            state.spot[index][0].setMap(null);
           }
           for (i = 0; i < state.tourspot.length; i++) {
-            state.tourspot[i][0].setMap(null);
+            index = state.tourspot[i];
+            state.spot[index][0].setMap(null);
           }
           for (i = 0; i < state.sido_polygon.length; i++) {
             state.sido_polygon[i][2].setMap(state.map);
@@ -107,7 +124,7 @@ export default {
       });
       axios({
         method: "get",
-        url: "https://i6a105.p.ssafy.io:8081/tourspot",
+        url: "https://i6a105.p.ssafy.io:8080/api/tourspot",
       }).then((res) => {
         makeMarker(res.data.tourSpotList);
       });
@@ -139,53 +156,66 @@ export default {
             new kakao.maps.Point(13, 34)
           );
           marker.setImage(markerImage);
-          state.tourspot_top100.push([
-            marker,
-            tourSpotList[i].tourSpotTwoDepthCode,
-          ]);
+          state.tourspot_top100.push(i); // 그 i를 저장
         } else {
-          state.tourspot.push([marker, tourSpotList[i].tourSpotTwoDepthCode]);
+          state.tourspot.push(i);
         }
-        let event = click(marker, tourSpotList[i]);
+        state.spot[i] = [marker, tourSpotList[i]];
+        let event = click(marker, tourSpotList[i], i);
         kakao.maps.event.addListener(marker, "click", event);
       }
     };
-    const click = (marker, tourlist) => {
+    const click = (marker, tourlist, index) => {
       kakao.maps.event.addListener(marker, "click", function () {
-        makeCustomOverlay(marker.getPosition(), tourlist);
+        state.index++;
+        makeCustomOverlay(marker.getPosition(), tourlist, index); // (marker.getPosition(), index, tourlist);
         displayCustomOverlay();
       });
     };
     const displayMarker = (depth, areaNum) => {
       removeAllChildNods(); // list 초기화
+      var index = 0;
       if (depth > 1) {
         removeMarker(depth);
         for (i = 0; i < state.tourspot.length; i++) {
-          console.log(state.tourspot[i][0]);
-          if (String(state.tourspot[i][1]) !== areaNum) {
+          var tmp = state.tourspot[i];
+          if (String(state.spot[tmp][1].tourSpotTwoDepthCode) !== areaNum) {
             continue;
           }
-          displayPlaces(state.tourspot[i][0]); //300번 더돌아
-          state.tourspot[i][0].setMap(state.map);
+          index++;
+          if (index === 16) {
+            index = 1;
+          }
+          displayPlaces(index, state.spot[tmp][1]);
+          state.spot[tmp][0].setMap(state.map);
         }
       } else if (depth > 0) {
         for (var i = 0; i < state.tourspot_top100.length; i++) {
-          if (String(state.tourspot_top100[i][1]).substr(0, 2) !== areaNum) {
+          tmp = state.tourspot_top100[i];
+          if (
+            String(state.spot[tmp][1].tourSpotTwoDepthCode).substr(0, 2) !==
+            areaNum
+          ) {
             continue;
           }
-          displayPlaces(state.tourspot_top100[i][0]); //4700번 더돌고
-          state.tourspot_top100[i][0].setMap(state.map);
+          index++;
+          if (index === 16) {
+            index = 1;
+          }
+          displayPlaces(index, state.spot[tmp][1]); //4700번 더돌고
+          state.spot[tmp][0].setMap(state.map);
         }
       }
     };
     const removeMarker = (depth) => {
       if (depth === 2) {
         for (var i = 0; i < state.tourspot.length; i++) {
-          state.tourspot[i][0].setMap(null);
+          var index = state.tourspot[i];
+          state.spot[index][0].setMap(null);
         }
       }
     };
-    const makeCustomOverlay = (position, tourSpot) => {
+    const makeCustomOverlay = (position, tourSpot, index) => {
       var overlay_info = document.createElement("div");
       overlay_info.className = "overlay_info";
 
@@ -205,6 +235,11 @@ export default {
       var desc = document.createElement("div");
       desc.className = "desc";
       overlay_info.appendChild(desc);
+
+      var img = document.createElement("img");
+      var i = state.index % 10;
+      img.src = state.src[i];
+      desc.appendChild(img);
 
       var address = document.createElement("div");
       address.className = "address";
@@ -258,17 +293,15 @@ export default {
         position: position,
         zIndex: 100,
       });
-      state.customOverlay.push([
-        overlay,
-        tourSpot.tourSpotId,
-        tourSpot.tourSpotName,
-      ]);
+      state.customOverlay.push([overlay, index, tourSpot.tourSpotName]);
       register.onclick = () => {
         state.tmp = {
           name: state.customOverlay[0][2],
+          // 관광지 이름
           day: Number(selectbar.value),
           lat: state.customOverlay[0][0].getPosition().getLat(),
           lng: state.customOverlay[0][0].getPosition().getLng(),
+          index: state.customOverlay[0][1],
         };
       };
     };
@@ -475,96 +508,39 @@ export default {
       var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
       state.infowindow = infowindow;
       infowindow.setMap(state.map);
-      searchPlaces();
     };
-    const searchPlaces = () => {
-      var keyword = document.getElementById("keyword").value;
-
-      if (!keyword.replace(/^\s+|\s+$/g, "")) {
-        alert("키워드를 입력해주세요!");
-        return false;
-      }
-
-      state.ps.keywordSearch(keyword, placesearch);
-    };
-    const placesearch = (data, sta, pagination) => {
-      console.log(data);
-      console.log(sta);
-      console.log(pagination);
-      if (sta === kakao.maps.services.Status.OK) {
-        displayPlaces(data);
-        displayPagination(pagination);
-      } else if (sta === kakao.maps.services.Status.ZERO_RESULT) {
-        alert("검색 결과가 존재하지 않습니다.");
-        return;
-      } else if (sta === kakao.maps.services.Status.ERROR) {
-        alert("검색 결과 중 오류가 발생했습니다.");
-        return;
-      }
-    };
-    const displayPlaces = (tourspot) => {
+    const displayPlaces = (index, tourspot) => {
       var listEl = document.getElementById("placesList");
       var menuEl = document.getElementById("menu_wrap");
-      //var fragment = document.createDocumentFragment();
-      //var bounds = new kakao.maps.LatLngBounds();
-      //var listStr = '';
       removeMarker();
-      //var placePosition = new kakao.maps.LatLng(tourspot.getPosition().getLat(), tourspot.getPosition().getLng());
-      //var marker = addMarker(placePosition, i);
-      var itemEl = getListItem(3, tourspot);
-      itemEl.onmouseover = function () {};
-      //bounds.extend(placePosition);
+      var itemEl = getListItem(index, tourspot);
+      itemEl.onclick = function () {
+        findMark(tourspot.tourSpotLatitude, tourspot.tourSpotLongitude);
+      };
       listEl.appendChild(itemEl);
-      //listEl.appendChild(fragment);
       menuEl.scrollTop = 0;
-
-      //state.map.setBounds(bounds);
     };
     const getListItem = (index, tourspot) => {
       var el = document.createElement("li");
 
       var itemStr = document.createElement("span");
-      itemStr.className = "markerbg marker_" + (index + 1);
-
+      itemStr.className = "markerbg marker_" + index;
       var info = document.createElement("div");
       info.className = "info";
       itemStr.appendChild(info);
 
       var htag = document.createElement("h5");
-      htag.innerText = tourspot.getPosition();
+      htag.className = "htag";
+      htag.innerText = tourspot.tourSpotName;
       info.appendChild(htag);
 
       var spantag = document.createElement("span");
-      spantag.innerText = tourspot.getPosition();
+      spantag.className = "spantag";
+      spantag.innerText = tourspot.tourSpotAddress;
       info.appendChild(spantag);
       el.appendChild(itemStr);
       el.className = "item";
       return el;
-    };
-    const displayPagination = (pagination) => {
-      var paginationEl = document.getElementById("pagination");
-      var fragment = document.createDocumentFragment();
-
-      while (paginationEl.hasChildNodes()) {
-        paginationEl.removeChild(paginationEl.lastChild);
-      }
-      for (var i = 1; i <= pagination.last; i++) {
-        var el = document.createElement("a");
-        el.href = "#";
-        el.innerHTML = i;
-
-        if (i === pagination.current) {
-          el.className = "on";
-        } else {
-          el.onclick = (function (i) {
-            return function () {
-              pagination.gotoPage(i);
-            };
-          })(i);
-        }
-        fragment.appendChild(fragment);
-      }
-      paginationEl.appendChild(fragment);
     };
     const removeAllChildNods = () => {
       var listEl = document.getElementById("placesList");
@@ -574,7 +550,6 @@ export default {
     };
     const emitList = function (abc) {
       if (state.polyline) {
-        console.log(state.polyline);
         nondisplayPolyline();
         removePolyline();
       }
@@ -590,6 +565,9 @@ export default {
     };
     const emitDay = (day) => {
       state.day = day;
+    };
+    const findMark = (lat, lng) => {
+      console.log(lat, lng);
     };
     return {
       state,
@@ -610,14 +588,12 @@ export default {
       removePolyline,
       addPolyline,
       makeSearchBar,
-      searchPlaces,
-      placesearch,
       displayPlaces,
       getListItem,
-      displayPagination,
       removeAllChildNods,
       emitList,
       emitDay,
+      findMark,
       click,
     };
   },
@@ -635,42 +611,99 @@ export default {
   border-top: 2px solid #5f5f5f;
   margin: 3px 0;
 }
-#menu_wrap .option {
+#placesList li {
+  list-style: none;
+}
+#placesList .item {
+  position: relative;
+  border-bottom: 1px solid #888;
+  overflow: hidden;
+  min-height: 100px;
+}
+#placesList .item span {
+  display: block;
+  margin-top: 4px;
+}
+#placesList .item h5,
+#placesList .item .info {
+  text-overflow: ellipsis;
+  /* overflow: hidden; */
+  white-space: nowrap;
+}
+#placesList .item .info {
+  padding: 10px 0 10px 55px;
+}
+#placesList .info .spantag {
+  color: #009900;
+}
+#placesList .item .markerbg {
+  float: left;
+  position: absolute;
+  width: 36px;
+  height: 37px;
+  margin: 10px 0 0 10px;
+  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
+    no-repeat;
+}
+#placesList .item .marker_1 {
+  background-position: 0 -10px;
+}
+#placesList .item .marker_2 {
+  background-position: 0 -56px;
+}
+#placesList .item .marker_3 {
+  background-position: 0 -102px;
+}
+#placesList .item .marker_4 {
+  background-position: 0 -148px;
+}
+#placesList .item .marker_5 {
+  background-position: 0 -194px;
+}
+#placesList .item .marker_6 {
+  background-position: 0 -240px;
+}
+#placesList .item .marker_7 {
+  background-position: 0 -286px;
+}
+#placesList .item .marker_8 {
+  background-position: 0 -332px;
+}
+#placesList .item .marker_9 {
+  background-position: 0 -378px;
+}
+#placesList .item .marker_10 {
+  background-position: 0 -423px;
+}
+#placesList .item .marker_11 {
+  background-position: 0 -470px;
+}
+#placesList .item .marker_12 {
+  background-position: 0 -516px;
+}
+#placesList .item .marker_13 {
+  background-position: 0 -562px;
+}
+#placesList .item .marker_14 {
+  background-position: 0 -608px;
+}
+#placesList .item .marker_15 {
+  background-position: 0 -654px;
+}
+
+#pagination {
+  margin: 10px auto;
   text-align: center;
 }
-#menu_wrap .option p {
-  margin: 10px 0;
+#pagination a {
+  display: inline-block;
+  margin-right: 10px;
 }
-#menu_wrap .option button {
-  margin-left: 5px;
-} /*
-#placesList li {list-style: none;}
-#placesList .item {position:relative;border-bottom:1px solid #888;overflow: hidden;cursor: pointer;min-height: 65px;}
-#placesList .item span {display: block;margin-top:4px;}
-#placesList .item h5, #placesList .item .info {text-overflow: ellipsis;overflow: hidden;white-space: nowrap;}
-#placesList .item .info{padding:10px 0 10px 55px;}
-#placesList .info .gray {color:#8a8a8a;}
-#placesList .info .jibun {padding-left:26px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;}
-#placesList .info .tel {color:#009900;}
-#placesList .item .markerbg {float:left;position:absolute;width:36px; height:37px;margin:10px 0 0 10px;background:url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;}
-#placesList .item .marker_1 {background-position: 0 -10px;}
-#placesList .item .marker_2 {background-position: 0 -56px;}
-#placesList .item .marker_3 {background-position: 0 -102px}
-#placesList .item .marker_4 {background-position: 0 -148px;}
-#placesList .item .marker_5 {background-position: 0 -194px;}
-#placesList .item .marker_6 {background-position: 0 -240px;}
-#placesList .item .marker_7 {background-position: 0 -286px;}
-#placesList .item .marker_8 {background-position: 0 -332px;}
-#placesList .item .marker_9 {background-position: 0 -378px;}
-#placesList .item .marker_10 {background-position: 0 -423px;}
-#placesList .item .marker_11 {background-position: 0 -470px;}
-#placesList .item .marker_12 {background-position: 0 -516px;}
-#placesList .item .marker_13 {background-position: 0 -562px;}
-#placesList .item .marker_14 {background-position: 0 -608px;}
-#placesList .item .marker_15 {background-position: 0 -654px;}
-#pagination {margin:10px auto;text-align: center;}
-#pagination a {display:inline-block;margin-right:10px;}
-#pagination .on {font-weight: bold; cursor: default;color:#777;}*/
+#pagination .on {
+  font-weight: bold;
+  cursor: default;
+  color: #777;
+}
 .overlay_info {
   border-radius: 6px;
   margin-bottom: 12px;
@@ -725,6 +758,8 @@ export default {
   min-height: 50px;
 }
 .overlay_info img {
+  width: 128px;
+  height: 128px;
   vertical-align: top;
 }
 .desc div {

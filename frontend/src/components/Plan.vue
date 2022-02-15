@@ -1,32 +1,42 @@
 <template>
   <div id="root">
-    <button @click="addTour()">관광지 추가</button>
     <button @click="addDay()">일정 하루 추가</button>
     <button @click="deleteDay(0)">일정 전체 삭제</button>
-    <button @click="emitTest()">emitTest</button>
-    <button @click="emitDay()">현재 Day 정보</button>
     <div>
       <ul id="day_wrap" class="list">
         <div v-for="item in state.tourList" v-bind:key="item.list">
-          <!-- <li v-if="item" class="day">
-            <div class="day_item">
-              {{ item }}
-            </div>
-          </li> -->
-          <ul class="day_item day sort" @click="showPlan(item.index)">
-            {{
-              item.index + 1
-            }}일차
+          <div class="day_item day sort" @click="showPlan(item.index)">
+            {{ item.index + 1 }}일차
             <div v-if="state.selectedIndex === item.index">
-              <p
-                class="tour_item"
-                v-for="tourItem in item.list"
-                v-bind:key="tourItem"
-              >
-                {{ tourItem.name }}
-              </p>
+              <div v-for="tourItem in item.list" v-bind:key="tourItem">
+                <div
+                  class="tour_item"
+                  @mouseenter="showComponent($event)"
+                  @mouseleave="blockComponent($event)"
+                >
+                  {{ tourItem.name }}
+                  <img
+                    src="https://user-images.githubusercontent.com/63468607/153530715-d5123829-4dc5-4a63-86d0-6b156fa0bd38.png"
+                    class="close_image"
+                    @click="deleteTour(item.index, tourItem.id)"
+                    style="display: none"
+                  />
+                  <img
+                    src="https://user-images.githubusercontent.com/63468607/153790617-0311fbca-8b5e-44ed-a30b-3415bf1c45d1.png"
+                    class="up_image"
+                    @click="listUp(item.index, tourItem.id)"
+                    style="display: none"
+                  />
+                  <img
+                    src="https://user-images.githubusercontent.com/63468607/153790551-4d34a662-f7f9-47f9-953a-837ffcde6a1a.png"
+                    class="down_image"
+                    @click="listDown(item.index, tourItem.id)"
+                    style="display: none"
+                  />
+                </div>
+              </div>
             </div>
-          </ul>
+          </div>
         </div>
       </ul>
     </div>
@@ -34,8 +44,8 @@
 </template>
 
 <script>
-import { reactive } from "@vue/reactivity";
-import { onMounted, watch } from "@vue/runtime-core";
+import { reactive } from "vue";
+import { onMounted, watch } from "vue";
 import $ from "jquery";
 import "jquery-ui/ui/widgets/sortable";
 
@@ -45,63 +55,34 @@ export default {
     tourData: Object,
     //아이디 장소 날짜
   },
-  // emits: ["emitTest"],
+  // emits: ["emitLine"],
   setup(props, { emit }) {
-    const tour = [
-      {
-        tour_spot_name: "강동몽돌해변",
-        day: 1,
-      },
-      {
-        tour_spot_name: "감자꽃 스튜디오",
-        day: 2,
-      },
-      {
-        tour_spot_name: "광나루한강공원",
-        day: 3,
-      },
-      {
-        tour_spot_name: "광명동굴",
-        day: 1,
-      },
-      {
-        tour_spot_name: "한강",
-        day: 2,
-      },
-      {
-        tour_spot_name: "북한강",
-        day: 2,
-      },
-    ];
-    let size = 0;
-    // const $ = jQuery;
-
     const state = reactive({
-      tourList: null,
-      td: null,
+      tourList: [],
       selectedIndex: null,
       propsData: null,
     });
-    const addTour = () => {
-      state.td = tour[size];
-      size++;
-      if (size >= 6) size = 0;
-    };
     const addDay = () => {
       let len = state.tourList.length;
       state.tourList[len] = { list: new Array(), index: len };
+      goEmit();
     };
     const deleteDay = (num) => {
       if (num == 0) {
         let len = state.tourList.length;
         state.tourList.splice(0, len);
+        addDay();
       } else {
         state.tourList.splice(num, 1);
+        let len = state.tourList.length;
+        reIndexingDay(len);
       }
+      goEmit();
     };
     const showPlan = (num) => {
       state.selectedIndex = num;
-      makeSortable();
+      goEmit();
+      // makeSortable();
     };
     const blockRightClick = () => {
       document
@@ -129,29 +110,96 @@ export default {
             state.tourList.splice(next, 0, arr);
           }
           let len = state.tourList.length;
-          reIndexing(len);
+          reIndexingDay(len);
           state.selectedIndex = next;
+          goEmit();
         },
       });
     };
-    const reIndexing = (len) => {
+    const makeTourSortable = () => {
+      let prev = 0;
+      $(".sort").sortable({
+        item: $(".tour_item"),
+        start: function (event, ui) {
+          prev = ui.item.index();
+        },
+        stop: function (event, ui) {
+          let index = state.selectedIndex;
+          let next = ui.item.index();
+          let arr = JSON.parse(JSON.stringify(state.tourList[index].list));
+          if (prev < next) {
+            state.tourList[index].list.splice(next + 1, 0, arr);
+            state.tourList[index].list.splice(prev, 1);
+          } else {
+            state.tourList[index].list.splice(prev, 1);
+            state.tourList[index].list.splice(next, 0, arr);
+          }
+          let len = state.tourList[index].list.length;
+          reIndexingTour(index, len);
+        },
+      });
+    };
+    const reIndexingDay = (len) => {
       for (let i = 0; i < len; i++) {
         state.tourList[i].index = i;
       }
+      goEmit();
     };
-    const emitTest = () => {
+    const reIndexingTour = (day, len) => {
+      for (let i = 0; i < len; i++) {
+        state.tourList[day].list[i].id = i;
+      }
+      goEmit();
+    };
+    const emitLine = () => {
       emit("getLine", state.tourList[state.selectedIndex]);
     };
     onMounted(() => {
       state.tourList = [];
       state.selectedIndex = 0;
+      state.tourList[0] = { list: new Array(), index: 0 };
+      // addDay();
+      emit("getDay", state.tourList.length);
       blockRightClick();
       makeSortable();
-      reIndexing();
-      // addDay();
     });
     const emitDay = () => {
       emit("getDay", state.tourList.length);
+    };
+    const deleteTour = (day, index) => {
+      state.tourList[day].list.splice(index, 1);
+      let len = state.tourList[day].list.length;
+      reIndexingTour(day, len);
+    };
+    const goEmit = () => {
+      emitDay();
+      emitLine();
+    };
+    const showComponent = (event) => {
+      const target = event.target;
+      $(target).children("img").css("display", "");
+    };
+    const blockComponent = (event) => {
+      const target = event.target;
+      $(target).children("img").css("display", "none");
+    };
+    const listUp = (day, index) => {
+      if (index === 0) return;
+      let len = state.tourList[day].list.length;
+      [state.tourList[day].list[index], state.tourList[day].list[index - 1]] = [
+        state.tourList[day].list[index - 1],
+        state.tourList[day].list[index],
+      ];
+      reIndexingTour(day, len);
+    };
+    const listDown = (day, index) => {
+      let len = state.tourList[day].list.length;
+      if (index + 1 === len) return;
+      [state.tourList[day].list[index], state.tourList[day].list[index + 1]] = [
+        state.tourList[day].list[index + 1],
+        state.tourList[day].list[index],
+      ];
+      reIndexingTour(day, len);
     };
     watch(
       () => props.tourData,
@@ -168,7 +216,8 @@ export default {
           lat: props.tourData.lat,
           lng: props.tourData.lng,
         });
-        //console.log(state.tourList);
+        goEmit();
+        // console.log(state.tourList);
         /*
         TODO
         Redis 로 보낼때
@@ -190,14 +239,22 @@ export default {
     );
     return {
       state,
-      addTour,
       addDay,
       deleteDay,
       showPlan,
       blockRightClick,
       makeSortable,
-      emitTest,
+      emitLine,
       emitDay,
+      deleteTour,
+      reIndexingDay,
+      reIndexingTour,
+      goEmit,
+      makeTourSortable,
+      showComponent,
+      blockComponent,
+      listUp,
+      listDown,
     };
   },
 };
@@ -219,13 +276,50 @@ export default {
 .tour_item {
   border: 1px solid #888;
   cursor: pointer;
-  border-radius: 15%;
+  border-radius: 5px;
   margin: 1%;
   z-index: 3;
-  color: rgb(180, 179, 179);
+  background-color: rgb(238, 231, 231);
+  /* box-shadow: 1px 1px 1px 1px gray; */
+  border-collapse: collapse;
 }
 #root {
   width: 100%;
   height: 100%;
 }
+.close_image {
+  z-index: 5;
+  width: 25px;
+  height: 25px;
+  right: 1px;
+  top: 1px;
+  float: right;
+  position: relative;
+}
+.down_image {
+  z-index: 5;
+  width: 25px;
+  height: 25px;
+  top: 1%;
+  float: left;
+  position: relative;
+}
+.up_image {
+  z-index: 5;
+  width: 25px;
+  height: 25px;
+  top: 99%;
+  float: left;
+  position: relative;
+}
+/* .left {
+  border-radius: 50% 0 0 50%;
+  border: 1px solid #888;
+  background-color: rgb(238, 231, 231);
+}
+.right {
+  border-radius: 0 50% 50% 0;
+  border: 1px solid #888;
+  background-color: rgb(238, 231, 231);
+} */
 </style>
