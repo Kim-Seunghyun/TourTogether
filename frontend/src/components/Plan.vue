@@ -238,12 +238,12 @@ export default {
         JSON.stringify({
           roomId: state.id,
           userId: state.user,
-          content: state.tourList,
+          content: JSON.stringify(state.tourList),
         })
       );
     };
     const updateList = (response) => {
-      state.tourList = response;
+      state.tourList = JSON.parse(response.content);
       goEmit();
     };
     const init = () => {
@@ -298,9 +298,9 @@ export default {
           index: props.tourData.index,
         });
         state.selectedIndex = day;
-        console.log("------");
-        console.log(JSON.stringify(state.tourList));
-        console.log("------");
+        // console.log("------");
+        // console.log(JSON.stringify(state.tourList));
+        // console.log("------");
         goEmit();
         // console.log(state.tourList);
         /*
