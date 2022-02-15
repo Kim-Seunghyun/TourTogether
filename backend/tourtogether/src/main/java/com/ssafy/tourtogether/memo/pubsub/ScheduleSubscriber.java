@@ -1,7 +1,7 @@
 package com.ssafy.tourtogether.memo.pubsub;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.ssafy.tourtogether.db.entity.MemoMessage;
+import com.ssafy.tourtogether.db.entity.ScheduleMessage;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class RedisSubscriber implements MessageListener {
+public class ScheduleSubscriber implements MessageListener {
 
     private final ObjectMapper objectMapper;
     private final RedisTemplate redisTemplate;
@@ -29,10 +29,10 @@ public class RedisSubscriber implements MessageListener {
             // redis에서 발행된 데이터를 받아 deserialize
             String publishMessage = (String) redisTemplate.getStringSerializer().deserialize(message.getBody());
             // MemoMessage 객채로 맵핑
-            MemoMessage roomMessage = objectMapper.readValue(publishMessage, MemoMessage.class);
+            ScheduleMessage roomMessage = objectMapper.readValue(publishMessage, ScheduleMessage.class);
             // Websocket 구독자에게 채팅 메시지 Send
-            System.out.println("MemoSubscriber onMessage: "+roomMessage.toString());
-            messagingTemplate.convertAndSend("/api/sub/memo/"+roomMessage.getRoomId(), roomMessage);
+            System.out.println("ScheduleSubscriber onMessage: "+roomMessage.toString());
+            messagingTemplate.convertAndSend("/api/sub/schedule/"+roomMessage.getRoomId(), roomMessage);
         } catch (Exception e) {
             log.error(e.getMessage());
         }

@@ -20,7 +20,7 @@ const onlyAuthUser = async (to, from, next) => {
   console.log("checkUserInfo!!!!! -> " + checkUserInfo);
   if (!checkUserInfo) {
     alert("로그인이 필요한 페이지입니다..");
-    router.push({ name: "Login" });
+    router.push({ name: "Dashboard" });
   } else {
     next();
   }

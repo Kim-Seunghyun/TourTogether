@@ -3,7 +3,7 @@ import { createStore } from "vuex";
 
 import { userStore } from "@/store/modules/userStore.js";
 import { boardStore } from "@/store/modules/boardStore.js";
-import createPersistedState from 'vuex-persistedstate';
+import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
   namespaced: true,
