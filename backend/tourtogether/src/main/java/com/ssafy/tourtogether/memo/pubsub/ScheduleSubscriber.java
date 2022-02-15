@@ -31,7 +31,8 @@ public class ScheduleSubscriber implements MessageListener {
             // MemoMessage 객채로 맵핑
             ScheduleMessage roomMessage = objectMapper.readValue(publishMessage, ScheduleMessage.class);
             // Websocket 구독자에게 채팅 메시지 Send
-            messagingTemplate.convertAndSend("/api/sub/memo/"+roomMessage.getRoomId(), roomMessage);
+            System.out.println("ScheduleSubscriber onMessage: "+roomMessage.toString());
+            messagingTemplate.convertAndSend("/api/sub/schedule/"+roomMessage.getRoomId(), roomMessage);
         } catch (Exception e) {
             log.error(e.getMessage());
         }
