@@ -175,7 +175,8 @@ public class BoardRepositorySupport {
 		for (int boardId : myBoardIds) {
 			Board board = jpaQueryFactory.select(qBoard).from(qBoard).where(qBoard.boardId.eq(boardId))
 					.where(qBoard.boardIsActive.eq(true)).fetchFirst();
-			boardList.add(board);
+			if (board != null)
+				boardList.add(board);
 		}
 
 		return boardList;
@@ -191,7 +192,8 @@ public class BoardRepositorySupport {
 		for (int boardId : myBoardIds) {
 			Board board = jpaQueryFactory.select(qBoard).from(qBoard).where(qBoard.boardId.eq(boardId))
 					.where(qBoard.boardIsActive.eq(false)).fetchFirst();
-			boardList.add(board);
+			if (board != null)
+				boardList.add(board);
 		}
 
 		return boardList;
