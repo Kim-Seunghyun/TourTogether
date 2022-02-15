@@ -48,6 +48,7 @@
       <button @click="deleteDay(0)" class="btn btn-secondary">
         일정 전체 삭제
       </button>
+      <button @click="sendMessage()">레디스로 보내보기</button>
     </div>
   </div>
 </template>
@@ -61,6 +62,9 @@ import "jquery-ui/ui/widgets/sortable";
 import SockJS from "sockjs-client";
 import Stomp from "stomp-websocket";
 import { API_BASE_URL } from "@/config/index.js";
+import store from "@/store";
+const getters = store.getters;
+
 let sock = new SockJS(API_BASE_URL + "ws-stomp");
 
 export default {
@@ -75,8 +79,9 @@ export default {
       tourList: [],
       selectedIndex: null,
       propsData: null,
-
-      ws: null,
+      user: getters["userStore/getUserNickname"],
+      my: true,
+      ws: Stomp.over(sock),
       id: null,
     });
     const addDay = () => {
@@ -177,6 +182,7 @@ export default {
       state.id = window.location.pathname.split("/")[1];
       state.tourList[0] = { list: new Array(), index: 0 };
       // addDay();
+      init();
       emit("getDay", state.tourList.length);
       blockRightClick();
       makeSortable();
@@ -225,21 +231,29 @@ export default {
         "https://user-images.githubusercontent.com/63468607/153804094-71229922-2e1e-4186-ba14-a4c6db03ae19.png"
       );
     };
-    const sendMessage = function (delta) {
-      console.log("sendMessage", delta);
+    const sendMessage = function () {
       state.ws.send(
-        "/api/pub/plan",
+        "/api/pub/schedule",
         {},
         JSON.stringify({
-          data: state.tourList,
+          roomId: state.id,
+          userId: state.user,
+          content: state.tourList,
         })
       );
     };
-    const updateList = () => {};
+    const updateList = (response) => {
+      state.tourList = response;
+      goEmit();
+    };
     const init = () => {
       axios({
-        method: "get",
-        url: API_BASE_URL + "",
+        method: "post",
+        url: API_BASE_URL + "schedule/room",
+        params: {
+          id: state.id,
+          user: state.user,
+        },
       })
         .then((response) => {
           console.log(response);
@@ -248,12 +262,12 @@ export default {
           console.log(error);
         });
       //시작하면 DB에서 기존에 작업 했던 것 불러 와야함
-      let subUrl = "api/sub/plan/" + state.id;
+      let subUrl = "/api/sub/schedule/" + state.id;
       var ws = Stomp.over(sock);
       state.ws = ws;
       ws.connect(
         {
-          //something
+          userNickname: state.user,
         },
         function (frame) {
           console.log("frame : " + frame);
