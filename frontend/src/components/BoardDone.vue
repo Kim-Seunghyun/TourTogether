@@ -6,7 +6,8 @@
       v-if="board"
       src="../assets/delete_button.png"
       alt="delete-button"
-      @click="deleteBoard">
+      @click="deleteBoard"
+    />
     <img
       v-if="computedGetters['boardStore/getBoardsLike'].includes(board)"
       src="@/assets/img/full_heart.png"
@@ -30,7 +31,7 @@ import { onMounted } from "vue";
 import { API_BASE_URL } from "@/config/index.js";
 
 export default {
-  name: 'BoardDone',
+  name: "BoardDone",
   props: {
     board: Object,
   },
@@ -40,18 +41,18 @@ export default {
     const getters = store.getters;
     const state = reactive({
       likes: null,
-    })
+    });
     const deleteBoard = () => {
       axios({
-        method: 'delete',
-        url: '/api/board/delete',
+        method: "delete",
+        url: "/api/board/delete",
         data: {
-          boardId: props.board.boardId
-        }
-      }).then(res => {
-          console.log(res)
-          store.commit("boardStore/deleteBoardIng", props.board.boardId)
-        })
+          boardId: props.board.boardId,
+        },
+      }).then((res) => {
+        console.log(res);
+        store.commit("boardStore/deleteBoardIng", props.board.boardId);
+      });
     };
     const like = () => {
       axios({
@@ -62,11 +63,11 @@ export default {
           userId: getters["userStore/getUserId"],
         },
       }).then((res) => {
-        store.commit("boardStore/addBoardLike", props.board)
-        console.log(res)
-        console.log(getters['boardStore/getBoardsLike'])
+        store.commit("boardStore/addBoardLike", props.board);
+        console.log(res);
+        console.log(getters["boardStore/getBoardsLike"]);
       });
-    }
+    };
     const likeCancel = () => {
       axios({
         method: "patch",
@@ -78,22 +79,21 @@ export default {
       }).then(() => {
         // store.commit("boardStore/addBoardLike", props.board)
         axios({
-        method: "post",
-        url: 
-        // API_BASE_URL + 
-        "/api/board/searchLikeBoardByUserId",
-        data: {
-          userId: 98,
-        },
+          method: "post",
+          url:
+            // API_BASE_URL +
+            "/api/board/searchLikeBoardByUserId",
+          data: {
+            userId: 98,
+          },
         }).then((res) => {
-          store.commit("boardStore/setBoardsLike", res.data.myBoards)
-          console.log(getters['boardStore/getBoardsLike'])
-        })
+          store.commit("boardStore/setBoardsLike", res.data.myBoards);
+          console.log(getters["boardStore/getBoardsLike"]);
+        });
       });
-    }
+    };
 
-    onMounted(() => {
-    })
+    onMounted(() => {});
 
     return {
       deleteBoard,
@@ -101,10 +101,10 @@ export default {
       computedGetters,
       like,
       likeCancel,
-      state
+      state,
     };
-  }
-}
+  },
+};
 </script>
 <style scoped>
 .delete-button {

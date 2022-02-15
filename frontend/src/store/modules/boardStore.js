@@ -19,14 +19,14 @@ export const boardStore = {
       return state.searchByCategoryBoards;
     },
     getBoardsIng(state) {
-      return state.boardsIng
+      return state.boardsIng;
     },
     getBoardsDone(state) {
-      return state.boardsDone
+      return state.boardsDone;
     },
     getBoardsLike(state) {
-      return state.boardsLike
-    }
+      return state.boardsLike;
+    },
   },
   mutations: {
     setAllBoards(state, boards) {
@@ -42,36 +42,36 @@ export const boardStore = {
       state.theme = category[3];
     },
     setBoardsIng(state, boardsIng) {
-      state.boardsIng = boardsIng
+      state.boardsIng = boardsIng;
     },
     setBoardsDone(state, boardsDone) {
-      state.boardsDone = boardsDone
+      state.boardsDone = boardsDone;
     },
     setBoardsLike(state, boardsLike) {
-      state.boardsLike = boardsLike
+      state.boardsLike = boardsLike;
     },
     deleteBoardIng(state, boardId) {
-      state.boardsIng = state.boardsIng.filter(board => {
-        if(board) {
-          return (board.boardId !== boardId)
+      state.boardsIng = state.boardsIng.filter((board) => {
+        if (board) {
+          return board.boardId !== boardId;
         }
-      })
+      });
     },
     deleteBoardDone(state, boardId) {
-      state.boardsDone = state.boardsDone.filter(board => {
-        if(board) {
-          return (board.boardId !== boardId)
+      state.boardsDone = state.boardsDone.filter((board) => {
+        if (board) {
+          return board.boardId !== boardId;
         }
-      })
+      });
     },
     addBoardLike(state, board) {
-      state.boardsLike.push(board)
+      state.boardsLike.push(board);
     },
     cancelBoardLike(state, board) {
-      state.boardsLike = state.boardsLike.fliter(boardLike => {
-        return boardLike !== board
-      })
-    }
+      state.boardsLike = state.boardsLike.fliter((boardLike) => {
+        return boardLike !== board;
+      });
+    },
   },
   actions: {},
   // modules: {},

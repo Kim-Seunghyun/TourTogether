@@ -6,7 +6,8 @@
       v-if="board"
       src="../assets/delete_button.png"
       alt="delete-button"
-      @click="deleteBoard">
+      @click="deleteBoard"
+    />
   </div>
 </template>
 
@@ -16,7 +17,7 @@ import { useStore } from "vuex";
 import { API_BASE_URL } from "@/config/index.js";
 
 export default {
-  name: 'BoardIng',
+  name: "BoardIng",
   props: {
     board: Object,
   },
@@ -24,22 +25,22 @@ export default {
     const store = useStore();
     const deleteBoard = () => {
       axios({
-        method: 'delete',
-        url: API_BASE_URL + 'board/delete',
+        method: "delete",
+        url: API_BASE_URL + "board/delete",
         data: {
-          boardId: props.board.boardId
-        }
-      }).then(res => {
-          console.log(res)
-          store.commit("boardStore/deleteBoardIng", props.board.boardId)
-        })
+          boardId: props.board.boardId,
+        },
+      }).then((res) => {
+        console.log(res);
+        store.commit("boardStore/deleteBoardIng", props.board.boardId);
+      });
     };
 
     return {
-      deleteBoard
+      deleteBoard,
     };
-  }
-}
+  },
+};
 </script>
 <style scoped>
 .delete-button {
