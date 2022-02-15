@@ -23,12 +23,14 @@ import com.ssafy.tourtogether.api.request.BoardSearchBoardIdByBoardRandomPostReq
 import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchParticipantPostReq;
 import com.ssafy.tourtogether.api.response.BoardClickBoardLikePatchRes;
 import com.ssafy.tourtogether.api.response.BoardCreatePostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchAllPostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchBoardIdByBoardRandomPostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchByBoardIdPostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchByUserIdPostRes;
+import com.ssafy.tourtogether.api.response.BoardSearchParticipantPostRes;
 import com.ssafy.tourtogether.api.service.BoardService;
 import com.ssafy.tourtogether.common.model.response.BaseResponseBody;
 import com.ssafy.tourtogether.db.entity.Board;
@@ -268,5 +270,20 @@ public class BoardController {
 		// 보드 ID로 불러오기
 		List<Board> boards = boardService.searchByCategory(boardSearchByCategoryInfo);
 		return ResponseEntity.status(200).body(BoardSearchAllPostRes.of(200, "Success", boards));
+	}
+
+	@PostMapping("/searchParticipant")
+	@ApiOperation(value = "보드에 참여한 참가자인지 확인", notes = "보드에 참여한 참가자인지 확인한다")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+
+	public ResponseEntity<? extends BaseResponseBody> searchParticipant(
+			@RequestBody @ApiParam(value = "추가할 유저의 아이디와 보드 아이디 정보", required = true) BoardSearchParticipantPostReq boardSearchParticipantInfo) {
+
+		// 보드 ID로 불러오기
+		Boolean isIncluded = boardService.searchParticipant(boardSearchParticipantInfo);
+		return ResponseEntity.status(200).body(BoardSearchParticipantPostRes.of(200, "Success", isIncluded));
 	}
 }

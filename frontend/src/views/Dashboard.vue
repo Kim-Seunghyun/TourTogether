@@ -135,6 +135,7 @@
         </div>
       </div>
     </div>
+
     <!-- 유형 선택하기 -->
     <div class="mt-4 row">
       <div class="mb-4 col-lg-12 mb-lg-0">
@@ -149,7 +150,7 @@
           <div style="display: flex">
             <div v-for="(board, index) in boards" :key="index" style="flex: 1">
               <div
-                class="col-lg-6 col-sm-8 card z-index-2"
+                class="col-lg-6 card z-index-2"
                 style="border: 3px solid #90d5eb; text-align: center"
               >
                 {{ board.boardName }} <br />
@@ -179,7 +180,6 @@
 <script>
 import BoardCategory from "./components/BoardCategory.vue";
 import { API_BASE_URL } from "@/config/index.js";
-
 import { mapMutations, mapState } from "vuex";
 // import { useStore } from "vuex";
 import { onMounted } from "vue";

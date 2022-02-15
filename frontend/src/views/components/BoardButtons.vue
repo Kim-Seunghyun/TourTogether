@@ -289,7 +289,7 @@ export default {
       const copyText = document.getElementById("myInput");
       copyText.select();
       document.execCommand("copy");
-      alert(copyText.value + "을 복사했습니다.");
+      // alert(copyText.value + "을 복사했습니다.");
     },
     exportToPDF() {
       //window.scrollTo(0, 0);
