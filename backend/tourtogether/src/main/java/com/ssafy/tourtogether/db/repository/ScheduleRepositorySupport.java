@@ -55,7 +55,7 @@ public class ScheduleRepositorySupport {
      */
     public ScheduleRoom createScheduleRoom(String id) {
     	System.out.println("createScheduleRoom: "+id);
-    	ScheduleRoom scheduleRoom = ScheduleRoom.create(id, new Schedule(id, "<p>새로 만들어진 스케쥴입니다.</p>"));
+    	ScheduleRoom scheduleRoom = ScheduleRoom.create(id, new Schedule(id, ""));
         opsHashScheduleRoom.put(SCHEDULE_ROOMS, scheduleRoom.getRoomId(), scheduleRoom);
         return scheduleRoom;
     }
