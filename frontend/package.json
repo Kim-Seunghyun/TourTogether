@@ -36,12 +36,14 @@
     "vue": "^3.0.0",
     "vue-clipboard2": "^0.3.3",
     "vue-flatpickr-component": "9.0.5",
+    "vue-good-table": "^2.21.11",
     "vue-router": "^4.0.0-0",
     "vue-websocket": "^0.2.3",
     "vue3-quill": "^0.2.6",
     "vuedraggable": "^4.1.0",
     "vuequilleditor": "^1.0.0",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "vuex-persistedstate": "^4.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

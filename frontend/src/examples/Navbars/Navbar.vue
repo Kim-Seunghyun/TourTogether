@@ -7,7 +7,7 @@
   >
     <div class="px-3 py-1 container-fluid">
       <router-link to="/" class="px-0 nav-link font-weight-bold"
-        >TOUR TOGETHER</router-link
+        ><h5>TOUR TOGETHER ✈️</h5></router-link
       >
 
       <div
@@ -28,9 +28,9 @@
               @click="login()"
             />
 
-            <h6 v-if="user" class="px-0 nav-link font-weight-bold">
+            <!-- <h6 v-if="user" class="px-0 nav-link font-weight-bold">
               {{ user.userNickname }} 님 &nbsp;
-            </h6>
+            </h6> -->
 
             <router-link
               to="/favoritepage"
@@ -49,11 +49,11 @@
             >
 
             <router-link
-              to="/memo2"
+              to="/memo"
               v-if="user"
               class="px-0 nav-link font-weight-bold"
               :class="textWhite ? textWhite : 'text-body'"
-              >memo2 &nbsp;</router-link
+              >memo &nbsp;</router-link
             >
 
             <router-link
@@ -81,6 +81,7 @@
 </template>
 <script>
 import { mapMutations, mapActions, useStore, mapState } from "vuex";
+import { onUpdated } from "vue";
 import router from "@/router";
 
 const userStore = "userStore";
@@ -108,11 +109,11 @@ export default {
   },
   setup() {
     const store = useStore();
-    // const getters = store.getters;
+    const getters = store.getters;
     const login = () => {
       window.Kakao.Auth.authorize({
-        redirectUri: "https://i6a105.p.ssafy.io/dashboard",
-        // redirectUri: "http://localhost:8080/dashboard",
+        redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback",
+        // redirectUri: "http://localhost:8080/kakao-login-callback",
       });
     };
     const logout = () => {
@@ -128,10 +129,24 @@ export default {
         store.commit("userStore/setUserInputNickname", "");
         store.commit("userStore/setUserProfileImage", "");
         // console.log(getters.getUserId);
-        alert('로그아웃 되었습니다!')
+        alert("로그아웃 되었습니다!");
       });
     };
-    return { login, logout };
+    onUpdated(() => {
+      const navbar = document.getElementById("navbarBlur");
+      window.addEventListener("scroll", () => {
+        if (window.scrollY > 10 && this.$store.state.isNavFixed) {
+          navbar.classList.add("blur");
+          navbar.classList.add("position-sticky");
+          navbar.classList.add("shadow-blur");
+        } else {
+          navbar.classList.remove("blur");
+          navbar.classList.remove("position-sticky");
+          navbar.classList.remove("shadow-blur");
+        }
+      });
+    });
+    return { login, logout, getters };
   },
   components: {},
   computed: {
@@ -139,20 +154,6 @@ export default {
     currentRouteName() {
       return this.$route.name;
     },
-  },
-  updated() {
-    const navbar = document.getElementById("navbarBlur");
-    window.addEventListener("scroll", () => {
-      if (window.scrollY > 10 && this.$store.state.isNavFixed) {
-        navbar.classList.add("blur");
-        navbar.classList.add("position-sticky");
-        navbar.classList.add("shadow-blur");
-      } else {
-        navbar.classList.remove("blur");
-        navbar.classList.remove("position-sticky");
-        navbar.classList.remove("shadow-blur");
-      }
-    });
   },
 };
 </script>

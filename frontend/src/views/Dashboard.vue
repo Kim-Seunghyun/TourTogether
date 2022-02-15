@@ -48,8 +48,9 @@
             <span class="mask bg-gradient-dark"></span>
             <div
               class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3"
+              style="background-color: #90d5eb"
             >
-              <h1 class="text-white font-weight-bolder mb-4 pt-2">✈️</h1>
+              <h1 class="text-white font-weight-bolder mb-4 pt-2">📅</h1>
               <p class="text-white">
                 친구들과 실시간으로 소통하며 여행 계획을 짜고 싶은 사람!<br />
                 다른 사람들의 기깔나는 여행 계획을 추천받고 싶은 사람! <br />
@@ -74,11 +75,12 @@
 
                   <button
                     type="button"
-                    class="btn btn-primary"
+                    class="btn btn-primary text-black"
                     data-bs-toggle="modal"
                     data-bs-target="#modal"
+                    :style="goToBoardBtn"
                   >
-                    일정 짜기 START
+                    일정짜러 가기
                   </button>
                 </h4>
               </a>
@@ -133,40 +135,42 @@
         </div>
       </div>
     </div>
+
     <!-- 유형 선택하기 -->
     <div class="mt-4 row">
       <div class="mb-4 col-lg-12 mb-lg-0">
-        <h4>여행지 추천</h4>
+        <h4>🌏 추천</h4>
         <div class="card z-index-2">
-          <div class="p-3 card-body">
-            <!-- <div data-html2canvas-ignore="true">
-              출력하지 않고 싶은 영역은 태그에 'data-html2canvas-ignore'
-              attribute를 넣어주면된다.
-            </div> -->
-
+          <div class="p-3 card-body d-flex justify-content-center">
             <div class="col-lg-4 col-sm-8">
               <board-category />
             </div>
             <br />
           </div>
-          <div v-for="(board, index) in boards" :key="index">
-            <div class="col-lg-6 col-sm-8">
-              {{ board.boardId }} // {{ board.boardName }} //
-              {{ board.boardLikesCount }}
-              <img
-                v-if="this.favoriteBoardId.includes(board.boardId)"
-                src="@/assets/img/full_heart.png"
-                width="30"
-                @click="likeCancel(board.boardId)"
-              />
-              <img
-                v-if="!this.favoriteBoardId.includes(board.boardId)"
-                src="@/assets/img/empty_heart.png"
-                width="30"
-                @click="likeClick(board.boardId)"
-              />
+          <div style="display: flex">
+            <div v-for="(board, index) in boards" :key="index" style="flex: 1">
+              <div
+                class="col-lg-6 card z-index-2"
+                style="border: 3px solid #90d5eb; text-align: center"
+              >
+                {{ board.boardName }} <br />
+                {{ board.boardLikesCount }}
+                <div>
+                  <img
+                    v-if="this.favoriteBoardId.includes(board.boardId)"
+                    src="@/assets/img/full_heart.png"
+                    width="30"
+                    @click="likeCancel(board.boardId)"
+                  />
+                  <img
+                    v-if="!this.favoriteBoardId.includes(board.boardId)"
+                    src="@/assets/img/empty_heart.png"
+                    width="30"
+                    @click="likeClick(board.boardId)"
+                  />
+                </div>
+              </div>
             </div>
-            <div class="col-lg-6 col-sm-8"></div>
           </div>
         </div>
       </div>
@@ -176,18 +180,20 @@
 <script>
 import BoardCategory from "./components/BoardCategory.vue";
 import { API_BASE_URL } from "@/config/index.js";
-
 import { mapMutations, mapState } from "vuex";
-import { useStore } from "vuex";
-import { reactive, watch } from "vue";
-import { onBeforeMount } from "vue";
-// import { onMounted } from "vue";
+// import { useStore } from "vuex";
+import { onMounted } from "vue";
 import axios from "axios";
 
 const userStore = "userStore";
 const boardStore = "boardStore";
 
 export default {
+  setup() {
+    // const store = useStore();
+    // const getters = store.getters;
+    onMounted(() => {});
+  },
   name: "dashboard",
   data() {
     return {
@@ -200,7 +206,10 @@ export default {
       stats: {
         iconBackground: "bg-gradient-success",
       },
-      sales: {},
+      goToBoardBtn: {
+        backgroundColor: "#fffff0",
+        color: "#1D2225",
+      },
     };
   },
   computed: {
@@ -310,167 +319,6 @@ export default {
         this.setSearchByCategoryBoards(res.data.boards);
       });
     },
-  },
-
-  setup() {
-    const state = reactive({
-      accessToken: window.Kakao.Auth.getAccessToken(),
-    });
-    const store = useStore();
-    const accessToken = watch(console.log(state.accessToken));
-
-    const getParameterByName = (name) => {
-      name = name.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
-      var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-      return results == null
-        ? ""
-        : decodeURIComponent(results[1].replace(/\+/g, " "));
-    };
-    onBeforeMount(() => {
-      const code = getParameterByName("code");
-      // alert("this is code:"+code);
-      var details = {
-        grant_type: "authorization_code",
-        client_id: process.env.VUE_APP_KAKAO_RESTAPI_KEY,
-        redirect_uri: "https://i6a105.p.ssafy.io/dashboard",
-        // redirect_uri: "http://localhost:8080/dashboard",
-        code: code,
-      };
-      var formBody = [];
-      for (var property in details) {
-        var encodedKey = encodeURIComponent(property);
-        var encodedValue = encodeURIComponent(details[property]);
-        formBody.push(encodedKey + "=" + encodedValue);
-      }
-      formBody = formBody.join("&");
-      fetch("https://kauth.kakao.com/oauth/token", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded;charset=utf-8",
-        },
-        body: formBody,
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(JSON.stringify(data));
-          alert(JSON.stringify(data));
-          window.Kakao.Auth.setAccessToken(data.access_token);
-          alert(window.Kakao.Auth.getAccessToken());
-        })
-        .then(() => {
-          window.Kakao.API.request({
-            url: "/v2/user/me",
-            data: {
-              property_keys: [
-                "properties.nickname",
-                "kakao_account.email",
-                "properties.profile_image",
-              ],
-            },
-            success: function (response) {
-              let email = null;
-              if (
-                response.kakao_account.has_email &
-                !response.kakao_account.email_needs_agreement
-              ) {
-                email = response.kakao_account.email;
-              }
-              axios({
-                method: "post",
-                url: API_BASE_URL + "user/login",
-                data: {
-                  userLoginPlatform: "kakao",
-                  userClientId: response.id,
-                  userEmail: email,
-                  userName: response.properties.nickname,
-                  userProfileImage: response.properties.profile_image,
-                },
-              }).then((res) => {
-                store.commit("userStore/setUser", res.data.user);
-                store.commit("userStore/setUserId", res.data.user.userId);
-                store.commit("userStore/setUserLoginPlatform", "kakao");
-                store.commit(
-                  "userStore/setUserClientId",
-                  res.data.user.userClientId
-                );
-                store.commit(
-                  "userStore/setUserNickname",
-                  res.data.user.userNickname
-                );
-                store.commit(
-                  "userStore/setUserInputNickname",
-                  res.data.user.userNickname
-                );
-                store.commit(
-                  "userStore/setUserProfileImage",
-                  res.data.user.userProfileImage
-                );
-              });
-            },
-            fail: function (error) {
-              console.log(error);
-            },
-          });
-        });
-    });
-    // onMounted(() => {
-    //   // 우리 api에 id있는지 확인, 있으면 기존 정보 가져오고 없으면 window.Kakao.API.request
-    //   window.Kakao.API.request({
-    //     url: "/v2/user/me",
-    //     data: {
-    //       property_keys: [
-    //         "properties.nickname",
-    //         "kakao_account.email",
-    //         "properties.profile_image",
-    //       ],
-    //     },
-    //     success: function (response) {
-    //       let email = null;
-    //       if (
-    //         response.kakao_account.has_email &
-    //         !response.kakao_account.email_needs_agreement
-    //       ) {
-    //         email = response.kakao_account.email;
-    //       }
-    //       axios({
-    //         method: "post",
-    //         url: LOCALHOST + "user/login",
-    //         data: {
-    //           userLoginPlatform: "kakao",
-    //           userClientId: response.id,
-    //           userEmail: email,
-    //           userName: response.properties.nickname,
-    //           userProfileImage: response.properties.profile_image,
-    //         },
-    //       }).then((res) => {
-    //         store.commit("userStore/setUser", res.data.user);
-    //         store.commit("userStore/setUserId", res.data.user.userId);
-    //         store.commit("userStore/setUserLoginPlatform", "kakao");
-    //         store.commit(
-    //           "userStore/setUserClientId",
-    //           res.data.user.userClientId
-    //         );
-    //         store.commit(
-    //           "userStore/setUserNickname",
-    //           res.data.user.userNickname
-    //         );
-    //         store.commit(
-    //           "userStore/setUserInputNickname",
-    //           res.data.user.userNickname
-    //         );
-    //         store.commit(
-    //           "userStore/setUserProfileImage",
-    //           res.data.user.userProfileImage
-    //         );
-    //       });
-    //     },
-    //     fail: function (error) {
-    //       console.log(error);
-    //     },
-    //   });
-    // });
-    return { state, accessToken };
   },
   components: {
     BoardCategory,

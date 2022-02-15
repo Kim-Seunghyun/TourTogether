@@ -39,6 +39,7 @@ export const userStore = {
     },
     setUserId(state, userId) {
       state.userId = userId;
+      console.log("user -> ", state.userId);
     },
     setUserNickname(state, userNickname) {
       state.userNickname = userNickname;
@@ -61,6 +62,8 @@ export const userStore = {
       this.setUserClientId("");
       this.setUserNickname("");
       this.setUserProfileImage("");
+      this.setUser("");
+      console.log(this.getUser);
     },
   },
   actions: {},

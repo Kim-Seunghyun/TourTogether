@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 // import Home from "../views/Home.vue";
-import Map from "../views/Map.vue";
+// import Map from "../views/Map.vue";
 import MyPage from "../views/MyPage.vue";
 import KakaoLoginCallback from "../views/KakaoLoginCallback.vue";
 import FavoritePage from "../views/FavoritePage.vue";
@@ -12,7 +12,7 @@ import SignUp from "@/views/SignUp.vue";
 import Memo from "../views/Memo.vue";
 import Schedule from "../views/Schedule.vue";
 import Sch2 from "../views/Sch2.vue";
-
+import Board from "@/views/Board.vue";
 import store from "@/store/index.js";
 
 const onlyAuthUser = async (to, from, next) => {
@@ -35,9 +35,9 @@ const routes = [
   },
   {
     path: "/board/:boardRandom",
-    name: "Map",
+    name: "Board",
     beforeEnter: onlyAuthUser,
-    component: Map,
+    component: Board,
   },
   {
     path: "/mypage",
