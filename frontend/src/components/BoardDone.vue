@@ -27,6 +27,7 @@ import axios from "axios";
 import { useStore } from "vuex";
 import { reactive, computed } from "vue";
 import { onMounted } from "vue";
+import { API_BASE_URL } from "@/config/index.js";
 
 export default {
   name: 'BoardDone',
@@ -53,15 +54,45 @@ export default {
         })
     };
     const like = () => {
-
+      axios({
+        method: "patch",
+        url: API_BASE_URL + "board/clickBoardLike",
+        data: {
+          boardId: props.board.boardId,
+          userId: getters["userStore/getUserId"],
+        },
+      }).then((res) => {
+        store.commit("boardStore/addBoardLike", props.board)
+        console.log(res)
+        console.log(getters['boardStore/getBoardsLike'])
+      });
     }
     const likeCancel = () => {
-
+      axios({
+        method: "patch",
+        url: API_BASE_URL + "board/cancelBoardLike",
+        data: {
+          boardId: props.board.boardId,
+          userId: getters["userStore/getUserId"],
+        },
+      }).then(() => {
+        // store.commit("boardStore/addBoardLike", props.board)
+        axios({
+        method: "post",
+        url: 
+        // API_BASE_URL + 
+        "/api/board/searchLikeBoardByUserId",
+        data: {
+          userId: 98,
+        },
+        }).then((res) => {
+          store.commit("boardStore/setBoardsLike", res.data.myBoards)
+          console.log(getters['boardStore/getBoardsLike'])
+        })
+      });
     }
 
     onMounted(() => {
-      console.log(props.board)
-      console.log(getters['boardStore/getBoardsLike'].includes(props.board))
     })
 
     return {

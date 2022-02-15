@@ -1,6 +1,7 @@
 <template>
   <div class="nav-wrapper position-relative end-0">
     <!-- 사람유형 -->
+
     <ul class="nav nav-pills nav-fill p-1" role="tablist" data-id="hi">
       <li
         class="nav-item"
@@ -21,6 +22,7 @@
   </div>
   <div class="nav-wrapper position-relative end-0">
     <!-- 계절 유형 -->
+    <br />
     <ul class="nav nav-pills nav-fill p-1" role="tablist">
       <li
         class="nav-item"
@@ -41,6 +43,7 @@
   </div>
   <div class="nav-wrapper position-relative end-0">
     <!-- 지역유형 -->
+    <br />
     <ul class="nav nav-pills nav-fill p-1" role="tablist">
       <li
         class="nav-item"
@@ -61,6 +64,7 @@
   </div>
   <div class="nav-wrapper position-relative end-0">
     <!-- 여행 유형 -->
+    <br />
     <ul class="nav nav-pills nav-fill p-1" role="tablist">
       <li
         class="nav-item"

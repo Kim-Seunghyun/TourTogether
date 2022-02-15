@@ -139,7 +139,6 @@ export default {
       axios({
         method: "patch",
         url: API_BASE_URL + "user/updateNickname/",
-        // url: "http://localhost:8081/user/updateNickname/",
         data: {
           userLoginPlatform: getters["userStore/getUserLoginPlatform"],
           userNickname: getters["userStore/getUserNickname"],
@@ -242,7 +241,7 @@ export default {
     onMounted(() => {
       axios({
         method: 'post',
-        url: '/api/board/searchByUserId/proceeding',
+        url: API_BASE_URL + 'board/searchByUserId/proceeding',
         data: {
           userId: 98,
         }
@@ -251,24 +250,30 @@ export default {
       })
       axios({
         method: 'post',
-        url: '/api/board/searchByUserId/finish',
+        url: API_BASE_URL + 'board/searchByUserId/finish',
         data: {
           userId: 98,
         }
       }).then(res => {
-        store.commit("boardStore/setBoardsDone", res.data.myBoards)
+        const myBoards = res.data.myBoards.filter(board => {
+          if(board) {
+            return board
+          }
+        })
+        store.commit("boardStore/setBoardsDone", myBoards)
+        // store.commit("boardStore/setBoardsDone", res.data.myBoards)
       })
       axios({
         method: "post",
         url: 
-        // API_BASE_URL + 
-        "/api/board/searchLikeBoardByUserId",
+        API_BASE_URL + 
+        "board/searchLikeBoardByUserId",
         data: {
           userId: 98,
         },
       }).then(res => {
         store.commit("boardStore/setBoardsLike", res.data.myBoards)
-        console.log(res.data.myBoards)
+        // console.log(res.data.myBoards)
       });
     });
 

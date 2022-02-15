@@ -43,6 +43,7 @@ export const userStore = {
     },
     setUserId(state, userId) {
       state.userId = userId;
+      console.log("user -> ", state.userId);
     },
     setUserNickname(state, userNickname) {
       state.userNickname = userNickname;

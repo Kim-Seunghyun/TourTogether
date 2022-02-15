@@ -1,14 +1,16 @@
 <template>
   <div id="root">
-    <button @click="addDay()">일정 하루 추가</button>
-    <button @click="deleteDay(0)">일정 전체 삭제</button>
     <div>
       <ul id="day_wrap" class="list">
         <div v-for="item in state.tourList" v-bind:key="item.list">
           <div class="day_item day sort" @click="showPlan(item.index)">
             {{ item.index + 1 }}일차
             <div v-if="state.selectedIndex === item.index">
-              <div v-for="tourItem in item.list" v-bind:key="tourItem">
+              <div
+                v-for="tourItem in item.list"
+                v-bind:key="tourItem"
+                class="relative"
+              >
                 <div
                   class="tour_item"
                   @mouseenter="showComponent($event)"
@@ -21,17 +23,18 @@
                     @click="deleteTour(item.index, tourItem.id)"
                     style="display: none"
                   />
+                </div>
+                <div
+                  v-if="
+                    tourItem.id !== state.tourList[item.index].list.length - 1
+                  "
+                >
                   <img
-                    src="https://user-images.githubusercontent.com/63468607/153790617-0311fbca-8b5e-44ed-a30b-3415bf1c45d1.png"
-                    class="up_image"
-                    @click="listUp(item.index, tourItem.id)"
-                    style="display: none"
-                  />
-                  <img
-                    src="https://user-images.githubusercontent.com/63468607/153790551-4d34a662-f7f9-47f9-953a-837ffcde6a1a.png"
-                    class="down_image"
-                    @click="listDown(item.index, tourItem.id)"
-                    style="display: none"
+                    src="https://user-images.githubusercontent.com/63468607/153804094-71229922-2e1e-4186-ba14-a4c6db03ae19.png"
+                    class="swap_image"
+                    @click="listSwap(item.index, tourItem.id)"
+                    @mouseenter="chageColorImage($event)"
+                    @mouseleave="reChangeImage($event)"
                   />
                 </div>
               </div>
@@ -40,14 +43,25 @@
         </div>
       </ul>
     </div>
+    <div class="button_wrapper">
+      <button @click="addDay()" class="btn btn-primary">일정 추가</button>
+      <button @click="deleteDay(0)" class="btn btn-secondary">
+        일정 전체 삭제
+      </button>
+    </div>
   </div>
 </template>
 
 <script>
 import { reactive } from "vue";
 import { onMounted, watch } from "vue";
+import axios from "axios";
 import $ from "jquery";
 import "jquery-ui/ui/widgets/sortable";
+import SockJS from "sockjs-client";
+import Stomp from "stomp-websocket";
+import { API_BASE_URL } from "@/config/index.js";
+let sock = new SockJS(API_BASE_URL + "ws-stomp");
 
 export default {
   name: "Plan",
@@ -61,6 +75,9 @@ export default {
       tourList: [],
       selectedIndex: null,
       propsData: null,
+
+      ws: null,
+      id: null,
     });
     const addDay = () => {
       let len = state.tourList.length;
@@ -157,6 +174,7 @@ export default {
     onMounted(() => {
       state.tourList = [];
       state.selectedIndex = 0;
+      state.id = window.location.pathname.split("/")[1];
       state.tourList[0] = { list: new Array(), index: 0 };
       // addDay();
       emit("getDay", state.tourList.length);
@@ -174,7 +192,9 @@ export default {
     const goEmit = () => {
       emitDay();
       emitLine();
+      //redis로 보내기
     };
+    //redis 에서 받기
     const showComponent = (event) => {
       const target = event.target;
       $(target).children("img").css("display", "");
@@ -183,23 +203,69 @@ export default {
       const target = event.target;
       $(target).children("img").css("display", "none");
     };
-    const listUp = (day, index) => {
-      if (index === 0) return;
+    const listSwap = (day, index) => {
       let len = state.tourList[day].list.length;
-      [state.tourList[day].list[index], state.tourList[day].list[index - 1]] = [
-        state.tourList[day].list[index - 1],
-        state.tourList[day].list[index],
-      ];
-      reIndexingTour(day, len);
-    };
-    const listDown = (day, index) => {
-      let len = state.tourList[day].list.length;
-      if (index + 1 === len) return;
       [state.tourList[day].list[index], state.tourList[day].list[index + 1]] = [
         state.tourList[day].list[index + 1],
         state.tourList[day].list[index],
       ];
       reIndexingTour(day, len);
+    };
+    const chageColorImage = (event) => {
+      const target = event.target;
+      $(target).attr(
+        "src",
+        "https://user-images.githubusercontent.com/63468607/153891222-2de71a0e-b047-43e4-a467-ad6779db5c94.png"
+      );
+    };
+    const reChangeImage = (event) => {
+      const target = event.target;
+      $(target).attr(
+        "src",
+        "https://user-images.githubusercontent.com/63468607/153804094-71229922-2e1e-4186-ba14-a4c6db03ae19.png"
+      );
+    };
+    const sendMessage = function (delta) {
+      console.log("sendMessage", delta);
+      state.ws.send(
+        "/api/pub/plan",
+        {},
+        JSON.stringify({
+          data: state.tourList,
+        })
+      );
+    };
+    const updateList = () => {};
+    const init = () => {
+      axios({
+        method: "get",
+        url: API_BASE_URL + "",
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+      //시작하면 DB에서 기존에 작업 했던 것 불러 와야함
+      let subUrl = "api/sub/plan/" + state.id;
+      var ws = Stomp.over(sock);
+      state.ws = ws;
+      ws.connect(
+        {
+          //something
+        },
+        function (frame) {
+          console.log("frame : " + frame);
+          ws.subscribe(subUrl, function (message) {
+            var res = JSON.parse(message.body);
+            updateList(res);
+          });
+        },
+        function (error) {
+          console.log(error);
+        }
+      );
     };
     watch(
       () => props.tourData,
@@ -215,7 +281,12 @@ export default {
           id: len,
           lat: props.tourData.lat,
           lng: props.tourData.lng,
+          index: props.tourData.index,
         });
+        state.selectedIndex = day;
+        console.log("------");
+        console.log(JSON.stringify(state.tourList));
+        console.log("------");
         goEmit();
         // console.log(state.tourList);
         /*
@@ -253,8 +324,12 @@ export default {
       makeTourSortable,
       showComponent,
       blockComponent,
-      listUp,
-      listDown,
+      listSwap,
+      chageColorImage,
+      reChangeImage,
+      sendMessage,
+      init,
+      updateList,
     };
   },
 };
@@ -268,7 +343,7 @@ export default {
 .day_item {
   position: relative;
   border-bottom: 1px solid #888;
-  overflow: hidden;
+  /* overflow: hidden; */
   cursor: pointer;
   min-height: 5vh;
   z-index: 2;
@@ -277,49 +352,51 @@ export default {
   border: 1px solid #888;
   cursor: pointer;
   border-radius: 5px;
-  margin: 1%;
+  margin: 3px;
+  padding-right: 0;
   z-index: 3;
   background-color: rgb(238, 231, 231);
   /* box-shadow: 1px 1px 1px 1px gray; */
-  border-collapse: collapse;
+  /* border-collapse: collapse; */
+  /* position: relative; */
 }
 #root {
   width: 100%;
   height: 100%;
+  position: relative;
 }
 .close_image {
   z-index: 5;
-  width: 25px;
-  height: 25px;
-  right: 1px;
-  top: 1px;
+  width: 20px;
+  height: 20px;
+  right: 0;
+  top: 0;
+  margin-top: -15 px;
   float: right;
-  position: relative;
+  position: absolute;
 }
-.down_image {
-  z-index: 5;
+.swap_image {
+  position: absolute;
   width: 25px;
   height: 25px;
-  top: 1%;
-  float: left;
+  bottom: 0;
+  margin-bottom: -12px;
+  left: 10%;
+  cursor: pointer;
+  z-index: 15000;
+  overflow: visible;
+  opacity: 0.8;
+}
+.relative {
   position: relative;
+  overflow: visible;
 }
-.up_image {
-  z-index: 5;
-  width: 25px;
-  height: 25px;
-  top: 99%;
-  float: left;
-  position: relative;
+.button_wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 10%;
 }
-/* .left {
-  border-radius: 50% 0 0 50%;
-  border: 1px solid #888;
-  background-color: rgb(238, 231, 231);
+.button_wrapper button {
+  margin-left: 10px;
 }
-.right {
-  border-radius: 0 50% 50% 0;
-  border: 1px solid #888;
-  background-color: rgb(238, 231, 231);
-} */
 </style>

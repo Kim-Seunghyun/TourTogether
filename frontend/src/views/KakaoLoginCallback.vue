@@ -371,8 +371,8 @@ export default {
         var details = {
           grant_type: "authorization_code",
           client_id: process.env.VUE_APP_KAKAO_RESTAPI_KEY,
-          // redirect_uri: "https://i6a105.p.ssafy.io/kakao-login-callback",
-          redirect_uri: "http://localhost:8080/kakao-login-callback",
+          redirect_uri: "https://i6a105.p.ssafy.io/kakao-login-callback",
+          // redirect_uri: "http://localhost:8080/kakao-login-callback",
           code: code,
         };
         var formBody = [];
@@ -430,6 +430,7 @@ export default {
                 }).then((res) => {
                   store.commit("userStore/setUser", res.data.user);
                   store.commit("userStore/setUserId", res.data.user.userId);
+                  console.log(">>>>>>>>>>>>", res.data.user.userId);
                   store.commit("userStore/setUserLoginPlatform", "kakao");
                   store.commit(
                     "userStore/setUserClientId",

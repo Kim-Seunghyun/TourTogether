@@ -23,12 +23,14 @@ import com.ssafy.tourtogether.api.request.BoardSearchBoardIdByBoardRandomPostReq
 import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchParticipantPostReq;
 import com.ssafy.tourtogether.api.response.BoardClickBoardLikePatchRes;
 import com.ssafy.tourtogether.api.response.BoardCreatePostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchAllPostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchBoardIdByBoardRandomPostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchByBoardIdPostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchByUserIdPostRes;
+import com.ssafy.tourtogether.api.response.BoardSearchParticipantPostRes;
 import com.ssafy.tourtogether.api.service.BoardService;
 import com.ssafy.tourtogether.common.model.response.BaseResponseBody;
 import com.ssafy.tourtogether.db.entity.Board;
@@ -153,6 +155,36 @@ public class BoardController {
 		return ResponseEntity.status(200).body(BoardSearchByUserIdPostRes.of(200, "Success", myBoards));
 	}
 
+	@PostMapping("/searchByUserId/finish")
+	@ApiOperation(value = "유저 ID로 완료된 보드 가져오기", notes = "유저 ID로 모든 보드 가져온다")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+
+	public ResponseEntity<? extends BaseResponseBody> searchByUserIdFinish(
+			@RequestBody @ApiParam(value = "불러올 유저 ID", required = true) BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
+
+		// 보드 ID로 불러오기
+		List<Board> myBoards = boardService.searchByUserIdFinish(boardSearchByUserIdInfo);
+		return ResponseEntity.status(200).body(BoardSearchByUserIdPostRes.of(200, "Success", myBoards));
+	}
+
+	@PostMapping("/searchByUserId/proceeding")
+	@ApiOperation(value = "유저 ID로 진행중인 보드 가져오기", notes = "유저 ID로 모든 보드 가져온다")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+
+	public ResponseEntity<? extends BaseResponseBody> searchByUserIdProceeding(
+			@RequestBody @ApiParam(value = "불러올 유저 ID", required = true) BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
+
+		// 보드 ID로 불러오기
+		List<Board> myBoards = boardService.searchByUserIdProceeding(boardSearchByUserIdInfo);
+		return ResponseEntity.status(200).body(BoardSearchByUserIdPostRes.of(200, "Success", myBoards));
+	}
+
 	@PostMapping("/searchBoardIdByBoardRandom")
 	@ApiOperation(value = "보드 랜덤값으로 보드 아이디 가져오기", notes = "보드 랜덤값으로 보드 아이디 가져온다")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
@@ -163,8 +195,8 @@ public class BoardController {
 	public ResponseEntity<? extends BaseResponseBody> searchByUserId(
 			@RequestBody @ApiParam(value = "보드 랜덤값", required = true) BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo) {
 
-		int boardId = boardService.searchByBoardRandom(searchBoardIdByBoardRandomInfo);
-		return ResponseEntity.status(200).body(BoardSearchBoardIdByBoardRandomPostRes.of(200, "Success", boardId));
+		Board board = boardService.searchByBoardRandom(searchBoardIdByBoardRandomInfo);
+		return ResponseEntity.status(200).body(BoardSearchBoardIdByBoardRandomPostRes.of(200, "Success", board));
 	}
 
 	@PostMapping("/searchLikeBoardByUserId")
@@ -238,5 +270,20 @@ public class BoardController {
 		// 보드 ID로 불러오기
 		List<Board> boards = boardService.searchByCategory(boardSearchByCategoryInfo);
 		return ResponseEntity.status(200).body(BoardSearchAllPostRes.of(200, "Success", boards));
+	}
+
+	@PostMapping("/searchParticipant")
+	@ApiOperation(value = "보드에 참여한 참가자인지 확인", notes = "보드에 참여한 참가자인지 확인한다")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+
+	public ResponseEntity<? extends BaseResponseBody> searchParticipant(
+			@RequestBody @ApiParam(value = "추가할 유저의 아이디와 보드 아이디 정보", required = true) BoardSearchParticipantPostReq boardSearchParticipantInfo) {
+
+		// 보드 ID로 불러오기
+		Boolean isIncluded = boardService.searchParticipant(boardSearchParticipantInfo);
+		return ResponseEntity.status(200).body(BoardSearchParticipantPostRes.of(200, "Success", isIncluded));
 	}
 }

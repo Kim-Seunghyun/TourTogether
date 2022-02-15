@@ -55,6 +55,10 @@ module.exports = {
       "/api/board/delete": {
         target: "https://i6a105.p.ssafy.io:8080",
         changeOrigin: true,
+      },
+      "/api/board/clickBoardLike": {
+        target: "https://i6a105.p.ssafy.io:8080",
+        changeOrigin: true,
       }
     },
   },
