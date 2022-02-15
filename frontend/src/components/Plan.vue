@@ -256,7 +256,10 @@ export default {
         },
       })
         .then((response) => {
-          updateList(JSON.parse(response));
+          if(!response.data.schedule.scheduleContent){
+            return;
+          }
+          updateList(JSON.parse(response.data.schedule.scheduleContent));
         })
         .catch((error) => {
           console.log(error);
