@@ -11,6 +11,8 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Repository;
 
+import com.ssafy.tourtogether.db.entity.Memo;
+import com.ssafy.tourtogether.db.entity.MemoRoom;
 import com.ssafy.tourtogether.db.entity.Schedule;
 import com.ssafy.tourtogether.db.entity.ScheduleRoom;
 //import com.ssafy.tourtogether.memo.pubsub.RedisSubscriber;
@@ -47,6 +49,17 @@ public class ScheduleRepositorySupport {
     /**
      * 채팅방 생성 : 서버간 공유를 위해 redis hash에 저장한다.
      */
+    
+    /**
+     * 채팅방 생성 : 서버간 메모 공유를 위해 redis hash에 저장한다.
+     */
+    public ScheduleRoom createScheduleRoom(String id) {
+    	System.out.println("createScheduleRoom: "+id);
+    	ScheduleRoom scheduleRoom = ScheduleRoom.create(id, new Schedule(id, "<p>새로 만들어진 스케쥴입니다.</p>"));
+        opsHashScheduleRoom.put(SCHEDULE_ROOMS, scheduleRoom.getRoomId(), scheduleRoom);
+        return scheduleRoom;
+    }
+    
     public void enterScheduleRoom(String id) {
     	System.out.println("enterScheduleRoom: "+id);
         ChannelTopic topic = topics.get(id);
