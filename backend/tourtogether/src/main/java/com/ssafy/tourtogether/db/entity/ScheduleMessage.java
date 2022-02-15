@@ -11,9 +11,11 @@ import lombok.ToString;
 public class ScheduleMessage extends BaseMessage{
 
     private String roomId; // 방번호
-    private Integer day;
-    private Integer orderInteger;
-    private double lat;
-    private double lng;
-    private String name;
+    private String user;
+//    private Integer day;
+//    private Integer orderInteger;
+//    private double lat;
+//    private double lng;
+//    private String name;
+    private String content;
 }

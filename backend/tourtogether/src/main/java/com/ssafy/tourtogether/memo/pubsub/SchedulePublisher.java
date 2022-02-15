@@ -14,7 +14,7 @@ public class SchedulePublisher {
 
     private final RedisTemplate<String, Object> redisTemplate;
 
-    public void publish(ChannelTopic topic, Schedule message) {
+    public void publish(ChannelTopic topic, ScheduleMessage message) {
         redisTemplate.convertAndSend(topic.getTopic(), message);
     }
 
