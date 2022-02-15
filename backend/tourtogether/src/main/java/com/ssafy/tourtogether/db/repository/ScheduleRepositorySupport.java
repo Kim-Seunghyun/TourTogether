@@ -11,8 +11,6 @@ import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Repository;
 
-import com.ssafy.tourtogether.db.entity.Memo;
-import com.ssafy.tourtogether.db.entity.MemoRoom;
 import com.ssafy.tourtogether.db.entity.Schedule;
 import com.ssafy.tourtogether.db.entity.ScheduleRoom;
 //import com.ssafy.tourtogether.memo.pubsub.RedisSubscriber;
