@@ -1,69 +1,31 @@
 <template>
   <div id="main-container" class="container">
-    <div id="join" v-if="!session">
-      <div id="img-div"></div>
-      <div id="join-dialog" class="jumbotron vertical-center">
-        <h1>Tour Together</h1>
-        <div class="form-group">
-          <p>
-            <label>Participant</label>
-            <input
-              v-model="myUserName"
-              class="form-control"
-              type="text"
-              required
-            />
-          </p>
-          <p>
-            <label>Session</label>
-            <input
-              v-model="mySessionId"
-              class="form-control"
-              type="text"
-              required
-            />
-          </p>
-          <p class="text-center">
-            <button class="btn btn-lg btn-success" @click="joinSession()">
-              Join!
-            </button>
-          </p>
-        </div>
-      </div>
-    </div>
+    <button v-if="!session" class="btn btn-success" @click="joinSession()">
+      Join!
+    </button>
 
-    <div id="session" v-if="session">
-      <div id="session-header">
-        <h1 id="session-title">{{ mySessionId }}</h1>
-        <input
-          class="btn btn-large btn-danger"
-          type="button"
-          id="buttonLeaveSession"
-          @click="leaveSession"
-          value="Leave session"
-        />
-      </div>
-      <div id="main-video" class="col-md-6">
-        <div class="box">
-          <user-video :stream-manager="mainStreamManager" class="my-video" />
-        </div>
-      </div>
-      <div id="video-container" class="col-md-6">
-        <!-- <div class="box">
-          <user-video
-            :stream-manager="publisher"
-            @click="updateMainVideoStreamManager(publisher)"
-          />
-        </div> -->
-        <!-- <div class="box"> -->
+    <div v-if="session" id="session">
+      <input
+        class="btn btn-large btn-danger"
+        type="button"
+        id="buttonLeaveSession"
+        @click="leaveSession"
+        value="Leave session"
+      />
+
+      <div id="video_wrapper">
+        <user-video :stream-manager="mainStreamManager" class="box" />
         <user-video
           v-for="sub in subscribers"
           :key="sub.stream.connection.connectionId"
           :stream-manager="sub"
           @click="updateMainVideoStreamManager(sub)"
-        />
-        <!-- </div> -->
+          class="box"
+        >
+          {{ sub.stream.connection.connectionId }}
+        </user-video>
       </div>
+      <!-- </div> -->
       <button @click="toggleVideo()">비디오버튼</button>
       <button @click="toggleAudio()">음소거</button>
       <input
@@ -88,8 +50,6 @@ axios.defaults.headers.post["Content-Type"] = "application/json";
 // const OPENVIDU_SERVER_URL = "https://" + location.hostname + ":4443";
 // 서버 배포 시
 const OPENVIDU_SERVER_URL = "https://i6a105.p.ssafy.io:443";
-// 로컬에서 테스트 시
-// const OPENVIDU_SERVER_URL = "https://localhost:8080";
 const OPENVIDU_SERVER_SECRET = "twist";
 
 export default {
@@ -154,8 +114,8 @@ export default {
             let publisher = this.OV.initPublisher(undefined, {
               audioSource: undefined, // The source of audio. If undefined default microphone
               videoSource: undefined, // The source of video. If undefined default webcam
-              publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
-              publishVideo: true, // Whether you want to start publishing with your video enabled or not
+              publishAudio: false, // Whether you want to start publishing with your audio unmuted or not
+              publishVideo: false, // Whether you want to start publishing with your video enabled or not
               resolution: "320x320", // The resolution of your video
               frameRate: 30, // The frame rate of your video
               insertMode: "APPEND", // How the video is inserted in the target element 'video-container'
@@ -180,7 +140,7 @@ export default {
 
       window.addEventListener("beforeunload", this.leaveSession);
       this.session.on("signal", (event) => {
-        console.log(event.data); // Message
+        // console.log(event.data); // Message/
         // console.log(event.from); // Connection object of the sender
         // console.log(event.type); // The type of message
 
@@ -188,7 +148,8 @@ export default {
         const el = document.createElement("li");
         const dest = document.getElementById("chatting");
         const wrapper = document.getElementById("chatting-wrapper");
-        el.innerText = event.data;
+        el.innerText =
+          event.from.data.split(":")[1].split('"')[1] + "\t" + event.data;
         dest.append(el);
         wrapper.scrollTop = wrapper.scrollHeight;
       });
@@ -309,6 +270,7 @@ export default {
     },
     submitChatting() {
       const content = this.message;
+      if (this.message == "") return;
       this.message = undefined;
       this.session
         .signal({
@@ -326,18 +288,12 @@ export default {
 };
 </script>
 <style>
-.my-video {
-  /* width: 10%;
-  height: 10%; */
-  object-fit: cover;
-  /* border-radius: 70%;
-  overflow: hidden; */
-}
 .box {
   width: 320px;
   height: 320px;
   border-radius: 70%;
   overflow: hidden;
+  float: left;
 }
 #chatting-wrapper {
   width: 400px;
@@ -348,5 +304,8 @@ export default {
   right: 10%;
   position: absolute;
   z-index: 3;
+}
+#chatting {
+  list-style: none;
 }
 </style>

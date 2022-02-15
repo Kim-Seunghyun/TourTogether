@@ -13,9 +13,11 @@ import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
+import com.ssafy.tourtogether.api.request.BoardSearchBoardIdByBoardRandomPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchParticipantPostReq;
 import com.ssafy.tourtogether.db.entity.Board;
 import com.ssafy.tourtogether.db.entity.BoardLikes;
 import com.ssafy.tourtogether.db.entity.BoardParticipant;
@@ -134,12 +136,6 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<Board> searchByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
-		List<Board> myBoards = boardRepositorySupport.findByUserId(boardSearchByUserIdInfo);
-		return myBoards;
-	}
-
-	@Override
 	public List<Board> searchLikeBoardByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
 		List<Board> myLikeBoards = boardRepositorySupport.findLikeBoardByUserId(boardSearchByUserIdInfo);
 		return myLikeBoards;
@@ -162,22 +158,24 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public void clickBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
+	public List<Integer> clickBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
 		// 좋아요 누른 보드 아이디 저장
 		BoardLikes boardLikes = new BoardLikes();
 		boardLikes.setBoardLikesBoardId(boardclickBoardLikeInfo.getBoardId());
 		boardLikes.setBoardLikesUserId(boardclickBoardLikeInfo.getUserId());
 		boardLikesRepository.save(boardLikes);
 		// 좋아요 누른 보드 아이디의 좋아요 개수 +1
-		boardRepositorySupport.increaseLike(boardclickBoardLikeInfo.getBoardId());
+		List<Integer> favoritesBoardId = boardRepositorySupport.increaseLike(boardclickBoardLikeInfo);
+		return favoritesBoardId;
 	}
 
 	@Override
-	public void cancelBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
+	public List<Integer> cancelBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
 		// 좋아요 누른 보드 아이디 삭제
 		boardLikesRepositorySupport.deleteByBoardId(boardclickBoardLikeInfo);
 		// 좋아요 누른 보드 아이디의 좋아요 개수 -1
-		boardRepositorySupport.decreaseLike(boardclickBoardLikeInfo.getBoardId());
+		List<Integer> favoritesBoardId = boardRepositorySupport.decreaseLike(boardclickBoardLikeInfo);
+		return favoritesBoardId;
 	}
 
 	@Override
@@ -195,6 +193,36 @@ public class BoardServiceImpl implements BoardService {
 	public List<Board> searchByCategory(BoardSearchByCategoryPostReq boardSearchByCategoryInfo) {
 		List<Board> boards = boardRepositorySupport.findByCategory(boardSearchByCategoryInfo);
 		return boards;
+	}
+
+	@Override
+	public Board searchByBoardRandom(BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo) {
+		Board board = boardRepositorySupport.findBoardIdByBoardRandom(searchBoardIdByBoardRandomInfo);
+		return board;
+	}
+
+	@Override
+	public List<Board> searchByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
+		List<Board> myBoards = boardRepositorySupport.findByUserId(boardSearchByUserIdInfo);
+		return myBoards;
+	}
+
+	@Override
+	public List<Board> searchByUserIdFinish(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
+		List<Board> myBoards = boardRepositorySupport.findByUserIdFinish(boardSearchByUserIdInfo);
+		return myBoards;
+	}
+
+	@Override
+	public List<Board> searchByUserIdProceeding(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
+		List<Board> myBoards = boardRepositorySupport.findByUserIdProceeding(boardSearchByUserIdInfo);
+		return myBoards;
+	}
+
+	@Override
+	public Boolean searchParticipant(BoardSearchParticipantPostReq boardSearchParticipantInfo) {
+		Boolean isIncluded = boardParticipantRepositorySupport.findByUserId(boardSearchParticipantInfo);
+		return isIncluded;
 	}
 
 }

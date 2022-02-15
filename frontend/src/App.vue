@@ -1,121 +1,75 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/map">Map</router-link> |
-    <router-link to="/Login" v-if="!accessToken">Login</router-link>||
-    <router-link to="/mypage" v-if="accessToken">MyPage</router-link> |
-    <router-link to="/favoritepage" v-if="accessToken"
-      >FavoritePage</router-link
-    >
-    |
-    <router-link to="#" v-on:click="logout()">Logout</router-link>
-    <router-link to="#" v-show="accessToken" v-on:click="unlink()">
-      | Kakao Unlink</router-link
-    >
-  </div>
-  <router-view />
+  <!-- <sidenav
+    :custom_class="this.$store.state.mcolor"
+    :class="[
+      this.$store.state.isTransparent,
+      this.$store.state.isRTL ? 'fixed-end' : 'fixed-start',
+    ]"
+    v-if="this.$store.state.showSidenav"
+  /> -->
+  <main
+    class="main-content position-relative max-height-vh-100 h-100 border-radius-lg"
+    :style="this.$store.state.isRTL ? 'overflow-x: hidden' : ''"
+  >
+    <!-- nav -->
+
+    <navbar
+      :class="[navClasses]"
+      :textWhite="this.$store.state.isAbsolute ? 'text-white opacity-8' : ''"
+      :minNav="navbarMinimize"
+      v-if="this.$store.state.showNavbar"
+    />
+    <router-view />
+    <app-footer v-show="this.$store.state.showFooter" />
+    <configurator
+      :toggle="toggleConfigurator"
+      :class="[
+        this.$store.state.showConfig ? 'show' : '',
+        this.$store.state.hideConfigButton ? 'd-none' : '',
+      ]"
+    />
+  </main>
+  <!-- <router-view /> -->
 </template>
 
 <script>
-import router from "./router";
-import axios from "axios";
-import { reactive } from "@vue/reactivity";
-import { computed, watch, onMounted } from "vue";
-import { useStore } from "vuex";
+// import Sidenav from "./examples/Sidenav";
+import Configurator from "@/examples/Configurator.vue";
+import Navbar from "@/examples/Navbars/Navbar.vue";
+import AppFooter from "@/examples/Footer.vue";
+// import axios from "axios";
+// import { API_BASE_URL } from "@/config/index.js";
+// import { reactive } from "vue";
+// import { watch, onMounted } from "vue";
+import { mapMutations } from "vuex";
 
 export default {
+  components: {
+    // Sidenav,
+    Configurator,
+    Navbar,
+    AppFooter,
+  },
+  methods: {
+    ...mapMutations(["toggleConfigurator", "navbarMinimize"]),
+  },
+  computed: {
+    navClasses() {
+      return {
+        "position-sticky blur shadow-blur mt-4 left-auto top-1 z-index-sticky":
+          this.$store.state.isNavFixed,
+        "position-absolute px-4 mx-0 w-100 z-index-2":
+          this.$store.state.isAbsolute,
+        "px-0 mx-4 mt-4": !this.$store.state.isAbsolute,
+      };
+    },
+  },
+  beforeMount() {
+    this.$store.state.isTransparent = "bg-transparent";
+  },
   setup() {
-    const state = reactive({
-      accessToken: window.Kakao.Auth.getAccessToken(),
-    });
-    const store = useStore();
-    const counter = computed(() => store.state.counter);
-    const login = () => {
-      window.Kakao.Auth.authorize({
-        redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback/",
-      });
-    };
-    const accessToken = watch(console.log(state.accessToken));
-    const logout = (type) => {
-      // 카카오 로그아웃
-      window.Kakao.Auth.logout(function () {
-        if (type) {
-          // "unlink"
-          alert("Unlinked Kakao Account!");
-        } else {
-          alert("Logout Account!");
-        }
-        router.push("");
-        store.commit("setUserLoginPlatform", '')
-        store.commit("setUserClientId", '')
-        store.commit("setUserNickname", '')
-        store.commit("setUserInputNickname", '')
-        store.commit("setUserProfileImage", '')
-      });
-    };
 
-    onMounted(() => {
-      // 우리 api에 id있는지 확인, 있으면 기존 정보 가져오고 없으면 window.Kakao.API.request
-      window.Kakao.API.request({
-        url: "/v2/user/me",
-        data: {
-          property_keys: [
-            "properties.nickname",
-            "kakao_account.email",
-            "properties.profile_image",
-          ],
-        },
-        success: function (response) {
-          let email = null;
-          if (
-            response.kakao_account.has_email &
-            !response.kakao_account.email_needs_agreement
-          ) {
-            email = response.kakao_account.email;
-          }
-          axios({
-            method: "post",
-            url: "https://i6a105.p.ssafy.io:8081/user/login",
-            data: {
-              userLoginPlatform: "kakao",
-              userClientId: response.id,
-              userEmail: email,
-              userName: response.properties.nickname,
-              userProfileImage: response.properties.profile_image,
-            },
-          }).then((res) => {
-            store.commit("setUserLoginPlatform", "kakao");
-            store.commit("setUserClientId", res.data.user.userClientId);
-            store.commit("setUserNickname", res.data.user.userNickname);
-            store.commit("setUserInputNickname", res.data.user.userNickname);
-            store.commit("setUserProfileImage", res.data.user.userProfileImage);
-          });
-        },
-        fail: function (error) {
-          console.log(error);
-        },
-      });
-    });
-
-    return { state, counter, login, logout, accessToken}
-  }
-  // methods: {
-  //   unlink() {  // 카카오 계정 연결끊기
-  //     let logout = this.logout;
-  //     window.Kakao.API.request({
-  //       url: "/v1/user/unlink",
-  //       success: function (response) {
-  //         console.log(response);
-  //         logout("unlink");
-  //       },
-  //       fail: function (error) {
-  //         console.log(error);
-  //         alert(error);
-  //         return;
-  //       },
-  //     });
-  //   },
-  // },
+  },
   // watch: {
   //   accessToken: function () { // 토큰이 변경 확인
   //     console.log(this.accessToken);

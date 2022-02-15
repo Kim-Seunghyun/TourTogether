@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div id="map" style="height: 1000px" class="map">
+    <div id="map" class="map" style="width: 100%">
       <div id="selectedApt_wrap" style="display: block">
         <Plan
           v-on:getLine="emitList"
@@ -14,21 +14,18 @@
       <div id="pagination"></div>
     </div>
   </div>
-  <div id="webrtc-wrapper">
-    <WebRTC />
-  </div>
 </template>
 
 <script>
-import { reactive } from "@vue/reactivity";
+import { reactive } from "vue";
 import { onMounted } from "vue";
-import WebRTC from "@/views/WebRTC.vue";
+
 import Plan from "@/components/Plan.vue";
+import { API_BASE_URL } from "@/config/index.js";
 import axios from "axios";
 export default {
   name: "Map",
   components: {
-    WebRTC,
     Plan,
   },
   setup() {
@@ -124,7 +121,7 @@ export default {
       });
       axios({
         method: "get",
-        url: "https://i6a105.p.ssafy.io:8080/api/tourspot",
+        url: API_BASE_URL + "tourspot",
       }).then((res) => {
         makeMarker(res.data.tourSpotList);
       });
@@ -785,7 +782,7 @@ export default {
 } */
 /* .map {
   width: 1900px;
-  height: 800px;
+  height: 800px;bo
 } */
 #selectedApt_wrap {
   position: absolute;
@@ -802,9 +799,9 @@ export default {
   /* font-size: 12px; */
   border-radius: 10px;
 }
-#webrtc-wrapper {
+#map {
   width: 100vw;
   height: 100vh;
-  top: 90%;
+  position: relative;
 }
 </style>

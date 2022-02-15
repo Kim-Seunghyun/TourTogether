@@ -9,9 +9,11 @@ import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
+import com.ssafy.tourtogether.api.request.BoardSearchBoardIdByBoardRandomPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchParticipantPostReq;
 import com.ssafy.tourtogether.db.entity.Board;
 
 public interface BoardService {
@@ -30,14 +32,22 @@ public interface BoardService {
 
 	List<Board> searchByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo);
 
-	void clickBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo);
+	List<Integer> clickBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo);
 
-	void cancelBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo);
+	List<Integer> cancelBoardLike(BoardClickBoardLikePatchReq boardclickBoardLikeInfo);
 
 	List<Board> searchLikeBoardByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo);
 
 	void category(BoardCategoryPostReq boardCategoryInfo);
 
 	List<Board> searchByCategory(BoardSearchByCategoryPostReq boardSearchByCategoryInfo);
+
+	Board searchByBoardRandom(BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo);
+
+	List<Board> searchByUserIdFinish(BoardSearchByUserIdPostReq boardSearchByUserIdInfo);
+
+	List<Board> searchByUserIdProceeding(BoardSearchByUserIdPostReq boardSearchByUserIdInfo);
+
+	Boolean searchParticipant(BoardSearchParticipantPostReq boardSearchParticipantInfo);
 
 }
