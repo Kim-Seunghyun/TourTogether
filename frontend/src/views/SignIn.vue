@@ -91,7 +91,7 @@ import VsudButton from "@/components/VsudButton.vue";
 const body = document.getElementsByTagName("body")[0];
 
 export default {
-  name: "signin",
+  name: "SignIn",
   components: {
     Navbar,
     AppFooter,
