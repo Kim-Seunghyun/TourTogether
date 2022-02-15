@@ -256,7 +256,7 @@ export default {
         },
       })
         .then((response) => {
-          console.log(response);
+          updateList(JSON.parse(response));
         })
         .catch((error) => {
           console.log(error);
