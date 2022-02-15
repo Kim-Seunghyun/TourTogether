@@ -1,5 +1,9 @@
 package com.ssafy.tourtogether.api.request;
 
+import java.util.List;
+
+import com.ssafy.tourtogether.db.entity.ScheduleDB;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Getter;
@@ -15,4 +19,7 @@ import lombok.Setter;
 public class BoardFinishPatchReq {
 	@ApiModelProperty(name = "보드 아이디", example = "보드 아이디")
 	int boardId;
+	
+	@ApiModelProperty(name = "스케줄 리스트", example = "[{}, {}, {}]")
+	List<ScheduleDB> scheduleList;
 }
