@@ -32,6 +32,7 @@ import com.ssafy.tourtogether.api.response.BoardSearchByBoardIdPostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchByUserIdPostRes;
 import com.ssafy.tourtogether.api.response.BoardSearchParticipantPostRes;
 import com.ssafy.tourtogether.api.service.BoardService;
+import com.ssafy.tourtogether.api.service.ScheduleDBService;
 import com.ssafy.tourtogether.common.model.response.BaseResponseBody;
 import com.ssafy.tourtogether.db.entity.Board;
 
@@ -50,6 +51,8 @@ import io.swagger.annotations.ApiResponses;
 public class BoardController {
 	@Autowired
 	BoardService boardService;
+	@Autowired
+	ScheduleDBService scheduleDBService;
 
 	@PostMapping("/create")
 	@ApiOperation(value = "보드생성", notes = "새로운 보드를 생성한다")
@@ -77,7 +80,10 @@ public class BoardController {
 			@RequestBody @ApiParam(value = "보드 완료 정보", required = true) BoardFinishPatchReq boardFinishInfo) {
 
 		// 보드 생성
-		boardService.finishBoard(boardFinishInfo);
+		boardService.finishBoard(boardFinishInfo.getBoardId());
+		
+		// 스케줄 저장
+		scheduleDBService.saveScheduleList(boardFinishInfo.getScheduleList());
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
