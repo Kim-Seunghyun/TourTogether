@@ -8,6 +8,7 @@ export const userStore = {
     userInputNickname: "",
     userLoginPlatform: "",
     userClientId: "",
+    kakaoProfileImage: null,
   },
   getters: {
     getUser(state) {
@@ -30,6 +31,9 @@ export const userStore = {
     },
     getUserClientId(state) {
       return state.userClientId;
+    },
+    getKakaoProfileImage(state) {
+      return state.kakaoProfileImage;
     },
   },
   mutations: {
@@ -64,6 +68,9 @@ export const userStore = {
       this.setUserProfileImage("");
       this.setUser("");
       console.log(this.getUser);
+    },
+    setKakaoProfileImage(state, kakaoProfileImage) {
+      state.kakaoProfileImage = kakaoProfileImage;
     },
   },
   actions: {},

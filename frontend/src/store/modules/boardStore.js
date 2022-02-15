@@ -7,6 +7,9 @@ export const boardStore = {
     season: "",
     area: "",
     theme: "",
+    boardsIng: null,
+    boardsDone: null,
+    boardsLike: null,
   },
   getters: {
     getAllBoards(state) {
@@ -15,6 +18,15 @@ export const boardStore = {
     getSearchByCategoryBoards(state) {
       return state.searchByCategoryBoards;
     },
+    getBoardsIng(state) {
+      return state.boardsIng
+    },
+    getBoardsDone(state) {
+      return state.boardsDone
+    },
+    getBoardsLike(state) {
+      return state.boardsLike
+    }
   },
   mutations: {
     setAllBoards(state, boards) {
@@ -29,6 +41,27 @@ export const boardStore = {
       state.area = category[2];
       state.theme = category[3];
     },
+    setBoardsIng(state, boardsIng) {
+      state.boardsIng = boardsIng
+    },
+    setBoardsDone(state, boardsDone) {
+      state.boardsDone = boardsDone
+    },
+    setBoardsLike(state, boardsLike) {
+      state.boardsLike = boardsLike
+    },
+    deleteBoardIng(state, boardId) {
+      state.boardsIng = state.boardsIng.filter(board => {
+        if(board) {
+          console.log(state.boardsIng)
+          console.log(board)
+          return (board.boardId !== boardId)
+        }
+      })
+    },
+    // deleteBoardDone(state, ) {
+
+    // },
   },
   actions: {},
   // modules: {},
