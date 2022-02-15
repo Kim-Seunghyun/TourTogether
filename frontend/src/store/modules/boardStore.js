@@ -53,15 +53,25 @@ export const boardStore = {
     deleteBoardIng(state, boardId) {
       state.boardsIng = state.boardsIng.filter(board => {
         if(board) {
-          console.log(state.boardsIng)
-          console.log(board)
           return (board.boardId !== boardId)
         }
       })
     },
-    // deleteBoardDone(state, ) {
-
-    // },
+    deleteBoardDone(state, boardId) {
+      state.boardsDone = state.boardsDone.filter(board => {
+        if(board) {
+          return (board.boardId !== boardId)
+        }
+      })
+    },
+    addBoardLike(state, board) {
+      state.boardsLike.push(board)
+    },
+    cancelBoardLike(state, board) {
+      state.boardsLike = state.boardsLike.fliter(boardLike => {
+        return boardLike !== board
+      })
+    }
   },
   actions: {},
   // modules: {},

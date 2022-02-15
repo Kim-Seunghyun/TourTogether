@@ -13,6 +13,7 @@
 <script>
 import axios from "axios";
 import { useStore } from "vuex";
+import { API_BASE_URL } from "@/config/index.js";
 
 export default {
   name: 'BoardIng',
@@ -24,7 +25,7 @@ export default {
     const deleteBoard = () => {
       axios({
         method: 'delete',
-        url: '/api/board/delete',
+        url: API_BASE_URL + 'board/delete',
         data: {
           boardId: props.board.boardId
         }
