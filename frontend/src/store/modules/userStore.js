@@ -1,7 +1,7 @@
 export const userStore = {
   namespaced: true,
   state: {
-    user: [],
+    user: null,
     userId: "",
     userNickname: "",
     userProfileImage: "",
