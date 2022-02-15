@@ -8,7 +8,6 @@ import com.ssafy.tourtogether.api.request.BoardCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
-import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
 import com.ssafy.tourtogether.api.request.BoardSearchBoardIdByBoardRandomPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
@@ -22,7 +21,7 @@ public interface BoardService {
 
 	void deleteBoard(BoardDeleteDeleteReq boardDeleteInfo);
 
-	void finishBoard(BoardFinishPatchReq boardFinishInfo);
+	void finishBoard(int boardId);
 
 	void addParticipant(BoardAddParticipantPostReq boardAddParticipantInfo);
 
