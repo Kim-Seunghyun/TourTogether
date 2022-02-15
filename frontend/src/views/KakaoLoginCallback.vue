@@ -393,7 +393,7 @@ export default {
           .then((response) => response.json())
           .then((data) => {
             // console.log(JSON.stringify(data));
-            alert(JSON.stringify(data));
+            // alert(JSON.stringify(data));
             window.Kakao.Auth.setAccessToken(data.access_token);
             state.accessToken = window.Kakao.Auth.getAccessToken();
           })
@@ -415,6 +415,8 @@ export default {
                 ) {
                   email = response.kakao_account.email;
                 }
+                console.log(response)
+                store.commit("userStore/setKakaoProfileImage", response.properties.profile_image)
                 axios({
                   method: "post",
                   url: API_BASE_URL + "user/login",
