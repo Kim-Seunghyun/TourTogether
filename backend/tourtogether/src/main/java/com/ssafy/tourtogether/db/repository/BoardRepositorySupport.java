@@ -144,10 +144,10 @@ public class BoardRepositorySupport {
 
 	}
 
-	public int findBoardIdByBoardRandom(BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo) {
-		int boardId = jpaQueryFactory.select(qBoard.boardId).from(qBoard)
+	public Board findBoardIdByBoardRandom(BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo) {
+		Board board = jpaQueryFactory.select(qBoard).from(qBoard)
 				.where(qBoard.boardRandom.eq(searchBoardIdByBoardRandomInfo.getBoardRandom())).fetchFirst();
-		return boardId;
+		return board;
 	}
 
 	public List<Board> findByUserId(BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
