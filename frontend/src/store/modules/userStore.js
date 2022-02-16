@@ -9,6 +9,7 @@ export const userStore = {
     userLoginPlatform: "",
     userClientId: "",
     kakaoProfileImage: null,
+    accessToken: "",
   },
   getters: {
     getUser(state) {
@@ -34,6 +35,9 @@ export const userStore = {
     },
     getKakaoProfileImage(state) {
       return state.kakaoProfileImage;
+    },
+    getAccessToken(state) {
+      return state.accessToken;
     },
   },
   mutations: {
@@ -72,7 +76,30 @@ export const userStore = {
     setKakaoProfileImage(state, kakaoProfileImage) {
       state.kakaoProfileImage = kakaoProfileImage;
     },
+    setAccessToken(accessToken) {
+      this.state.accessToken = accessToken;
+    },
   },
-  actions: {},
+  actions: {
+    // async findById(userid, success, fail) {
+    // api.defaults.headers["access-token"] = sessionStorage.getItem("access-token");
+    // await api.get(`/user/info/${userid}`).then(success).catch(fail);
+    // },
+
+    async getUserInfo(token) {
+      console.log("token: " + token);
+      // let decode_token = jwt_decode(token);
+      // console.log("decode_token: "+decode_token);
+      // console.log("디코드콘솔"+decode_token.id)
+      // await findById(decode_token.userClientId, ({ data }) => {
+      // commit("SET_USER_INFO", data.userInfo);
+      // console.log("decode_token: "+decode_token);
+      // setAccessToken
+      // console.log("회원정보>>"+data.userInfo)
+      // }, (error) => {
+      // console.log("로그인에러", error);
+      // });
+    },
+  },
   // modules: {},
 };
