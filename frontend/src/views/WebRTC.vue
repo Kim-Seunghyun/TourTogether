@@ -6,22 +6,24 @@
 
     <div v-if="session" id="session">
       <!-- 비디오 -->
-      <user-video :stream-manager="mainStreamManager" class="box" />
-      <div class="video-ctr-btn-group">
-        <button
-          @click="toggleVideo()"
-          class="video-ctr-btn"
-          title="비디오 on/off"
-        >
-          📷
-        </button>
-        <button
-          @click="toggleAudio()"
-          class="video-ctr-btn"
-          title="마이크 on/off"
-        >
-          🎙️
-        </button>
+      <div>
+        <user-video :stream-manager="mainStreamManager" class="box" />
+        <div class="video-ctr-btn-group">
+          <button
+            @click="toggleVideo()"
+            class="video-ctr-btn"
+            title="비디오 on/off"
+          >
+            📷
+          </button>
+          <button
+            @click="toggleAudio()"
+            class="video-ctr-btn"
+            title="마이크 on/off"
+          >
+            🎙️
+          </button>
+        </div>
       </div>
       <div id="video_wrapper">
         <user-video
