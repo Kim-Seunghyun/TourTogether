@@ -48,14 +48,13 @@
       <button @click="deleteDay(0)" class="btn btn-secondary">
         일정 전체 삭제
       </button>
-      <button @click="sendMessage()">레디스로 보내보기</button>
     </div>
   </div>
 </template>
 
 <script>
 import { reactive } from "vue";
-import { onMounted, watch } from "vue";
+import { onBeforeUnmount, onMounted, watch } from "vue";
 import axios from "axios";
 import $ from "jquery";
 import "jquery-ui/ui/widgets/sortable";
@@ -183,7 +182,7 @@ export default {
       state.tourList = [];
       state.selectedIndex = 0;
       state.id = window.location.pathname.split("/")[1];
-      state.tourList[0] = { list: new Array(), index: 0 };
+      // state.tourList[0] = { list: new Array(), index: 0 };/
       // addDay();
       init();
       blockRightClick();
@@ -249,7 +248,8 @@ export default {
       state.tourList = JSON.parse(response.content);
       console.log("updateList!!!!!!");
       console.log(state.tourList);
-      goEmit();
+      emitDay();
+      emitLine();
     };
     const init = () => {
       axios({
@@ -262,6 +262,7 @@ export default {
       })
         .then((response) => {
           if (!response.data.schedule.scheduleContent) {
+            addDay();
             return;
           }
           let res = {};
@@ -291,29 +292,45 @@ export default {
         }
       );
     };
-    watch(
-      () => props.tourData,
-      () => {
-        var day = props.tourData.day - 1;
-        var name = props.tourData.name;
-        if (state.tourList[day] === undefined) {
-          state.tourList[day] = { list: new Array(), index: day };
-        }
-        var len = state.tourList[day].list.length;
-        state.tourList[day].list.push({
-          name: name,
-          id: len,
-          lat: props.tourData.lat,
-          lng: props.tourData.lng,
-          index: props.tourData.index,
+    const boardFinish = () => {
+      axios({
+        method: "patch",
+        url: API_BASE_URL + "board/finish",
+        params: {},
+      })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
         });
-        state.selectedIndex = day;
-        // console.log("------");
-        // console.log(JSON.stringify(state.tourList));
-        // console.log("------");
-        goEmit();
-        // console.log(state.tourList);
-        /*
+    };
+    onBeforeUnmount(() => {
+      sendMessage();
+    }),
+      watch(
+        () => props.tourData,
+        () => {
+          var day = props.tourData.day - 1;
+          var name = props.tourData.name;
+          if (state.tourList[day] === undefined) {
+            state.tourList[day] = { list: new Array(), index: day };
+          }
+          var len = state.tourList[day].list.length;
+          state.tourList[day].list.push({
+            name: name,
+            id: len,
+            lat: props.tourData.lat,
+            lng: props.tourData.lng,
+            index: props.tourData.index,
+          });
+          state.selectedIndex = day;
+          // console.log("------");
+          // console.log(JSON.stringify(state.tourList));
+          // console.log("------");
+          goEmit();
+          // console.log(state.tourList);
+          /*
         TODO
         Redis 로 보낼때
         schdeule: {
@@ -330,8 +347,8 @@ export default {
         캐싱이 안된다면 Redis DB값을 먼저 조회 해서 달라진 값들 비교해서 다를것들 모아서 다시 select 걸어주는 방법도 있는데 이건 또 생각 해봐야됨 뭔가 되게 복잡해질듯
 
         */
-      }
-    );
+        }
+      );
     return {
       state,
       addDay,
@@ -354,6 +371,7 @@ export default {
       sendMessage,
       init,
       updateList,
+      boardFinish,
     };
   },
 };
