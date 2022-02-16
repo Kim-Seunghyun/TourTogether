@@ -461,7 +461,7 @@ export default {
                     token
                   );
                   // store.dispatch("userStore/getUserInfo", res.data.accessToken);
-                  store.dispatch("userStore/getUserInfo", token);
+                  store.dispatch("userStore/getUserInfo");
                 });
               },
               fail: function (error) {

@@ -88,6 +88,7 @@ export const userStore = {
       console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
       // console.log(this.state.accessToken);
       // console.log(this.$state.accessToken);+
+      console.log(state);
       console.log(state.accessToken);
       // console.log(this.getAccessToken);
       console.log(this.getAccessToken());
