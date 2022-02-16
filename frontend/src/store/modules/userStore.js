@@ -100,23 +100,24 @@ export const userStore = {
         // (error) => {
         // console.log("로그인에러", error);
         // }
-      )
-        .then(() => {
-          console.log("로그인 완료");
-          // console.log(user);
-          // this.setUser(user);
-          // this.setUserId(user.userId);
-          // this.setUserLoginPlatform("kakao");
-          // this.setUserClientId(user.userClientId);
-          // this.setUserNickname(user.userNickname);
-          // this.setUserInputNickname(user.userInputNinkname);
-          // this.setUserProfileImage(user.userProfileImage);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+      );
+      // .then(() => {
+      // console.log("로그인 완료");
+      // console.log(user);
+      // this.setUser(user);
+      // this.setUserId(user.userId);
+      // this.setUserLoginPlatform("kakao");
+      // this.setUserClientId(user.userClientId);
+      // this.setUserNickname(user.userNickname);
+      // this.setUserInputNickname(user.userInputNinkname);
+      // this.setUserProfileImage(user.userProfileImage);
+      // })
+      // .catch((error) => {
+      // console.log(error);
+      // });
 
       async function getUserByClientId(userClientId) {
+        var _this = this;
         axios({
           method: "get",
           url: API_BASE_URL + "user/info",
@@ -129,7 +130,7 @@ export const userStore = {
           },
         })
           .then((response) => {
-            this.setUser(response.user);
+            _this.setUser(response.user);
           })
           .catch((error) => {
             console.log(error);
