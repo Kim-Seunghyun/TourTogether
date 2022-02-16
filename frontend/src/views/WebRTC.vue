@@ -373,9 +373,9 @@ joinSession() {
   /* height: 150px; */
 }
 
-.video-ctr-btn-group {
-  display: inline;
-}
+/* .video-ctr-btn-group {
+  
+} */
 
 #chattingInput {
   width: 250px;
