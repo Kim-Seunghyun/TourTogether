@@ -2,8 +2,6 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 import { API_BASE_URL } from "@/config/index.js";
 
-const _this = this;
-
 export const userStore = {
   namespaced: true,
   state: {
@@ -118,7 +116,7 @@ export const userStore = {
       // console.log(error);
       // });
 
-      async function getUserByClientId(userClientId) {
+      async function getUserByClientId(userClientId, state) {
         axios.defaults.headers.common["Authorization"] = token;
         axios({
           method: "get",
@@ -132,14 +130,14 @@ export const userStore = {
           // },
         })
           .then((response) => {
-            console.log(_this);
-            console.log(_this.state);
+            console.log(state);
             let user = response.data.user;
-            _this.state.user = user;
-            _this.state.userId = user.userId;
-            _this.state.userNickname = user.userNickname;
-            _this.state.userProfileImage = user.userProfileImage;
-            _this.state.userInputNickname = user.userNickname;
+            state.user = user;
+            state.userId = user.userId;
+            state.userNickname = user.userNickname;
+            state.userProfileImage = user.userProfileImage;
+            state.userInputNickname = user.userNickname;
+            console.log(state);
           })
           .catch((error) => {
             console.log(error);
