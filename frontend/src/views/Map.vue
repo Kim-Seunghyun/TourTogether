@@ -36,21 +36,23 @@ export default {
       page: 0,
       num: null,
       map: null,
+      depthlevel: 0,
       src: [
-        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%ED%94%BC%EC%B9%B4%EC%B8%84.png",
-        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%ED%81%AC%EB%AA%BD.png",
-        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EC%A7%B1%EA%B5%AC.png",
-        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EC%97%BD%EA%B8%B0%ED%86%A0%EB%81%BC.jfif",
-        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EC%8A%A4%ED%8F%B0%EC%A7%80%EB%B0%A5.jfif",
-        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%BD%80%EB%A1%9C%EB%A1%9C.jfif",
-        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%B3%B4%EB%85%B8%EB%B3%B4%EB%85%B8.jfif",
-        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%B0%B0%EC%B0%8C.jfif",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EA%B2%BD%EB%B3%B5%EA%B6%81.jfif",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%82%99%EC%82%B0%ED%95%B4%EC%88%98%EC%9A%95%EC%9E%A5.jfif",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%8F%84%EB%9D%BC%EC%97%90%EB%AA%BD.jfif",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EC%9A%A9%EC%9D%B8%EC%8B%9C%EB%B0%95%EB%AC%BC%EA%B4%80.jfif",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EC%B2%A8%EC%84%B1%EB%8C%80.jfif",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%ED%95%9C%EB%9D%BC%EC%82%B0.jfif",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%86%80%EC%9D%B4%EA%B3%B5%EC%9B%90.png",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%82%A8%EC%82%B0%ED%83%80%EC%9B%8C.png",
         "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%9D%BC%EC%9D%B4%EC%96%B8.jpg",
         "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%8F%84%EB%9D%BC%EC%97%90%EB%AA%BD.jfif",
       ],
       infowindow: null,
       listFlag: false,
       areas: [],
+      bounds: [],
       polyline: null,
       customOverlay: [], //overlay, tourSpotId, tourSpotName
       sido_polygon: [],
@@ -80,43 +82,11 @@ export default {
         level: 13, //지도의 레벨(확대, 축소 정도)
       };
       state.map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리
-      kakao.maps.event.addListener(
-        state.map,
-        "rightclick",
-        function (mouseEvent) {
-          if (state.map.getLevel() < 10) {
-            state.map.setLevel(10);
-          } else {
-            state.map.setLevel(13);
-          }
-          var mousePoint = mouseEvent.latLng;
-          state.map.setCenter(
-            new kakao.maps.LatLng(mousePoint.getLat(), mousePoint.getLng())
-          );
-        }
-      );
-      kakao.maps.event.addListener(state.map, "zoom_changed", function () {
-        if (state.map.getLevel() <= 10) {
-          // 10->9 9->8
-          for (var i = 0; i < state.sido_polygon.length; i++) {
-            state.sido_polygon[i][2].setMap(null);
-          }
-        } else {
-          state.num = 0;
-          for (i = 0; i < state.sigungu_polygon.length; i++) {
-            state.sigungu_polygon[i][2].setMap(null);
-          }
-          for (i = 0; i < state.tourspot_top100.length; i++) {
-            var index = state.tourspot_top100[i];
-            state.spot[index][0].setMap(null);
-          }
-          for (i = 0; i < state.tourspot.length; i++) {
-            index = state.tourspot[i];
-            state.spot[index][0].setMap(null);
-          }
-          for (i = 0; i < state.sido_polygon.length; i++) {
-            state.sido_polygon[i][2].setMap(state.map);
-          }
+      kakao.maps.event.addListener(state.map, "rightclick", function () {
+        if (state.depthlevel === 1) {
+          showDepth0();
+        } else if (state.depthlevel === 2) {
+          showDepth1();
         }
       });
       axios({
@@ -165,7 +135,7 @@ export default {
     const click = (marker, tourlist, index) => {
       kakao.maps.event.addListener(marker, "click", function () {
         state.index++;
-        makeCustomOverlay(marker.getPosition(), tourlist, index); // (marker.getPosition(), index, tourlist);
+        makeCustomOverlay(marker.getPosition(), tourlist, index);
         displayCustomOverlay();
       });
     };
@@ -183,7 +153,7 @@ export default {
           if (index === 16) {
             index = 1;
           }
-          displayPlaces(index, state.spot[tmp][1]);
+          displayPlaces(index, state.spot[tmp][1], tmp);
           state.spot[tmp][0].setMap(state.map);
         }
       } else if (depth > 0) {
@@ -199,7 +169,7 @@ export default {
           if (index === 16) {
             index = 1;
           }
-          displayPlaces(index, state.spot[tmp][1]); //4700번 더돌고
+          displayPlaces(index, state.spot[tmp][1], tmp); //4700번 더돌고
           state.spot[tmp][0].setMap(state.map);
         }
       }
@@ -234,7 +204,7 @@ export default {
       overlay_info.appendChild(desc);
 
       var img = document.createElement("img");
-      var i = state.index % 10;
+      var i = index % 10;
       img.src = state.src[i];
       desc.appendChild(img);
 
@@ -376,20 +346,29 @@ export default {
       });
       polygon.setMap(state.map);
       state.sido_polygon.push([area.name, area.num, polygon]);
-      kakao.maps.event.addListener(polygon, "click", function (mouseEvent) {
+      kakao.maps.event.addListener(polygon, "click", function () {
+        var bounds = new kakao.maps.LatLngBounds();
+        for (var i = 0; i < state.sido_polygon.length; i++) {
+          if (state.sido_polygon[i][1] === area.num) {
+            for (
+              var j = 0;
+              j < state.sido_polygon[i][2].getPath().length;
+              j++
+            ) {
+              bounds.extend(state.sido_polygon[i][2].getPath()[j]);
+            }
+          }
+        }
+        state.bounds = bounds;
         state.num = area.num;
-        state.map.setLevel(10);
         displayMarker(1, area.num);
-        for (var i = 0; i < state.sigungu_polygon.length; i++) {
+        showDepth1();
+        for (i = 0; i < state.sigungu_polygon.length; i++) {
           if (state.sigungu_polygon[i][1].substr(0, 2) !== area.num) {
             continue;
           }
           state.sigungu_polygon[i][2].setMap(state.map);
         }
-        var mousePoint = mouseEvent.latLng;
-        state.map.setCenter(
-          new kakao.maps.LatLng(mousePoint.getLat(), mousePoint.getLng())
-        );
       });
       kakao.maps.event.addListener(polygon, "mouseover", function () {
         polygon.setOptions({ fillColor: "#09f" });
@@ -461,13 +440,14 @@ export default {
         fillColor: "#00CC00",
         fillOpacity: 0.1,
       });
-      kakao.maps.event.addListener(polygon, "click", function (mouseEvent) {
+      kakao.maps.event.addListener(polygon, "click", function () {
+        state.depthlevel = 2;
+        var bounds = new kakao.maps.LatLngBounds();
+        for (var i = 0; i < area.path.length; i++) {
+          bounds.extend(area.path[i]);
+        }
+        state.map.setBounds(bounds);
         displayMarker(2, area.num);
-        state.map.setLevel(8);
-        var mousePoint = mouseEvent.latLng;
-        state.map.setCenter(
-          new kakao.maps.LatLng(mousePoint.getLat(), mousePoint.getLng())
-        );
       });
       state.sigungu_polygon.push([area.name, area.num, polygon]);
       kakao.maps.event.addListener(polygon, "mouseover", function () {
@@ -476,6 +456,35 @@ export default {
       kakao.maps.event.addListener(polygon, "mouseout", function () {
         polygon.setOptions({ fillColor: "#00CC00" });
       });
+    };
+    const showDepth0 = () => {
+      state.depthlevel = 0;
+      state.map.setLevel(13);
+      state.map.setCenter(
+        new kakao.maps.LatLng(37.565400364768095, 126.97723780998845)
+      );
+      state.num = 0;
+      for (var i = 0; i < state.sigungu_polygon.length; i++) {
+        state.sigungu_polygon[i][2].setMap(null);
+      }
+      for (i = 0; i < state.tourspot_top100.length; i++) {
+        var index = state.tourspot_top100[i];
+        state.spot[index][0].setMap(null);
+      }
+      for (i = 0; i < state.sido_polygon.length; i++) {
+        state.sido_polygon[i][2].setMap(state.map);
+      }
+    };
+    const showDepth1 = () => {
+      state.depthlevel = 1;
+      state.map.setBounds(state.bounds);
+      for (var i = 0; i < state.sido_polygon.length; i++) {
+        state.sido_polygon[i][2].setMap(null);
+      }
+      for (i = 0; i < state.tourspot.length; i++) {
+        var index = state.tourspot[i];
+        state.spot[index][0].setMap(null);
+      }
     };
     const makePolyline = () => {
       var polyline = new kakao.maps.Polyline({
@@ -498,21 +507,19 @@ export default {
     const addPolyline = (path) => {
       state.polyline.setPath(path);
     };
-    const makeSearchBar = () => {
-      var ps = new kakao.maps.services.Places();
-      state.ps = ps;
-      ps.setMap(state.map);
-      var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
-      state.infowindow = infowindow;
-      infowindow.setMap(state.map);
-    };
-    const displayPlaces = (index, tourspot) => {
+    const displayPlaces = (listindex, tourspot, markerindex) => {
       var listEl = document.getElementById("placesList");
       var menuEl = document.getElementById("menu_wrap");
       removeMarker();
-      var itemEl = getListItem(index, tourspot);
+      var itemEl = getListItem(listindex, tourspot);
       itemEl.onclick = function () {
-        findMark(tourspot.tourSpotLatitude, tourspot.tourSpotLongitude);
+        state.map.setCenter(state.spot[markerindex][0].getPosition());
+        makeCustomOverlay(
+          state.spot[markerindex][0].getPosition(),
+          state.spot[markerindex][1],
+          markerindex
+        );
+        displayCustomOverlay();
       };
       listEl.appendChild(itemEl);
       menuEl.scrollTop = 0;
@@ -546,6 +553,7 @@ export default {
       }
     };
     const emitList = function (abc) {
+      console.log(abc);
       if (state.polyline) {
         nondisplayPolyline();
         removePolyline();
@@ -560,11 +568,30 @@ export default {
         displayPolyline();
       }
     };
+    const clickPDF = (daylist) => {
+      for (var i = 0; i < daylist.length; i++) {
+        var bounds = new kakao.maps.LatLngBounds();
+        var path = [];
+        if (state.polyline) {
+          nondisplayPolyline();
+          removePolyline();
+        }
+        var list = daylist[i];
+        for (var j = 0; j < list.length; j++) {
+          var location = state.spot[list[i].index][0].getPosition();
+          bounds.extend(location);
+          state.spot[list[i].index].setMap(state.map);
+          path.push(location);
+        }
+        addPolyline(path);
+        displayPolyline();
+        state.map.setBounds(bounds);
+        // pdf 한장 내보내기 또는 한장 찍어두기
+      }
+      //일정 완료하기 호출
+    };
     const emitDay = (day) => {
       state.day = day;
-    };
-    const findMark = (lat, lng) => {
-      console.log(lat, lng);
     };
     return {
       state,
@@ -584,14 +611,15 @@ export default {
       nondisplayPolyline,
       removePolyline,
       addPolyline,
-      makeSearchBar,
       displayPlaces,
       getListItem,
       removeAllChildNods,
       emitList,
       emitDay,
-      findMark,
       click,
+      clickPDF,
+      showDepth0,
+      showDepth1,
     };
   },
 };
@@ -615,6 +643,7 @@ export default {
   position: relative;
   border-bottom: 1px solid #888;
   overflow: hidden;
+  cursor: pointer;
   min-height: 100px;
 }
 #placesList .item span {
@@ -780,10 +809,11 @@ export default {
   top: 10px;
   white-space: normal;
 } */
-/* .map {
-  width: 1900px;
-  height: 800px;bo
-} */
+
+.map {
+  margin: 0 auto;
+}
+
 #selectedApt_wrap {
   position: absolute;
   top: 0;
@@ -801,7 +831,7 @@ export default {
 }
 #map {
   width: 100vw;
-  height: 100vh;
+  height: 70vh;
   position: relative;
 }
 </style>

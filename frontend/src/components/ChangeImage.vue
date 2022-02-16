@@ -2,6 +2,7 @@
   <div>
     <div class="changeImageButton">
       <img src="../assets/circularplusbutton_121982.png" alt="uploadNewImage"
+        class="cursur-pointer"
         @click="$refs.imageUpload.click()"
         data-bs-toggle="modal"
         data-bs-target="#modal"/>
@@ -56,7 +57,7 @@
           >
             Close
           </button>
-          <button @click="uploadImage()" class="btn btn-primary">이미지변경</button>
+          <button @click="uploadImage()" class="btn btn-primary" data-bs-dismiss="modal">이미지변경</button>
         </div>
       </div>
     </div>
@@ -231,5 +232,8 @@ export default {
   font-weight: 600;
   transition: 0.25s;
   margin: 10px;
+}
+.cursur-pointer {
+  cursor: pointer;
 }
 </style>
