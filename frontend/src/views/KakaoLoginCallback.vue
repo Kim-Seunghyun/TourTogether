@@ -431,6 +431,10 @@ export default {
                     userProfileImage: response.properties.profile_image,
                   },
                 }).then((res) => {
+                  console.log(res);
+                  console.log(res.data);
+                  console.log(res.data.accessToken);
+                  console.log(res.data.token);
                   // store.commit("userStore/setUser", res.data.user);
                   // store.commit("userStore/setUserId", res.data.user.userId);
                   // store.commit("userStore/setUserLoginPlatform", "kakao");
