@@ -18,6 +18,8 @@ const onlyAuthUser = async (to, from, next) => {
   let token = localStorage.getItem("userStore/accessToken");
   console.log("checkUserInfo!!!!! -> " + checkUserInfo);
   console.log("token!!!!! -> " + token);
+  console.log("tooken!!!!! -> " + localStorage.getItem("userStore"));
+  console.log("toooken!!!!! -> " + localStorage.getItem("accessToken"));
   if (!checkUserInfo || !token) {
     alert("로그인이 필요한 페이지입니다..");
     router.push({ name: "Dashboard" });
