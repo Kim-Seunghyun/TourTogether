@@ -99,11 +99,11 @@ export const userStore = {
       })
         .then((response) => {
           let user = response.data.user;
-          store.commit("userStore/setUser", user);
-          store.commit("userStore/setUserId", user.userId);
-          store.commit("userStore/setUserNickname", user.userNickname);
-          store.commit("userStore/setUserProfileImage", user.userProfileImage);
-          store.commit("userStore/setUserInputNickname", user.userNickname);
+          store.commit("setUser", user);
+          store.commit("setUserId", user.userId);
+          store.commit("setUserNickname", user.userNickname);
+          store.commit("setUserProfileImage", user.userProfileImage);
+          store.commit("setUserInputNickname", user.userNickname);
         })
         .catch((error) => {
           console.log(error);
