@@ -179,7 +179,8 @@ export default {
     onMounted(() => {
       state.tourList = [];
       state.selectedIndex = 0;
-      state.id = window.location.pathname.split("/")[1];
+      state.id = window.location.pathname;
+      console.log(state.id);
       state.tourList[0] = { list: new Array(), index: 0 };
       // addDay();
       init();
@@ -244,6 +245,8 @@ export default {
     };
     const updateList = (response) => {
       state.tourList = JSON.parse(response.content);
+      console.log("updateList!!!!!!");
+      console.log(state.tourList);
       goEmit();
     };
     const init = () => {
@@ -256,10 +259,12 @@ export default {
         },
       })
         .then((response) => {
-          if(!response.data.schedule.scheduleContent){
+          if (!response.data.schedule.scheduleContent) {
             return;
           }
-          updateList(JSON.parse(response.data.schedule.scheduleContent));
+          let res = {};
+          res.content = response.data.schedule.scheduleContent;
+          updateList(res);
         })
         .catch((error) => {
           console.log(error);
