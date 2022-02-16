@@ -1,7 +1,5 @@
 package com.ssafy.tourtogether.api.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -10,6 +8,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.tourtogether.api.request.UserDeleteDeleteReq;
@@ -52,7 +51,7 @@ public class UserController {
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 	public ResponseEntity<UserInfoGetRes> getInfo(
-			@RequestBody @ApiParam(value = "유저 정보", required = true) UserInfoGetReq userInfoGetReq) {
+			@RequestParam @ApiParam(value = "유저 정보", required = true) UserInfoGetReq userInfoGetReq) {
 //		if (jwtService.isUsable(request.getHeader("Authorization"))) {
 			System.out.println("사용 가능한 토큰!!!");
 

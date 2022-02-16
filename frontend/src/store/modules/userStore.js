@@ -120,7 +120,7 @@ export const userStore = {
         axios({
           method: "get",
           url: API_BASE_URL + "user/info",
-          data: {
+          params: {
             userClientId: userClientId,
             userLoginPlatform: "kakao",
           },
