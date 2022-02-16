@@ -5,7 +5,7 @@
         <div v-for="item in state.tourList" v-bind:key="item.list">
           <div class="day_item day sort" @click="showPlan(item.index)">
             {{ item.index + 1 }}일차
-            <div v-if="state.selectedIndex === item.index">
+            <div v-if="state.selectedIndex === item.index" class="selected">
               <div
                 v-for="tourItem in item.list"
                 v-bind:key="tourItem"
@@ -48,14 +48,13 @@
       <button @click="deleteDay(0)" class="btn btn-secondary">
         일정 전체 삭제
       </button>
-      <button @click="sendMessage()">레디스로 보내보기</button>
     </div>
   </div>
 </template>
 
 <script>
 import { reactive } from "vue";
-import { onMounted, watch } from "vue";
+import { onBeforeUnmount, onMounted, watch } from "vue";
 import axios from "axios";
 import $ from "jquery";
 import "jquery-ui/ui/widgets/sortable";
@@ -71,19 +70,23 @@ export default {
   name: "Plan",
   props: {
     tourData: Object,
-    //아이디 장소 날짜
+    emitFlag: Boolean,
+    //아이디 장소 날짜 인덱스
   },
-  // emits: ["emitLine"],
+
   setup(props, { emit }) {
     const state = reactive({
-      tourList: [],
-      selectedIndex: null,
-      propsData: null,
-      user: getters["userStore/getUserNickname"],
-      my: true,
-      ws: Stomp.over(sock),
-      id: null,
+      tourList: [], //일정 배열
+      selectedIndex: null, //현재 보고 있는 Day
+      user: getters["userStore/getUserNickname"], //유저 정보
+      my: true, // 실험중
+      ws: Stomp.over(sock), //webSocket
+      id: null, //sessionId
     });
+    /*
+      addDay : 일정 하루 추가
+      설명 : 일정 하루 추가 후 Map.vue으로 emit요청
+    */
     const addDay = () => {
       let len = state.tourList.length;
       state.tourList[len] = { list: new Array(), index: len };
@@ -180,10 +183,9 @@ export default {
       state.tourList = [];
       state.selectedIndex = 0;
       state.id = window.location.pathname.split("/")[1];
-      state.tourList[0] = { list: new Array(), index: 0 };
+      // state.tourList[0] = { list: new Array(), index: 0 };/
       // addDay();
       init();
-      emit("getDay", state.tourList.length);
       blockRightClick();
       makeSortable();
     });
@@ -198,6 +200,7 @@ export default {
     const goEmit = () => {
       emitDay();
       emitLine();
+      sendMessage();
       //redis로 보내기
     };
     //redis 에서 받기
@@ -244,7 +247,10 @@ export default {
     };
     const updateList = (response) => {
       state.tourList = JSON.parse(response.content);
-      goEmit();
+      console.log("updateList!!!!!!");
+      console.log(state.tourList);
+      emitDay();
+      emitLine();
     };
     const init = () => {
       axios({
@@ -256,10 +262,13 @@ export default {
         },
       })
         .then((response) => {
-          if(!response.data.schedule.scheduleContent){
+          if (!response.data.schedule.scheduleContent) {
+            addDay();
             return;
           }
-          updateList(JSON.parse(response.data.schedule.scheduleContent));
+          let res = {};
+          res.content = response.data.schedule.scheduleContent;
+          updateList(res);
         })
         .catch((error) => {
           console.log(error);
@@ -284,29 +293,36 @@ export default {
         }
       );
     };
-    watch(
-      () => props.tourData,
-      () => {
-        var day = props.tourData.day - 1;
-        var name = props.tourData.name;
-        if (state.tourList[day] === undefined) {
-          state.tourList[day] = { list: new Array(), index: day };
-        }
-        var len = state.tourList[day].list.length;
-        state.tourList[day].list.push({
-          name: name,
-          id: len,
-          lat: props.tourData.lat,
-          lng: props.tourData.lng,
-          index: props.tourData.index,
-        });
-        state.selectedIndex = day;
-        // console.log("------");
-        // console.log(JSON.stringify(state.tourList));
-        // console.log("------");
-        goEmit();
-        // console.log(state.tourList);
-        /*
+    const emitTotalList = () => {
+      // emit("", );/
+    };
+    watch(props.emitFlag, () => {});
+    onBeforeUnmount(() => {
+      sendMessage();
+    }),
+      watch(
+        () => props.tourData,
+        () => {
+          var day = props.tourData.day - 1;
+          var name = props.tourData.name;
+          if (state.tourList[day] === undefined) {
+            state.tourList[day] = { list: new Array(), index: day };
+          }
+          var len = state.tourList[day].list.length;
+          state.tourList[day].list.push({
+            name: name,
+            id: len,
+            lat: props.tourData.lat,
+            lng: props.tourData.lng,
+            index: props.tourData.index,
+          });
+          state.selectedIndex = day;
+          // console.log("------");
+          // console.log(JSON.stringify(state.tourList));
+          // console.log("------");
+          goEmit();
+          // console.log(state.tourList);
+          /*
         TODO
         Redis 로 보낼때
         schdeule: {
@@ -323,8 +339,8 @@ export default {
         캐싱이 안된다면 Redis DB값을 먼저 조회 해서 달라진 값들 비교해서 다를것들 모아서 다시 select 걸어주는 방법도 있는데 이건 또 생각 해봐야됨 뭔가 되게 복잡해질듯
 
         */
-      }
-    );
+        }
+      );
     return {
       state,
       addDay,
@@ -347,6 +363,7 @@ export default {
       sendMessage,
       init,
       updateList,
+      emitTotalList,
     };
   },
 };
@@ -356,6 +373,11 @@ export default {
 .day {
   list-style: none;
   padding-top: 10%;
+  background-color: rgba(255, 255, 255, 0.849);
+  border-radius: 10px;
+  box-shadow: 2px 2px gray;
+  border-top: 1px solid rgb(187, 187, 187);
+  border-left: 1px solid rgb(187, 187, 187);
 }
 .day_item {
   position: relative;
@@ -364,15 +386,16 @@ export default {
   cursor: pointer;
   min-height: 5vh;
   z-index: 2;
+  margin: auto;
 }
 .tour_item {
-  border: 1px solid #888;
+  border: 1px solid rgb(187, 187, 187);
   cursor: pointer;
   border-radius: 5px;
   margin: 3px;
   padding-right: 0;
   z-index: 3;
-  background-color: rgb(238, 231, 231);
+  background-color: rgba(250, 250, 250, 0.95);
   /* box-shadow: 1px 1px 1px 1px gray; */
   /* border-collapse: collapse; */
   /* position: relative; */
@@ -386,8 +409,8 @@ export default {
   z-index: 5;
   width: 20px;
   height: 20px;
-  right: 0;
-  top: 0;
+  right: -3px;
+  top: -5px;
   margin-top: -15 px;
   float: right;
   position: absolute;
@@ -415,5 +438,11 @@ export default {
 }
 .button_wrapper button {
   margin-left: 10px;
+}
+.selected {
+  border-radius: 1px solid black;
+}
+#day_wrap {
+  margin: auto;
 }
 </style>

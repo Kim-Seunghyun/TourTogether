@@ -1,3 +1,7 @@
+import jwt_decode from "jwt-decode";
+import axios from "axios";
+import { API_BASE_URL } from "@/config/index.js";
+
 export const userStore = {
   namespaced: true,
   state: {
@@ -9,6 +13,7 @@ export const userStore = {
     userLoginPlatform: "",
     userClientId: "",
     kakaoProfileImage: null,
+    accessToken: "",
   },
   getters: {
     getUser(state) {
@@ -35,15 +40,16 @@ export const userStore = {
     getKakaoProfileImage(state) {
       return state.kakaoProfileImage;
     },
+    getAccessToken(state) {
+      return state.accessToken;
+    },
   },
   mutations: {
     setUser(state, user) {
       state.user = user;
-      console.log("user -> ", state.user);
     },
     setUserId(state, userId) {
       state.userId = userId;
-      console.log("user -> ", state.userId);
     },
     setUserNickname(state, userNickname) {
       state.userNickname = userNickname;
@@ -67,12 +73,79 @@ export const userStore = {
       this.setUserNickname("");
       this.setUserProfileImage("");
       this.setUser("");
-      console.log(this.getUser);
+      this.setKakaoProfileImage("");
+      this.setAccessToken("");
     },
     setKakaoProfileImage(state, kakaoProfileImage) {
       state.kakaoProfileImage = kakaoProfileImage;
     },
+    setAccessToken(state, accessToken) {
+      state.accessToken = accessToken;
+    },
   },
-  actions: {},
+  actions: {
+    async getUserInfo(store) {
+      let token = store.state.accessToken;
+      let decode_token = jwt_decode(token);
+      console.log("decode_token: ^^^^^^");
+      console.log(decode_token);
+      await getUserByClientId(
+        decode_token.userClientId,
+        store.state
+        // ({ _user }) => {
+        // commit("SET_USER_INFO", data.userInfo);
+        // console.log("decode_token: " + decode_token);
+        // set ~~~~~~~~~~;
+        // axios.defaults.headers.common["Authorization"] = token;
+        // console.log("회원정보>>" + _user);
+        // },
+        // (error) => {
+        // console.log("로그인에러", error);
+        // }
+      );
+      // .then(() => {
+      // console.log("로그인 완료");
+      // console.log(user);
+      // this.setUser(user);
+      // this.setUserId(user.userId);
+      // this.setUserLoginPlatform("kakao");
+      // this.setUserClientId(user.userClientId);
+      // this.setUserNickname(user.userNickname);
+      // this.setUserInputNickname(user.userInputNinkname);
+      // this.setUserProfileImage(user.userProfileImage);
+      // })
+      // .catch((error) => {
+      // console.log(error);
+      // });
+
+      async function getUserByClientId(userClientId, state) {
+        axios({
+          method: "get",
+          url: API_BASE_URL + "user/info",
+          params: {
+            userClientId: userClientId,
+            userLoginPlatformString: "kakao",
+          },
+          headers: {
+            Authorization: "Bearer " + token,
+          },
+        })
+          .then((response) => {
+            console.log(state);
+            console.log(response);
+            console.log(response.data);
+            let user = response.data.user;
+            state.user = user;
+            state.userId = user.userId;
+            state.userNickname = user.userNickname;
+            state.userProfileImage = user.userProfileImage;
+            state.userInputNickname = user.userNickname;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
+    },
+  },
   // modules: {},
 };

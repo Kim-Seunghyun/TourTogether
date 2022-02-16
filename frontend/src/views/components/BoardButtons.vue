@@ -1,23 +1,28 @@
 <template>
   <button
-    class="btn btn-info"
+    class="c-btn btn-green"
     data-bs-toggle="modal"
     data-bs-target="#inviteModal"
   >
-    친구 초대하기
+    친구 초대 👭
   </button>
   &nbsp;
   <button
-    class="btn btn-info"
+    class="c-btn btn-green"
     data-bs-toggle="modal"
     data-bs-target="#finishModal"
   >
-    일정 완료하기
+    일정 완료 💾
   </button>
   &nbsp;
-  <button type="button" class="btn btn-info" @click="exportToPDF()">
-    PDF로 내보내기
+  <button type="button" class="c-btn btn-green" @click="exportToPDF()">
+    PDF 저장 📄
   </button>
+  &nbsp;
+  <button type="button" class="c-btn btn-green">
+    회의 종료 🚪
+  </button>
+  &nbsp;
   <!-- Modal -->
   <div
     class="modal fade"
@@ -32,19 +37,15 @@
       "
     >
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header" style="border-bottom: none; margin-left: 10px;" >
           <h5 class="modal-title" id="exampleModalLabel">
             링크를 복사해서 친구에게 전송하세요!
           </h5>
-          <button
-            type="button"
-            class="btn-close"
-            data-bs-dismiss="modal"
-            aria-label="Close"
-          ></button>
         </div>
-        <input id="myInput" :value="this.curURL" readonly />
-        <div class="modal-footer">
+        <div id="myInputDiv" style="text-align: left; margin-left: 25px;">
+          <input id="myInput" :value="this.curURL" readonly />
+        </div>
+        <div class="modal-footer" style="border-top: none;">
           <button
             type="button"
             class="btn btn-secondary"
@@ -73,7 +74,7 @@
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header">
+        <div class="modal-header" style="border-bottom: none;">
           <h5 class="modal-title" id="exampleModalLabel">
             여행 유형을 선택하고 일정을 마무리하세요!
           </h5>
@@ -170,7 +171,7 @@
             </ul>
           </div>
         </div>
-        <div class="modal-footer">
+        <div class="modal-footer" style="border-top: none;">
           <button
             type="button"
             class="btn btn-secondary"
@@ -325,4 +326,36 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+#myInput {
+  border: none;
+  border-radius: 5px;
+  padding: 5px;
+  background-color: #e7e7e8;
+  font-size: 20px;
+}
+
+.modal-content {
+  padding: 2px;
+}
+
+.c-btn {
+  border: none;
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 5px;
+  font-family: "paybooc-Light", sans-serif;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+  font-size: 13px;
+  width: 100px;
+  height: 30px;
+}
+
+.btn-green {
+  background-color: #77af9c;
+  color: #d7fff1;
+}
+</style>

@@ -842,10 +842,11 @@ export default {
   top: 10px;
   white-space: normal;
 } */
-/* .map {
-  width: 1900px;
-  height: 800px;bo
-} */
+
+.map {
+  margin: 0 auto;
+}
+
 #selectedApt_wrap {
   position: absolute;
   top: 0;
@@ -863,7 +864,7 @@ export default {
 }
 #map {
   width: 100vw;
-  height: 100vh;
+  height: 70vh;
   position: relative;
 }
 </style>

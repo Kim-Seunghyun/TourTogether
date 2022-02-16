@@ -9,14 +9,17 @@ import Tables from "@/views/Tables.vue";
 import Profile from "@/views/Profile.vue";
 import SignIn from "@/views/SignIn.vue";
 import SignUp from "@/views/SignUp.vue";
-import Memo from "../views/Memo.vue";
 import Sch2 from "../views/Sch2.vue";
 import Board from "@/views/Board.vue";
 import store from "@/store/index.js";
 
 const onlyAuthUser = async (to, from, next) => {
   const checkUserInfo = store.getters["userStore/getUserId"];
-  console.log("checkUserInfo!!!!! -> " + checkUserInfo);
+  const getUserInfo = store._actions["userStore/getUserInfo"];
+  const token = store.getters["userStore/getAccessToken"];
+  if (!checkUserInfo && token) {
+    await getUserInfo(token);
+  }
   if (!checkUserInfo) {
     alert("로그인이 필요한 페이지입니다..");
     router.push({ name: "Dashboard" });
@@ -80,12 +83,6 @@ const routes = [
     path: "/sign-up",
     name: "SignUp",
     component: SignUp,
-  },
-  {
-    path: "/memo",
-    name: "Memo",
-    beforeEnter: onlyAuthUser,
-    component: Memo,
   },
   {
     path: "/sch2",

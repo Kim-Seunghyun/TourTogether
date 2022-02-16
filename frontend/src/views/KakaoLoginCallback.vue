@@ -415,8 +415,11 @@ export default {
                 ) {
                   email = response.kakao_account.email;
                 }
-                console.log(response)
-                store.commit("userStore/setKakaoProfileImage", response.properties.profile_image)
+                console.log(response);
+                store.commit(
+                  "userStore/setKakaoProfileImage",
+                  response.properties.profile_image
+                );
                 axios({
                   method: "post",
                   url: API_BASE_URL + "user/login",
@@ -428,27 +431,30 @@ export default {
                     userProfileImage: response.properties.profile_image,
                   },
                 }).then((res) => {
-                  store.commit("userStore/setUser", res.data.user);
-                  store.commit("userStore/setUserId", res.data.user.userId);
-                  console.log(">>>>>>>>>>>>", res.data.user.userId);
+                  let token = res.data.accessToken;
+                  // store.commit("userStore/setUser", res.data.user);
+                  // store.commit("userStore/setUserId", res.data.user.userId);
                   store.commit("userStore/setUserLoginPlatform", "kakao");
+                  store.commit("userStore/setUserClientId", response.id);
+                  // store.commit(
+                  // "userStore/setUserNickname",
+                  // res.data.user.userNickname
+                  // );
+                  // store.commit(
+                  // "userStore/setUserInputNickname",
+                  // res.data.user.userNickname
+                  // );
+                  // store.commit(
+                  // "userStore/setUserProfileImage",
+                  // res.data.user.userProfileImage
+                  // );
                   store.commit(
-                    "userStore/setUserClientId",
-                    res.data.user.userClientId
+                    "userStore/setAccessToken",
+                    // res.data.accessToken
+                    token
                   );
-                  store.commit(
-                    "userStore/setUserNickname",
-                    res.data.user.userNickname
-                  );
-                  store.commit(
-                    "userStore/setUserInputNickname",
-                    res.data.user.userNickname
-                  );
-                  store.commit(
-                    "userStore/setUserProfileImage",
-                    res.data.user.userProfileImage
-                  );
-                  console.log(getters["userStore/getUserId"]);
+                  // store.dispatch("userStore/getUserInfo", res.data.accessToken);
+                  store.dispatch("userStore/getUserInfo");
                 });
               },
               fail: function (error) {

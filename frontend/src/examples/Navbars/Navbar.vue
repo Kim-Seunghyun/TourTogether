@@ -4,6 +4,7 @@
     v-bind="$attrs"
     id="navbarBlur"
     data-scroll="true"
+    style="margin-top: 0px;"
   >
     <div class="px-3 py-1 container-fluid">
       <router-link to="/" class="px-0 nav-link font-weight-bold"
@@ -46,14 +47,6 @@
               class="px-0 nav-link font-weight-bold"
               :class="textWhite ? textWhite : 'text-body'"
               >MyPage &nbsp;</router-link
-            >
-
-            <router-link
-              to="/memo"
-              v-if="user"
-              class="px-0 nav-link font-weight-bold"
-              :class="textWhite ? textWhite : 'text-body'"
-              >memo &nbsp;</router-link
             >
 
             <router-link
@@ -128,6 +121,8 @@ export default {
         store.commit("userStore/setUserNickname", "");
         store.commit("userStore/setUserInputNickname", "");
         store.commit("userStore/setUserProfileImage", "");
+        store.commit("userStore/setKakaoProfileImage", "");
+        store.commit("userStore/setAccessToken", "");
         // console.log(getters.getUserId);
         alert("로그아웃 되었습니다!");
       });

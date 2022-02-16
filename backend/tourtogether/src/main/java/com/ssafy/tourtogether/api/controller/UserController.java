@@ -3,10 +3,12 @@ package com.ssafy.tourtogether.api.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.tourtogether.api.request.UserDeleteDeleteReq;
@@ -14,9 +16,11 @@ import com.ssafy.tourtogether.api.request.UserLoginPostReq;
 import com.ssafy.tourtogether.api.request.UserUpdateImagePatchReq;
 import com.ssafy.tourtogether.api.request.UserUpdateNicknamePatchReq;
 import com.ssafy.tourtogether.api.response.UserDeleteDeleteRes;
+import com.ssafy.tourtogether.api.response.UserInfoGetRes;
 import com.ssafy.tourtogether.api.response.UserLoginPostRes;
 import com.ssafy.tourtogether.api.response.UserUpdateImagePatchRes;
 import com.ssafy.tourtogether.api.response.UserUpdateNicknamePatchRes;
+import com.ssafy.tourtogether.api.service.JwtServiceImpl;
 import com.ssafy.tourtogether.api.service.UserService;
 import com.ssafy.tourtogether.common.model.response.BaseResponseBody;
 //import com.ssafy.tourtogether.common.util.JwtTokenUtil;
@@ -37,6 +41,43 @@ import io.swagger.annotations.ApiResponses;
 public class UserController {
 	@Autowired
 	UserService userService;
+
+	@Autowired
+	private JwtServiceImpl jwtService;
+
+	@GetMapping("/info")
+	@ApiOperation(value = "유저 정보 반환", notes = "JWT 토큰을 통해 인증된 유저의 정보를 반환한다.")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+	public ResponseEntity<UserInfoGetRes> getInfo(@RequestParam String userClientId,
+			@RequestParam String userLoginPlatformString) {
+//		if (jwtService.isUsable(request.getHeader("Authorization"))) {
+//			System.out.println("사용 가능한 토큰!!!");
+		
+		System.out.println("getInfo: "+userClientId+" "+userLoginPlatformString);
+
+		int userLoginPlatform = -1;
+
+		if (userLoginPlatformString.compareTo("kakao") == 0)
+			userLoginPlatform = 1;
+		else if (userLoginPlatformString.compareTo("naver") == 0)
+			userLoginPlatform = 2;
+		else if (userLoginPlatformString.compareTo("google") == 0)
+			userLoginPlatform = 3;
+
+		User user = userService.getUserByUserId(userClientId, userLoginPlatform);
+
+		if (user == null) {
+			return ResponseEntity.status(401).body(UserInfoGetRes.of(401, "유효하지 않은 유저", null));
+		} else {
+			return ResponseEntity.ok(UserInfoGetRes.of(200, "Success", user));
+		}
+
+//		} else {
+//			System.out.println("사용 불가능 토큰!!!");
+//			return ResponseEntity.status(401).body(UserInfoGetRes.of(401, "유효하지 않은 유저", null));
+//		}
+	}
 
 	@PostMapping("/login")
 	@ApiOperation(value = "로그인", notes = "소셜로그인 API를 통해 로그인 한다.")
@@ -65,8 +106,9 @@ public class UserController {
 			user = userService.createUser(loginInfo);
 		} else
 			System.out.println("기존유저");
-		System.out.println("Return user: " + user.toString());
-		return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", user/* JwtTokenUtil.getToken(userId) */));
+//		System.out.println("Return user: " + user.toString());
+		return ResponseEntity.ok(
+				UserLoginPostRes.of(200, "Success", jwtService.create("userClientId", userClientId, "accessToken")));
 	}
 
 	@DeleteMapping("/delete")
@@ -78,10 +120,10 @@ public class UserController {
 		if (userService.checkUser(deleteInfo)) {
 			System.out.println("유저 삭제됨");
 			userService.deleteUser(deleteInfo);
-			return ResponseEntity.ok(UserDeleteDeleteRes.of(200, "Success", true));
+			return ResponseEntity.ok(UserDeleteDeleteRes.of(200, "유저 삭제됨", true));
 		} else {
 			System.out.println("존재하지 않은 유저");
-			return ResponseEntity.ok(UserDeleteDeleteRes.of(200, "Success", false));
+			return ResponseEntity.ok(UserDeleteDeleteRes.of(401, "존재하지 않은 유저", false));
 		}
 	}
 

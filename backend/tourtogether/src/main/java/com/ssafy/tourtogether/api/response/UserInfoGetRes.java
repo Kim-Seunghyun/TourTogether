@@ -1,6 +1,7 @@
 package com.ssafy.tourtogether.api.response;
 
 import com.ssafy.tourtogether.common.model.response.BaseResponseBody;
+import com.ssafy.tourtogether.db.entity.User;
 
 import io.swagger.annotations.ApiModel;
 //import io.swagger.annotations.ApiModelProperty;
@@ -14,14 +15,14 @@ import lombok.Setter;
 @Getter
 @Setter
 @ApiModel("UserLoginPostResponse")
-public class UserLoginPostRes extends BaseResponseBody {
-	String accessToken;
+public class UserInfoGetRes extends BaseResponseBody {
+	User user;
 
-	public static UserLoginPostRes of(Integer statusCode, String message, String accessToken) {
-		UserLoginPostRes res = new UserLoginPostRes();
+	public static UserInfoGetRes of(Integer statusCode, String message, User user) {
+		UserInfoGetRes res = new UserInfoGetRes();
 		res.setStatusCode(statusCode);
 		res.setMessage(message);
-		res.setAccessToken(accessToken);
+		res.setUser(user);
 		return res;
 	}
 }
