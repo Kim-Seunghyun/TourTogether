@@ -54,15 +54,15 @@
 
 <script>
 import { reactive } from "vue";
-import { onBeforeUnmount, onMounted, watch } from "vue";
+import { onMounted, watch } from "vue";
+// import { onBeforeUnmount } from "vue";
 import axios from "axios";
 import $ from "jquery";
 import "jquery-ui/ui/widgets/sortable";
 import SockJS from "sockjs-client";
 import Stomp from "stomp-websocket";
 import { API_BASE_URL } from "@/config/index.js";
-import store from "@/store";
-const getters = store.getters;
+import { useStore } from "vuex";
 
 let sock = new SockJS(API_BASE_URL + "ws-stomp");
 
@@ -70,18 +70,20 @@ export default {
   name: "Plan",
   props: {
     tourData: Object,
-    emitFlag: Boolean,
     //아이디 장소 날짜 인덱스
   },
 
   setup(props, { emit }) {
+    const store = useStore();
+    const getters = store.getters;
+
     const state = reactive({
       tourList: [], //일정 배열
       selectedIndex: null, //현재 보고 있는 Day
       user: getters["userStore/getUserNickname"], //유저 정보
       my: true, // 실험중
       ws: Stomp.over(sock), //webSocket
-      id: null, //sessionId
+      id: window.location.pathname.split("/")[2], //sessionId
     });
     /*
       addDay : 일정 하루 추가
@@ -182,7 +184,6 @@ export default {
     onMounted(() => {
       state.tourList = [];
       state.selectedIndex = 0;
-      state.id = window.location.pathname.split("/")[1];
       // state.tourList[0] = { list: new Array(), index: 0 };/
       // addDay();
       init();
@@ -201,6 +202,7 @@ export default {
       emitDay();
       emitLine();
       sendMessage();
+      setStateTour();
       //redis로 보내기
     };
     //redis 에서 받기
@@ -249,15 +251,15 @@ export default {
       state.tourList = JSON.parse(response.content);
       console.log("updateList!!!!!!");
       console.log(state.tourList);
-      emitDay();
-      emitLine();
+      // emitDay();
+      // emitLine();
     };
     const init = () => {
       axios({
         method: "post",
         url: API_BASE_URL + "schedule/room",
         params: {
-          id: state.id,
+          id: window.location.pathname.split("/")[2],
           user: state.user,
         },
       })
@@ -274,7 +276,7 @@ export default {
           console.log(error);
         });
       //시작하면 DB에서 기존에 작업 했던 것 불러 와야함
-      let subUrl = "/api/sub/schedule/" + state.id;
+      var subUrl = "/api/sub/schedule/" + state.id;
       var ws = Stomp.over(sock);
       state.ws = ws;
       ws.connect(
@@ -284,8 +286,8 @@ export default {
         function (frame) {
           console.log("frame : " + frame);
           ws.subscribe(subUrl, function (message) {
-            var res = JSON.parse(message.body);
-            updateList(res);
+            var resMessage = JSON.parse(message.body);
+            updateList(resMessage);
           });
         },
         function (error) {
@@ -293,36 +295,38 @@ export default {
         }
       );
     };
-    const emitTotalList = () => {
-      // emit("", );/
+    const setStateTour = () => {
+      let tourList = [];
+      //양식에 맞게 tourList에 저장
+      tourList = state.tourList;
+      store.commit("boardStore/setTourList", tourList);
     };
-    watch(props.emitFlag, () => {});
-    onBeforeUnmount(() => {
-      sendMessage();
-    }),
-      watch(
-        () => props.tourData,
-        () => {
-          var day = props.tourData.day - 1;
-          var name = props.tourData.name;
-          if (state.tourList[day] === undefined) {
-            state.tourList[day] = { list: new Array(), index: day };
-          }
-          var len = state.tourList[day].list.length;
-          state.tourList[day].list.push({
-            name: name,
-            id: len,
-            lat: props.tourData.lat,
-            lng: props.tourData.lng,
-            index: props.tourData.index,
-          });
-          state.selectedIndex = day;
-          // console.log("------");
-          // console.log(JSON.stringify(state.tourList));
-          // console.log("------");
-          goEmit();
-          // console.log(state.tourList);
-          /*
+    // onBeforeUnmount(() => {
+    //   sendMessage();
+    // }),
+    watch(
+      () => props.tourData,
+      () => {
+        var day = props.tourData.day - 1;
+        var name = props.tourData.name;
+        if (state.tourList[day] === undefined) {
+          state.tourList[day] = { list: new Array(), index: day };
+        }
+        var len = state.tourList[day].list.length;
+        state.tourList[day].list.push({
+          name: name,
+          id: len,
+          lat: props.tourData.lat,
+          lng: props.tourData.lng,
+          index: props.tourData.index,
+        });
+        state.selectedIndex = day;
+        // console.log("------");
+        // console.log(JSON.stringify(state.tourList));
+        // console.log("------");
+        goEmit();
+        // console.log(state.tourList);
+        /*
         TODO
         Redis 로 보낼때
         schdeule: {
@@ -339,8 +343,8 @@ export default {
         캐싱이 안된다면 Redis DB값을 먼저 조회 해서 달라진 값들 비교해서 다를것들 모아서 다시 select 걸어주는 방법도 있는데 이건 또 생각 해봐야됨 뭔가 되게 복잡해질듯
 
         */
-        }
-      );
+      }
+    );
     return {
       state,
       addDay,
@@ -363,7 +367,7 @@ export default {
       sendMessage,
       init,
       updateList,
-      emitTotalList,
+      setStateTour,
     };
   },
 };

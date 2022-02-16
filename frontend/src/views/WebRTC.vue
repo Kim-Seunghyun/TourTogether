@@ -1,5 +1,5 @@
 <template>
-  <div id="main-container" class="container" style="padding: 0;">
+  <div id="main-container" class="container" style="padding: 0">
     <button v-if="!session" class="c-btn w-btn-green2" @click="joinSession()">
       Join!
     </button>
@@ -66,7 +66,7 @@ export default {
       publisher: undefined,
       subscribers: [],
       message: undefined,
-      mySessionId: window.location.pathname.split("/")[1],
+      mySessionId: window.location.pathname.split("/")[2],
       myUserName: getters["userStore/getUserNickname"],
     };
   },
@@ -322,8 +322,8 @@ export default {
 }
 
 .w-btn-green2 {
-    background-color: #80da52;
-    color: white;
+  background-color: #80da52;
+  color: white;
 }
 
 #chatting {
