@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="zzz">
     <div id="map" class="map" style="width: 100%">
       <div id="selectedApt_wrap" style="display: block">
         <Plan
@@ -23,6 +23,8 @@ import { onMounted } from "vue";
 import Plan from "@/components/Plan.vue";
 import { API_BASE_URL } from "@/config/index.js";
 import axios from "axios";
+import html2pdf from "html2pdf.js";
+import html2canvas from "html2canvas";
 export default {
   name: "Map",
   components: {
@@ -63,6 +65,7 @@ export default {
       ps: null,
       tmp: Object,
       day: null,
+      emitflag: false,
     });
     onMounted(() => {
       window.kakao && window.kakao.maps ? initMap() : addKakaoMapScript();
@@ -116,6 +119,7 @@ export default {
           position: position,
           clickable: true,
         });
+        var index = tourSpotList[i].tourSpotId;
         if (tourSpotList[i].tourSpotIsTop100 === true) {
           var markerImage = new kakao.maps.MarkerImage(
             "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
@@ -123,18 +127,20 @@ export default {
             new kakao.maps.Point(13, 34)
           );
           marker.setImage(markerImage);
-          state.tourspot_top100.push(i); // 그 i를 저장
+          state.tourspot_top100.push(index); // 그 i를 저장
         } else {
-          state.tourspot.push(i);
+          state.tourspot.push(index);
         }
-        state.spot[i] = [marker, tourSpotList[i]];
-        let event = click(marker, tourSpotList[i], i);
+        state.spot[index] = [marker, tourSpotList[i]];
+        let event = click(marker, tourSpotList[i], index);
         kakao.maps.event.addListener(marker, "click", event);
       }
     };
     const click = (marker, tourlist, index) => {
       kakao.maps.event.addListener(marker, "click", function () {
         state.index++;
+        console.log(tourlist.tourSpotId);
+        console.log(index);
         makeCustomOverlay(marker.getPosition(), tourlist, index);
         displayCustomOverlay();
       });
@@ -146,6 +152,9 @@ export default {
         removeMarker(depth);
         for (i = 0; i < state.tourspot.length; i++) {
           var tmp = state.tourspot[i];
+          if (!state.spot[tmp]) {
+            continue;
+          }
           if (String(state.spot[tmp][1].tourSpotTwoDepthCode) !== areaNum) {
             continue;
           }
@@ -159,6 +168,9 @@ export default {
       } else if (depth > 0) {
         for (var i = 0; i < state.tourspot_top100.length; i++) {
           tmp = state.tourspot_top100[i];
+          if (!state.spot[tmp]) {
+            continue;
+          }
           if (
             String(state.spot[tmp][1].tourSpotTwoDepthCode).substr(0, 2) !==
             areaNum
@@ -178,6 +190,9 @@ export default {
       if (depth === 2) {
         for (var i = 0; i < state.tourspot.length; i++) {
           var index = state.tourspot[i];
+          if (!state.spot[index]) {
+            continue;
+          }
           state.spot[index][0].setMap(null);
         }
       }
@@ -469,6 +484,9 @@ export default {
       }
       for (i = 0; i < state.tourspot_top100.length; i++) {
         var index = state.tourspot_top100[i];
+        if (!state.spot[index]) {
+          continue;
+        }
         state.spot[index][0].setMap(null);
       }
       for (i = 0; i < state.sido_polygon.length; i++) {
@@ -483,6 +501,9 @@ export default {
       }
       for (i = 0; i < state.tourspot.length; i++) {
         var index = state.tourspot[i];
+        if (!state.spot[index]) {
+          continue;
+        }
         state.spot[index][0].setMap(null);
       }
     };
@@ -568,27 +589,39 @@ export default {
         displayPolyline();
       }
     };
-    const clickPDF = (daylist) => {
-      for (var i = 0; i < daylist.length; i++) {
-        var bounds = new kakao.maps.LatLngBounds();
-        var path = [];
-        if (state.polyline) {
-          nondisplayPolyline();
-          removePolyline();
-        }
-        var list = daylist[i];
-        for (var j = 0; j < list.length; j++) {
-          var location = state.spot[list[i].index][0].getPosition();
-          bounds.extend(location);
-          state.spot[list[i].index].setMap(state.map);
-          path.push(location);
-        }
-        addPolyline(path);
-        displayPolyline();
-        state.map.setBounds(bounds);
-        // pdf 한장 내보내기 또는 한장 찍어두기
+    const aaa = () => {
+      console.log("aaa");
+      //state.emitflag = !state.emitflag;
+      var element = document.getElementById("zzz");
+      html2canvas(element).then(function (canvas) {
+        saveAs(canvas.toDataURL("image/png"), "capture-test.png");
+      });
+      html2pdf()
+        .from(element)
+        .set({
+          margin: 10,
+          filename: "filename.pdf",
+          html2canvas: { scale: 1 },
+          jsPDF: {
+            orientation: "landscape",
+            unit: "mm",
+            format: "a4",
+            compressPDF: true,
+          },
+        })
+        .save();
+    };
+    const saveAs = (url, filename) => {
+      var link = document.createElement("a");
+      if (typeof link.download === "string") {
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        window.open(url);
       }
-      //일정 완료하기 호출
     };
     const emitDay = (day) => {
       state.day = day;
@@ -617,9 +650,9 @@ export default {
       emitList,
       emitDay,
       click,
-      clickPDF,
       showDepth0,
       showDepth1,
+      aaa,
     };
   },
 };
@@ -831,7 +864,7 @@ export default {
 }
 #map {
   width: 100vw;
-  height: 70vh;
+  height: 67vh;
   position: relative;
 }
 </style>
