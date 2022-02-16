@@ -19,7 +19,7 @@
     PDF 저장 📄
   </button>
   &nbsp;
-  <button type="button" class="c-btn btn-green">
+  <button type="button" class="c-btn btn-green" @click="goToDashboard()">
     회의 종료 🚪
   </button>
   &nbsp;
@@ -32,20 +32,21 @@
     aria-hidden="true"
   >
     <div
-      class="
-        modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg
-      "
+      class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
     >
       <div class="modal-content">
-        <div class="modal-header" style="border-bottom: none; margin-left: 10px;" >
+        <div
+          class="modal-header"
+          style="border-bottom: none; margin-left: 10px"
+        >
           <h5 class="modal-title" id="exampleModalLabel">
             링크를 복사해서 친구에게 전송하세요!
           </h5>
         </div>
-        <div id="myInputDiv" style="text-align: left; margin-left: 25px;">
+        <div id="myInputDiv" style="text-align: left; margin-left: 25px">
           <input id="myInput" :value="this.curURL" readonly />
         </div>
-        <div class="modal-footer" style="border-top: none;">
+        <div class="modal-footer" style="border-top: none">
           <button
             type="button"
             class="btn btn-secondary"
@@ -74,7 +75,7 @@
   >
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <div class="modal-header" style="border-bottom: none;">
+        <div class="modal-header" style="border-bottom: none">
           <h5 class="modal-title" id="exampleModalLabel">
             여행 유형을 선택하고 일정을 마무리하세요!
           </h5>
@@ -171,7 +172,7 @@
             </ul>
           </div>
         </div>
-        <div class="modal-footer" style="border-top: none;">
+        <div class="modal-footer" style="border-top: none">
           <button
             type="button"
             class="btn btn-secondary"
@@ -235,6 +236,9 @@ export default {
     this.boardFinish;
   },
   methods: {
+    goToDashboard() {
+      location.href = `/dashboard`;
+    },
     findBoardId(boardRandom) {
       axios({
         method: "post",
