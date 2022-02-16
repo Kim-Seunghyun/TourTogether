@@ -89,34 +89,34 @@ export const userStore = {
       console.log("decode_token: ^^^^^^");
       console.log(decode_token);
       await getUserByClientId(
-        decode_token.userClientId,
-        ({ _user }) => {
-          // commit("SET_USER_INFO", data.userInfo);
-          console.log("decode_token: " + decode_token);
-          // set ~~~~~~~~~~;
-          // axios.defaults.headers.common["Authorization"] = token;
-          console.log("회원정보>>" + _user);
-        },
-        (error) => {
-          console.log("로그인에러", error);
-        }
+        decode_token.userClientId
+        // ({ _user }) => {
+        // commit("SET_USER_INFO", data.userInfo);
+        // console.log("decode_token: " + decode_token);
+        // set ~~~~~~~~~~;
+        // axios.defaults.headers.common["Authorization"] = token;
+        // console.log("회원정보>>" + _user);
+        // },
+        // (error) => {
+        // console.log("로그인에러", error);
+        // }
       )
-        .then((user) => {
-          console.log("user^^^^^^^^^^^^^^^^^^^");
-          console.log(user);
-          this.setUser(user);
-          this.setUserId(user.userId);
-          this.setUserLoginPlatform("kakao");
-          this.setUserClientId(user.userClientId);
-          this.setUserNickname(user.userNickname);
-          this.setUserInputNickname(user.userInputNinkname);
-          this.setUserProfileImage(user.userProfileImage);
+        .then(() => {
+          console.log("로그인 완료");
+          // console.log(user);
+          // this.setUser(user);
+          // this.setUserId(user.userId);
+          // this.setUserLoginPlatform("kakao");
+          // this.setUserClientId(user.userClientId);
+          // this.setUserNickname(user.userNickname);
+          // this.setUserInputNickname(user.userInputNinkname);
+          // this.setUserProfileImage(user.userProfileImage);
         })
         .catch((error) => {
           console.log(error);
         });
 
-      async function getUserByClientId(userClientId, success, fail) {
+      async function getUserByClientId(userClientId) {
         axios({
           method: "get",
           url: API_BASE_URL + "user/info",
@@ -128,8 +128,12 @@ export const userStore = {
             Authorization: "Bearer " + token,
           },
         })
-          .then(success)
-          .catch(fail);
+          .then((response) => {
+            this.setUser(response.user);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       }
     },
   },
