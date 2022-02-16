@@ -3,21 +3,20 @@
     <p>{{ board }}</p>
     <img
       class="delete-button"
-      v-if="board"
       src="../assets/delete_button.png"
       alt="delete-button"
       @click="deleteBoard">
     <img
-      v-if="computedGetters['boardStore/getBoardsLike'].includes(board)"
+      v-show="computedGetters['boardStore/getBoardsLikeId'].includes(board.boardId)"
       src="@/assets/img/full_heart.png"
       width="30"
-      @click="likeCancel(board.boardId)"
+      @click="likeCancel()"
     />
     <img
-      v-if="!computedGetters['boardStore/getBoardsLike'].includes(board)"
+      v-show="!computedGetters['boardStore/getBoardsLikeId'].includes(board.boardId)"
       src="@/assets/img/empty_heart.png"
       width="30"
-      @click="like(board.boardId)"
+      @click="like()"
     />
   </div>
 </template>
@@ -25,8 +24,7 @@
 <script>
 import axios from "axios";
 import { useStore } from "vuex";
-import { reactive, computed } from "vue";
-import { onMounted } from "vue";
+import { computed } from "vue";
 import { API_BASE_URL } from "@/config/index.js";
 
 export default {
@@ -38,9 +36,9 @@ export default {
     const store = useStore();
     const computedGetters = computed(() => store.getters);
     const getters = store.getters;
-    const state = reactive({
-      likes: null,
-    })
+    // const state = reactive({
+    //   isLiked: getters["boardStore/getBoardsLike"].includes(props.board),
+    // })
     const deleteBoard = () => {
       axios({
         method: 'delete',
@@ -61,10 +59,10 @@ export default {
           boardId: props.board.boardId,
           userId: getters["userStore/getUserId"],
         },
-      }).then((res) => {
+      }).then(() => {
         store.commit("boardStore/addBoardLike", props.board)
-        console.log(res)
-        console.log(getters['boardStore/getBoardsLike'])
+        getBoardsLike()
+        // isLiked()
       });
     }
     const likeCancel = () => {
@@ -76,24 +74,32 @@ export default {
           userId: getters["userStore/getUserId"],
         },
       }).then(() => {
-        // store.commit("boardStore/addBoardLike", props.board)
-        axios({
-        method: "post",
-        url: 
-        // API_BASE_URL + 
-        "/api/board/searchLikeBoardByUserId",
-        data: {
-          userId: 98,
-        },
-        }).then((res) => {
-          store.commit("boardStore/setBoardsLike", res.data.myBoards)
-          console.log(getters['boardStore/getBoardsLike'])
-        })
+        store.commit("boardStore/cancelBoardLike", props.board)
+        getBoardsLike()
+        // isLiked()
       });
     }
-
-    onMounted(() => {
-    })
+    const getBoardsLike = () => {
+      axios({
+        method: "post",
+        url: 
+        API_BASE_URL + "board/searchLikeBoardByUserId",
+        data: {
+          userId: getters["userStore/getUserId"],
+        },
+      }).then(res => {
+        store.commit("boardStore/setBoardsLike", res.data.myBoards)
+        });
+    }
+    // const isLiked = () => {
+    //   computedGetters.value["boardStore/getBoardsLike"].forEach(board => {
+    //     if (board.boardId === props.board.boardId) {
+    //       state.isLiked = true
+    //     } else {
+    //       state.isLiked = false
+    //     }
+    //   });
+    // }
 
     return {
       deleteBoard,
@@ -101,7 +107,9 @@ export default {
       computedGetters,
       like,
       likeCancel,
-      state
+      // state,
+      // isLiked,
+      getBoardsLike
     };
   }
 }

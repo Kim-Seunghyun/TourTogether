@@ -18,7 +18,7 @@
           <div id="changeNickname">
             <div v-if="!state.isChangingNickname">
               <span>{{ computedGetters["userStore/getUserNickname"] }}</span>
-              <button @click="toggleChangeNickname" style="margin-left: 20px">
+              <button @click="toggleChangeNickname" class="button-change-nickname" style="margin-left: 20px">
                 닉네임변경
               </button>
             </div>
@@ -28,13 +28,13 @@
                 @keyup="setUserInputNickname"
                 :value="computedGetters['userStore/getUserNickname']"
               />
-              <button @click="[toggleChangeNickname(), submitNickname()]">확인</button>
-              <button @click="toggleChangeNickname">취소</button>
+              <button class="button-change-nickname" @click="[toggleChangeNickname(), submitNickname()]">확인</button>
+              <button class="button-change-nickname" @click="toggleChangeNickname" style="margin-left: 0px;">취소</button>
             </div>
           </div>
           <div id="userDelete">
             <div v-if="!state.isDeletingAccount">
-              <button @click="toggleDeleteAccount" style="margin-left: 20px">
+              <button class="button-delete-account" @click="toggleDeleteAccount">
                 회원탈퇴
               </button>
             </div>
@@ -45,10 +45,10 @@
                 placeholder="카카오계정 ID를 입력해주세요"
                 v-model="state.userInputEmail"
               />
-              <button @click="[toggleDeleteAccount(), deleteAccount()]">
+              <button class="button-delete-account" @click="[toggleDeleteAccount(), deleteAccount()]">
                 회원탈퇴
               </button>
-              <button @click="toggleDeleteAccount">취소</button>
+              <button class="button-delete-account" @click="toggleDeleteAccount">취소</button>
             </div>
           </div>
           <div style="margin-top: 20px">
@@ -56,42 +56,51 @@
             <span class="profiletext">등급 🏅</span>
           </div>
           <div style="margin-top: 20px">
-            <span>
-              <span class="profiletext">진행중인 일정 </span>
-              <span class="profiletext">완료한 일정 </span><br>
-              <span class="profiletext">1</span>
-              <span class="profiletext">2</span>
-            </span>
+            <div class="d-flex justify-content-between">
+              <div>
+                <div class="profiletext">진행중인 일정 </div>
+                <div class="profiletext-num">{{ computedGetters["boardStore/getBoardsIng"].length }}</div>
+              </div>
+              <div>
+                <div class="profiletext">완료한 일정 </div>
+                <div class="profiletext-num">{{ computedGetters["boardStore/getBoardsDone"].length }}</div>
+              </div>
+              <div>
+                <div class="profiletext">좋아한 일정 </div>
+                <div class="profiletext-num">{{ computedGetters["boardStore/getBoardsLikeId"].length }}</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
+      <div class="d-flex justify-content-center select-schedule">
+        <div class="scheduleTap" @click="toggleBoards('boardsIng')"> ✈️ 진행중인 일정</div>
+        <div class="scheduleTap middle-schedule-tap"  @click="toggleBoards('boardsDone')"> 🛬 완료된 일정</div>
+        <div class="scheduleTap" @click="toggleBoards('boardsLike')"> ❤️ 좋아요 누른 일정</div>
+      </div>
       <div>
-        <hr style="margin-top : 80px; margin-bottom: 30px;">
-        <span class="scheduleTap" @click="toggleBoards('boardsIng')"> ✈️ 진행중인 일정</span>
-        <span class="scheduleTap"  @click="toggleBoards('boardsDone')"> 🛬 완료된 일정</span>
-        <span class="scheduleTap" @click="toggleBoards('boardsLike')"> ❤️ 좋아요 누른 일정</span>
-      </div>
-      <div v-show="state.isBoardIng">
-        <BoardIng
-          v-for="board in computedGetters['boardStore/getBoardsIng']"
-          :board="board"
-          :key="board"
+        <div v-show="state.isBoardIng" class="row card-container">
+          <BoardIng
+            v-for="board in computedGetters['boardStore/getBoardsIng']"
+            :board="board"
+            :key="board"
+            />
+        </div>
+        <div v-show="state.isBoardDone">
+          <BoardDone 
+            v-for="board in computedGetters['boardStore/getBoardsDone']"
+            :board="board"
+            :key="board"
           />
-      </div>
-      <div v-show="state.isBoardDone">
-        <BoardDone 
-          v-for="board in computedGetters['boardStore/getBoardsDone']"
-          :board="board"
-          :key="board"
-        />
-      </div>
-      <div v-show="state.isBoardLike">
-        <BoardLike
-          v-for="board in computedGetters['boardStore/getBoardsLike']"
-          :board="board"
-          :key="board"
-        />
+        </div>
+        <div v-show="state.isBoardLike">
+          <BoardLike
+            v-for="board in computedGetters['boardStore/getBoardsLike']"
+            :board="board"
+            :key="board"
+          />
+        </div>
       </div>
     </div>
   </div>
@@ -243,37 +252,31 @@ export default {
         method: 'post',
         url: API_BASE_URL + 'board/searchByUserId/proceeding',
         data: {
-          userId: 98,
+          userId: getters["userStore/getUserId"],
         }
       }).then(res => {
         store.commit("boardStore/setBoardsIng", res.data.myBoards)
+        console.log(getters["boardStore/getBoardsIng"])
       })
       axios({
         method: 'post',
         url: API_BASE_URL + 'board/searchByUserId/finish',
         data: {
-          userId: 98,
+          userId: getters["userStore/getUserId"],
         }
       }).then(res => {
-        const myBoards = res.data.myBoards.filter(board => {
-          if(board) {
-            return board
-          }
-        })
-        store.commit("boardStore/setBoardsDone", myBoards)
-        // store.commit("boardStore/setBoardsDone", res.data.myBoards)
+        store.commit("boardStore/setBoardsDone", res.data.myBoards)
       })
       axios({
         method: "post",
         url: 
-        API_BASE_URL + 
-        "board/searchLikeBoardByUserId",
+        API_BASE_URL + "board/searchLikeBoardByUserId",
         data: {
-          userId: 98,
+          userId: getters["userStore/getUserId"],
         },
       }).then(res => {
         store.commit("boardStore/setBoardsLike", res.data.myBoards)
-        // console.log(res.data.myBoards)
+        store.commit("boardStore/setBoardsLikeId", res.data.myBoards)
       });
     });
 
@@ -296,14 +299,14 @@ export default {
 <style scoped>
 .profile-image {
   border: 1px solid gray;
-  width: 250px;
-  height: 250px;
+  width: 270px;
+  height: 270px;
   border-radius: 60%;
   overflow: hidden;
 }
 .object-fit-contain {
-  width: 290px;
-  height: 290px;
+  width: 270px;
+  height: 270px;
   object-fit: contain;
 }
 
@@ -321,15 +324,15 @@ export default {
 }
 
 #profileImagePart {
-  padding-right: 280px;
-  padding-left: 100px
+  padding-right: 267px;
+  padding-left: 113px
 }
 
 .container {
   display: flex;
 }
 
-button {
+.button-change-nickname {
   background: white;
   border: 1px solid #dbdbdb;
   border-radius: 10px;
@@ -339,6 +342,18 @@ button {
   font-weight: 600;
   transition: 0.25s;
   margin: 10px;
+}
+
+.button-delete-account {
+  background: white;
+  border: 1px solid #dbdbdb;
+  border-radius: 10px;
+  padding: 5px 10px;
+  font-family: "paybooc-Light", sans-serif;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+  margin: 3px;
 }
 
 input {
@@ -357,14 +372,35 @@ input:focus {
   font-family: "paybooc-Light", sans-serif;
   font-weight: 600;
   font-size : 18px;
-  margin-left: 30px;
+  margin-right: 30px;
   margin-top: 20px;
+}
+.profiletext-num {
+  font-family: "paybooc-Light", sans-serif;
+  font-weight: 600;
+  font-size : 18px;
+  margin-right: 30px;
+  text-align: center;
+  margin-top: 5px;
 }
 
 .scheduleTap {
-  margin: 70px;
   cursor: pointer;
   font-weight: 600;
+  padding: 11px 0 20px 0;
+  width: 400px;
+}
+.middle-schedule-tap {
+  border-left: 1px solid gray;
+  border-right: 1px solid gray;
+}
+.select-schedule {
+  border-bottom: 1px solid gray;
+  margin-top: 25px;
+  margin-bottom: 6px;
+}
+.card-container {
+  padding: 0 10px;
 }
 
 .profilePart {
