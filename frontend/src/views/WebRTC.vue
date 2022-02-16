@@ -91,11 +91,14 @@ export default {
     };
   },
   methods: {
-joinSession() {
+    joinSession() {
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
 
-      // --- Init a session ---
+      //mySessionId: "SessionA",
+      myUserName: "Participant" + Math.floor(Math.random() * 100),
+      // 토글버튼
+      chatToggle: false, --- Init a session ---
       this.session = this.OV.initSession();
 
       // --- Specify the actions when events take place in the session ---
@@ -383,40 +386,6 @@ joinSession() {
   bottom: 0;
   width: 400px;
   height: 40px;
-  border: none;
-  border-radius: 0px 0px 5px 5px;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-
-.box {
-  margin: 0 20px;
-}
-
-.popup-btn {
-  background-color: rgb(252, 160, 14);
-  color: rgb(84, 52, 4);
-}
-
-.chattingPart {
-  width: 250px;
-  position: absolute;
-  right: 0.5vw;
-  top: 4.9vw;
-  z-index: 5000;
-  opacity: 1;
-  background-color: white;
-  border-radius: 5px;
-}
-
-</style>
-
-  opacity: 1;
-  background-color: white;
-  border-radius: 5px;
-}
-
-</style>ight: 40px;
   border: none;
   border-radius: 0px 0px 5px 5px;
   padding-left: 10px;
