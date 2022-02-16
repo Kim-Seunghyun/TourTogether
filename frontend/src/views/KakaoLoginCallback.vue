@@ -432,10 +432,6 @@ export default {
                   },
                 }).then((res) => {
                   let token = res.data.accessToken;
-                  console.log(token);
-                  console.log(typeof token);
-                  console.log(res.data.accessToken);
-                  console.log(typeof res.data.accessToken);
                   // store.commit("userStore/setUser", res.data.user);
                   // store.commit("userStore/setUserId", res.data.user.userId);
                   // store.commit("userStore/setUserLoginPlatform", "kakao");
