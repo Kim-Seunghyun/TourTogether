@@ -132,7 +132,8 @@ export const userStore = {
           .then((response) => {
             console.log(state);
             console.log(response);
-            let user = response.user;
+            console.log(response.data);
+            let user = response.data.user;
             state.user = user;
             state.userId = user.userId;
             state.userNickname = user.userNickname;
