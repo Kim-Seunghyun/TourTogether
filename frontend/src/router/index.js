@@ -33,9 +33,9 @@ const routes = [
     redirect: "/dashboard",
   },
   {
-    path: "/board/:boardRandom",
+    path: "/board",     // 디자인하려고 수정해둠
     name: "Board",
-    beforeEnter: onlyAuthUser,
+    // beforeEnter: onlyAuthUser,
     component: Board,
   },
   {

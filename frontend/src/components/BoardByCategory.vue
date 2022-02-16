@@ -1,0 +1,158 @@
+<template>
+  <div class="card col-3">
+    <img src="@/assets/trip-route.jpg" alt="trip-route" />
+    <div class="board-info d-flex justify-content-between">
+      <div>{{ board.boardName }}</div>
+      <div>
+        <img
+          v-if="this.favoriteBoardId.includes(board.boardId)"
+          src="@/assets/img/full_heart.png"
+          width="30"
+          @click="likeCancel(board.boardId)"
+        />
+        <img
+          v-if="!this.favoriteBoardId.includes(board.boardId)"
+          src="@/assets/img/empty_heart.png"
+          width="30"
+          @click="likeClick(board.boardId)"
+        />
+        <span>{{ board.boardLikesCount }}</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script>
+import { API_BASE_URL } from "@/config/index.js";
+import axios from "axios";
+import { mapMutations, mapState } from "vuex";
+
+const userStore = "userStore";
+const boardStore = "boardStore";
+export default {
+  name: "BoardCategory",
+  props: {
+    board: Object,
+  },
+  data() {
+    return {
+      boards: [],
+      favoriteBoardId: [],
+    };
+  },
+  computed: {
+    ...mapState(userStore, ["userId"]),
+    ...mapState(boardStore, ["searchByCategoryBoards"]),
+    ...mapState(boardStore, ["withWhom", "season", "area", "theme"]),
+  },
+  watch: {
+    searchByCategoryBoards() {
+      this.boards = this.searchByCategoryBoards;
+    },
+  },
+  created() {
+    // this.getAllBoards();
+    this.getUserFavoriteBoards();
+  },
+  methods: {
+    ...mapMutations(boardStore, ["setSearchByCategoryBoards"]),
+    getUserFavoriteBoards() {
+      axios({
+        method: "post",
+        url: API_BASE_URL + "board/searchLikeBoardByUserId",
+        data: {
+          userId: this.userId,
+        },
+      }).then((res) => {
+        for (var i = 0; i < res.data.myBoards.length; i++) {
+          this.favoriteBoardId[i] = res.data.myBoards[i].boardId;
+        }
+      });
+    },
+    likeClick(boardId) {
+      console.log("좋아요 누르기 ");
+      axios({
+        method: "patch",
+        url: API_BASE_URL + "board/clickBoardLike",
+        data: {
+          boardId: boardId,
+          userId: this.userId,
+        },
+      }).then((res) => {
+        this.favoriteBoardId = res.data.favoriteBoardId;
+        this.getListByCategory(
+          this.withWhom,
+          this.season,
+          this.area,
+          this.theme
+        );
+      });
+    },
+    likeCancel(boardId) {
+      console.log("좋아요 취소하기");
+      axios({
+        method: "patch",
+        url: API_BASE_URL + "board/cancelBoardLike",
+        data: {
+          boardId: boardId,
+          userId: this.userId,
+        },
+      }).then((res) => {
+        this.favoriteBoardId = res.data.favoriteBoardId;
+        this.getListByCategory(
+          this.withWhom,
+          this.season,
+          this.area,
+          this.theme
+        );
+      });
+    },
+    getListByCategory(withWhom, season, area, theme) {
+      axios({
+        method: "post",
+        url: API_BASE_URL + "board/searchByCategory",
+        data: {
+          categoryArea: area,
+          categorySeason: season,
+          categoryTheme: theme,
+          categoryWithWhom: withWhom,
+        },
+      }).then((res) => {
+        this.setSearchByCategoryBoards(res.data.boards);
+      });
+    },
+  },
+};
+</script>
+<style scoped>
+.delete-button {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  position: relative;
+}
+
+.delete-button-div {
+  position: relative;
+  left: 125px;
+  bottom: 12px;
+}
+
+.cursur-pointer {
+  cursor: pointer;
+}
+
+.card {
+  border: 1px solid gray;
+  margin: 25px;
+  width: 250px;
+}
+
+.board-info {
+  margin: 5px;
+}
+
+.heart {
+  margin: 0 3px;
+}
+</style>

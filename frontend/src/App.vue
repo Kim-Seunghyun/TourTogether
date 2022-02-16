@@ -56,11 +56,11 @@ export default {
   computed: {
     navClasses() {
       return {
-        "position-sticky blur shadow-blur mt-4 left-auto top-1 z-index-sticky":
+        "position-sticky blur shadow-blur mt-0 left-auto top-1 z-index-sticky":
           this.$store.state.isNavFixed,
         "position-absolute px-4 mx-0 w-100 z-index-2":
           this.$store.state.isAbsolute,
-        "px-0 mx-4 mt-4": !this.$store.state.isAbsolute,
+        "px-0 mx-4 mt-0": !this.$store.state.isAbsolute,
       };
     },
   },

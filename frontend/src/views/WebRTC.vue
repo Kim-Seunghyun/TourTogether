@@ -1,18 +1,11 @@
 <template>
-  <div id="main-container" class="container">
-    <button v-if="!session" class="btn btn-success" @click="joinSession()">
+  <div id="main-container" class="container" style="padding: 0;">
+    <button v-if="!session" class="c-btn w-btn-green2" @click="joinSession()">
       Join!
     </button>
 
     <div v-if="session" id="session">
-      <input
-        class="btn btn-large btn-danger"
-        type="button"
-        id="buttonLeaveSession"
-        @click="leaveSession"
-        value="Leave session"
-      />
-
+      <!-- 비디오 -->
       <div id="video_wrapper">
         <user-video :stream-manager="mainStreamManager" class="box" />
         <user-video
@@ -25,14 +18,18 @@
           {{ sub.stream.connection.connectionId }}
         </user-video>
       </div>
-      <!-- </div> -->
-      <button @click="toggleVideo()">비디오버튼</button>
-      <button @click="toggleAudio()">음소거</button>
+      <!-- 비디오설정버튼 -->
+      <div>
+        <button @click="toggleVideo()" class="video-ctr-btn">📹</button>
+        <button @click="toggleAudio()" class="video-ctr-btn">🎙️</button>
+      </div>
+      <!-- 채팅입력 -->
       <input
         @keyup.enter="submitChatting()"
         placeholder="여기에 메시지 입력"
         v-model="message"
       />
+      <!-- 채팅화면 -->
       <div id="chatting-wrapper">
         <ul id="chatting"></ul>
       </div>
@@ -289,10 +286,11 @@ export default {
   },
 };
 </script>
+
 <style>
 .box {
-  width: 320px;
-  height: 320px;
+  width: 120px;
+  height: 120px;
   border-radius: 70%;
   overflow: hidden;
   float: left;
@@ -307,7 +305,39 @@ export default {
   position: absolute;
   z-index: 3;
 }
+
+.c-btn {
+  border: none;
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 5px;
+  font-family: "paybooc-Light", sans-serif;
+  text-decoration: none;
+  font-weight: 600;
+  transition: 0.25s;
+  font-size: 13px;
+  width: 100px;
+  height: 30px;
+}
+
+.w-btn-green2 {
+    background-color: #80da52;
+    color: white;
+}
+
 #chatting {
   list-style: none;
+}
+
+.video-ctr-btn {
+  background: none;
+  border-radius: 5px;
+  border: none;
+}
+
+#session {
+  width: 150px;
+  /* height: 150px; */
 }
 </style>

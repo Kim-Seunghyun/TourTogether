@@ -7,9 +7,10 @@ export const boardStore = {
     season: "",
     area: "",
     theme: "",
-    boardsIng: null,
-    boardsDone: null,
+    boardsIng: [],
+    boardsDone: [],
     boardsLike: null,
+    boardsLikeId: [],
   },
   getters: {
     getAllBoards(state) {
@@ -26,6 +27,9 @@ export const boardStore = {
     },
     getBoardsLike(state) {
       return state.boardsLike
+    },
+    getBoardsLikeId(state) {
+      return state.boardsLikeId
     }
   },
   mutations: {
@@ -50,6 +54,13 @@ export const boardStore = {
     setBoardsLike(state, boardsLike) {
       state.boardsLike = boardsLike
     },
+    setBoardsLikeId(state, boardsLike) {
+      const boardIds = []
+      state.boardsLikeId = boardsLike.forEach(board => {
+        boardIds.push(board.boardId)
+      });
+      state.boardsLikeId = boardIds
+    },
     deleteBoardIng(state, boardId) {
       state.boardsIng = state.boardsIng.filter(board => {
         if(board) {
@@ -65,11 +76,12 @@ export const boardStore = {
       })
     },
     addBoardLike(state, board) {
-      state.boardsLike.push(board)
+      // if 없다면
+      state.boardsLikeId.push(board.boardId)
     },
     cancelBoardLike(state, board) {
-      state.boardsLike = state.boardsLike.fliter(boardLike => {
-        return boardLike !== board
+      state.boardsLikeId = state.boardsLikeId.filter(boardLikeId => {
+        return (boardLikeId !== board.boardId)
       })
     }
   },
