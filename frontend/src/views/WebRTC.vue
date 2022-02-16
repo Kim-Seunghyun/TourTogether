@@ -19,22 +19,22 @@
         </user-video>
       </div>
       <!-- 비디오설정버튼 -->
-      <div class="video-ctr-btn-group">
-        <button
-          @click="toggleVideo()"
-          class="video-ctr-btn"
-          title="비디오 on/off"
-        >
-          📷
-        </button>
-        <button
-          @click="toggleAudio()"
-          class="video-ctr-btn"
-          title="마이크 on/off"
-        >
-          🎙️
-        </button>
-      </div>
+    </div>
+    <div v-if="session" class="video-ctr-btn-group">
+      <button
+        @click="toggleVideo()"
+        class="video-ctr-btn"
+        title="비디오 on/off"
+      >
+        📷
+      </button>
+      <button
+        @click="toggleAudio()"
+        class="video-ctr-btn"
+        title="마이크 on/off"
+      >
+        🎙️
+      </button>
     </div>
     <div v-show="session && this.chatToggle" class="chattingPart">
       <!-- 채팅화면 -->
