@@ -94,7 +94,7 @@ export const userStore = {
           // commit("SET_USER_INFO", data.userInfo);
           console.log("decode_token: " + decode_token);
           // set ~~~~~~~~~~;
-          axios.defaults.headers.common["Authorization"] = token;
+          // axios.defaults.headers.common["Authorization"] = token;
           console.log("회원정보>>" + data.userInfo);
         },
         (error) => {
@@ -123,6 +123,9 @@ export const userStore = {
           params: {
             userClientId: userClientId,
             userLoginPlatform: "kakao",
+          },
+          headers: {
+            Authorization: "Bearer " + token,
           },
         })
           .then(success)
