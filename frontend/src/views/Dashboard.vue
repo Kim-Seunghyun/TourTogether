@@ -1,4 +1,4 @@
-<template>
+`<template>
   <div class="py-4 container-fluid">
     <div class="row">
       <div class="col-lg-7 mb-lg-0 mb-4">
@@ -146,11 +146,11 @@
             </div>
             <br />
           </div>
-          <div style="display: flex">
-            <div v-if="boards.length == 0">
-              <h5>선택하신 유형에 해당되는 여행 계획이 없습니다.😭</h5>
+          <div>
+            <div v-if="boards.length == 0" style="text-align: center;" class="d-flex justify-content-center">
+              <h5 style="text-align: center; margin: 7px;">선택하신 유형에 해당되는 여행 계획이 없습니다.😭</h5>
             </div>
-            <div v-else class="row card-container">
+            <div v-else class="row card-container" style="padding: 0 33px;">
               <BoardByCategory
                 v-for="board in boards"
                 :board="board"
@@ -266,3 +266,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+.card-container {
+  /* width: 2040px; */
+  margin: 0 auto;
+}
+</style>

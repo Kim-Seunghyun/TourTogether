@@ -65,12 +65,6 @@
                 href="javascript:;"
               >
                 <h4>
-                  <!-- <router-link
-                    class="px-0 text-white nav-link font-weight-bold"
-                    data-bs-toggle="modal"
-                    data-bs-target="#startModal"
-                    >일정 짜기 START</router-link
-                  > -->
 
                   <button
                     type="button"
@@ -187,7 +181,7 @@ import html2pdf from "html2pdf.js";
 
 import { mapMutations, mapState } from "vuex";
 import { useStore } from "vuex";
-import { reactive, watch } from "vue";
+import { reactive } from "vue";
 // import { onBeforeMount } from "vue";
 import { onMounted } from "vue";
 import { onUpdated } from "vue";
@@ -253,7 +247,6 @@ export default {
       });
     },
     createBoard() {
-      // alert("send create board data");
       axios({
         method: "post",
         url: API_BASE_URL + "board/create",
@@ -262,14 +255,11 @@ export default {
           userId: this.userId,
         },
       }).then((res) => {
-        console.log(res.data.boardRandom);
         this.boardRandom = res.data.boardRandom;
-        console.log(this.boardRandom);
         location.href = `/board/${this.boardRandom}`;
       });
     },
     likeClick(boardId) {
-      console.log("좋아요 누르기 ");
       axios({
         method: "patch",
         url: API_BASE_URL + "board/clickBoardLike",
@@ -288,7 +278,6 @@ export default {
       });
     },
     likeCancel(boardId) {
-      console.log("좋아요 취소하기");
       axios({
         method: "patch",
         url: API_BASE_URL + "board/cancelBoardLike",
@@ -350,7 +339,6 @@ export default {
       accessToken: window.Kakao.Auth.getAccessToken(),
     });
     const store = useStore();
-    const accessToken = watch(console.log(state.accessToken));
     const getters = store.getters;
 
     const getParameterByName = (name) => {
@@ -364,15 +352,13 @@ export default {
     onUpdated(() => {});
 
     onMounted(() => {
-      // console.log(getters["userStore/getUserId"])
       if (!getters["userStore/getUserId"]) {
         const code = getParameterByName("code");
-        // alert("this is code:"+code);
         var details = {
           grant_type: "authorization_code",
           client_id: process.env.VUE_APP_KAKAO_RESTAPI_KEY,
-          redirect_uri: "https://i6a105.p.ssafy.io/kakao-login-callback",
-          // redirect_uri: "http://localhost:8080/kakao-login-callback",
+          // redirect_uri: "https://i6a105.p.ssafy.io/kakao-login-callback",
+          redirect_uri: "http://localhost:8080/kakao-login-callback",
           code: code,
         };
         var formBody = [];
@@ -392,8 +378,6 @@ export default {
         })
           .then((response) => response.json())
           .then((data) => {
-            // console.log(JSON.stringify(data));
-            // alert(JSON.stringify(data));
             window.Kakao.Auth.setAccessToken(data.access_token);
             state.accessToken = window.Kakao.Auth.getAccessToken();
           })
@@ -415,7 +399,6 @@ export default {
                 ) {
                   email = response.kakao_account.email;
                 }
-                console.log(response);
                 store.commit(
                   "userStore/setKakaoProfileImage",
                   response.properties.profile_image
@@ -432,40 +415,23 @@ export default {
                   },
                 }).then((res) => {
                   let token = res.data.accessToken;
-                  // store.commit("userStore/setUser", res.data.user);
-                  // store.commit("userStore/setUserId", res.data.user.userId);
                   store.commit("userStore/setUserLoginPlatform", "kakao");
                   store.commit("userStore/setUserClientId", response.id);
-                  // store.commit(
-                  // "userStore/setUserNickname",
-                  // res.data.user.userNickname
-                  // );
-                  // store.commit(
-                  // "userStore/setUserInputNickname",
-                  // res.data.user.userNickname
-                  // );
-                  // store.commit(
-                  // "userStore/setUserProfileImage",
-                  // res.data.user.userProfileImage
-                  // );
                   store.commit(
                     "userStore/setAccessToken",
-                    // res.data.accessToken
                     token
                   );
-                  // store.dispatch("userStore/getUserInfo", res.data.accessToken);
                   store.dispatch("userStore/getUserInfo");
                 });
               },
-              fail: function (error) {
-                console.log(error);
+              fail: function () {
               },
             });
           });
         router.push("/dashboard");
       }
     });
-    return { state, accessToken, getters };
+    return { state, getters };
   },
   components: {
     BoardCategory,

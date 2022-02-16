@@ -43,7 +43,8 @@
     "vuedraggable": "^4.1.0",
     "vuequilleditor": "^1.0.0",
     "vuex": "^4.0.2",
-    "vuex-persistedstate": "^4.1.0"
+    "vuex-persistedstate": "^4.1.0",
+    "webpack": "^4.39.3"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",

@@ -11,6 +11,7 @@ export const boardStore = {
     boardsDone: [],
     boardsLike: null,
     boardsLikeId: [],
+    boardToDelete: null,
   },
   getters: {
     getAllBoards(state) {
@@ -30,6 +31,9 @@ export const boardStore = {
     },
     getBoardsLikeId(state) {
       return state.boardsLikeId
+    },
+    getBoardToDelete(state) {
+      return state.boardToDelete
     }
   },
   mutations: {
@@ -83,6 +87,9 @@ export const boardStore = {
       state.boardsLikeId = state.boardsLikeId.filter(boardLikeId => {
         return (boardLikeId !== board.boardId)
       })
+    },
+    setBoardToDelete(state, boardId) {
+      state.boardToDelete = boardId
     }
   },
   actions: {},
