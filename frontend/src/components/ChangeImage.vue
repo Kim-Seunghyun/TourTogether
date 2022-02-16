@@ -8,7 +8,6 @@
         data-bs-target="#modal"/>
     </div>
     <input class="display-none" ref="imageUpload" @change="handleImageUpload" type="file" id="chooseFile" name="chooseFile" accept="image/*">
-    <!-- 여기선 object-fit이 적용된다 왜 그럴까 -->
   </div>
 
   <!-- Modal -->
@@ -100,8 +99,7 @@ export default {
         const upload = new AWS.S3.ManagedUpload({
           params: {
             Bucket: "tour-together--s3",
-            // user이름이랑 같이
-            Key: state.image.name,
+            Key: Date.now() + state.image.name,
             Body: state.image,
           },
         });
@@ -109,7 +107,6 @@ export default {
 
         promise.then(
           function (data) {
-            console.log(typeof data.Location);
             alert("Successfully uploaded photo.");
             axios({
               method: "patch",
@@ -124,8 +121,7 @@ export default {
                 store.commit("userStore/setUserProfileImage", data.Location);
                 state.preview = ''
               })
-              .catch((error) => {
-                console.log(error);
+              .catch(() => {
               });
           },
           function (err) {
@@ -148,18 +144,15 @@ export default {
             store.commit("userStore/setUserProfileImage", state.imageURL);
             state.preview = null
           })
-          .catch((error) => {
-            console.log(error);
+          .catch(() => {
           });
       } else {
-        console.log(state.image);
         alert("이미지를 선택해주세요!");
       }
     };
 
     // const imageRef = ref(null);
     const handleImageUpload = (event) => {
-      console.log(event.target.files[0]);
       const imageFile = event.target.files[0];
       state.image = imageFile;
       if (imageFile) {
@@ -167,7 +160,6 @@ export default {
       } else {
         state.preview = null;
       }
-      console.log(getters['userStore/getKakaoProfileImage'])
     };
 
     const bringKakaoProfileImage = () => {

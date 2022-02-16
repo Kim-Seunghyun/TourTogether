@@ -52,7 +52,7 @@
             </div>
           </div>
           <div style="margin-top: 20px">
-            <span class="profiletext">(수정)</span>
+            <!-- <span class="profiletext">(수정)</span> -->
             <span class="profiletext">등급 🏅</span>
           </div>
           <div style="margin-top: 20px">
@@ -165,10 +165,8 @@ export default {
       } else {
         state.isDeletingAccount = true;
       }
-      console.log(state.userInputEmail);
     };
     const deleteAccount = () => {
-      console.log(state.userInputEmail);
       axios({
         method: "delete",
         url: API_BASE_URL + "user/delete",
@@ -181,8 +179,7 @@ export default {
           // unlink() {  // 카카오 계정 연결끊기
           window.Kakao.API.request({
             url: "/v1/user/unlink",
-            success: function (response) {
-              console.log(response);
+            success: function () {
               router.push("");
               store.commit("userStore/setUser", null);
               store.commit("userStore/setUserId", "");
@@ -191,18 +188,15 @@ export default {
               store.commit("userStore/setUserNickname", "");
               store.commit("userStore/setUserInputNickname", "");
               store.commit("userStore/setUserProfileImage", "");
-              // console.log(getters.getUserId);
               alert('탈퇴되었습니다!')
             },
             fail: function (error) {
-              console.log(error);
               alert(error);
               return;
             },
           });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
         });
     };
 
@@ -225,9 +219,7 @@ export default {
     const kakaoUnlink = () => {
       window.Kakao.API.request({
         url: "/v1/user/unlink",
-        success: function (response) {
-          console.log(response);
-          console.log(store);
+        success: function () {
           store.commit("userStore/setUser", null);
           store.commit("userStore/setUserId", "");
           store.commit("userStore/setUserLoginPlatform", "");
@@ -235,12 +227,10 @@ export default {
           store.commit("userStore/setUserNickname", "");
           store.commit("userStore/setUserInputNickname", "");
           store.commit("userStore/setUserProfileImage", "");
-          // console.log(getters.getUserId);
           alert('unlink 되었습니다!')
           router.push("");
         },
         fail: function (error) {
-          console.log(error);
           alert(error);
           return;
         },
@@ -256,7 +246,6 @@ export default {
         }
       }).then(res => {
         store.commit("boardStore/setBoardsIng", res.data.myBoards)
-        console.log(getters["boardStore/getBoardsIng"])
       })
       axios({
         method: 'post',

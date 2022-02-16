@@ -11,6 +11,7 @@ export const boardStore = {
     boardsDone: [],
     boardsLike: null,
     boardsLikeId: [],
+    boardToDelete: null,
     tourList: [],
   },
   getters: {
@@ -30,7 +31,10 @@ export const boardStore = {
       return state.boardsLike;
     },
     getBoardsLikeId(state) {
-      return state.boardsLikeId;
+      return state.boardsLikeId
+    },
+    getBoardToDelete(state) {
+      return state.boardToDelete
     },
     getTourListFromStore(state) {
       return state.tourList;
@@ -84,9 +88,13 @@ export const boardStore = {
       state.boardsLikeId.push(board.boardId);
     },
     cancelBoardLike(state, board) {
-      state.boardsLikeId = state.boardsLikeId.filter((boardLikeId) => {
-        return boardLikeId !== board.boardId;
-      });
+      state.boardsLikeId = state.boardsLikeId.filter(boardLikeId => {
+        return (boardLikeId !== board.boardId)
+      })
+    },
+    setBoardToDelete(state, boardId) {
+      state.boardToDelete = boardId
+
     },
     setTourList(state, tourList) {
       state.tourList = tourList;
