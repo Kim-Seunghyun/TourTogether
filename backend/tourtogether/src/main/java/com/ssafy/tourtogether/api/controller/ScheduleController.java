@@ -5,12 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.tourtogether.api.request.ScheduleSearchByBoardIdPostReq;
 import com.ssafy.tourtogether.api.response.ScheduleSearchByBoardIdPostRes;
@@ -30,8 +29,7 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 
 @Api(value = "스케쥴 API", tags = { "Schedule" })
-@RestController
-@RequestMapping("/api/schedule")
+@Controller
 @RequiredArgsConstructor
 public class ScheduleController {
 
@@ -40,7 +38,7 @@ public class ScheduleController {
 	private final SchedulePublisher schedulePublisher;
 	private final ScheduleRepositorySupport scheduleRepository;
 
-	@PostMapping("/room")
+	@PostMapping("/api/schedule/room")
 	@ResponseBody
 	public ScheduleRoom createRoom(@RequestParam String id, @RequestParam String user) {
 		ScheduleRoom scheduleRoom = scheduleRepository.findRoomById(id);
@@ -54,7 +52,7 @@ public class ScheduleController {
 	/**
 	 * websocket "/api/pub/memo"로 들어오는 메시징을 처리한다.
 	 */
-	@MessageMapping()
+	@MessageMapping("/schedule")
 	@ApiOperation(value = "스케줄", notes = "유저가 메모에 입력한 스케쥴을 받는다.")
 	public void schedule(ScheduleMessage message) {
 		System.out.println("@@@message: " + message.toString());
@@ -67,7 +65,7 @@ public class ScheduleController {
 		schedulePublisher.publish(scheduleRepository.getTopic(message.getRoomId()), message);
 	}
 
-	@PostMapping("/searchByBoardId")
+	@PostMapping("/api/schedule/searchByBoardId")
 	@ApiOperation(value = "보드 ID로 스케쥴 가져오기", notes = "보드 ID로 스케쥴 가져온다")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
