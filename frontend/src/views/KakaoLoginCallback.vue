@@ -415,8 +415,11 @@ export default {
                 ) {
                   email = response.kakao_account.email;
                 }
-                console.log(response)
-                store.commit("userStore/setKakaoProfileImage", response.properties.profile_image)
+                console.log(response);
+                store.commit(
+                  "userStore/setKakaoProfileImage",
+                  response.properties.profile_image
+                );
                 axios({
                   method: "post",
                   url: API_BASE_URL + "user/login",
@@ -448,7 +451,11 @@ export default {
                     "userStore/setUserProfileImage",
                     res.data.user.userProfileImage
                   );
-                  console.log(getters["userStore/getUserId"]);
+                  store.commit("userStore/setAccessToken", res.data.token);
+                  console.log(
+                    "accessToken is set to: ",
+                    getters["userStore/accessToken"]
+                  );
                 });
               },
               fail: function (error) {
