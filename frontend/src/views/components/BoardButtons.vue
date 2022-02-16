@@ -197,7 +197,6 @@ import setNavPills from "@/assets/js/nav-pills.js";
 import axios from "axios";
 import { API_BASE_URL } from "@/config/index.js";
 import html2pdf from "html2pdf.js";
-import Map from "../Map.vue";
 
 export default {
   name: "boardbuttons",
@@ -295,8 +294,6 @@ export default {
       // alert(copyText.value + "을 복사했습니다.");
     },
     exportToPDF() {
-      console.log(Map);
-      this.$root.$refs.Map.aaa();
       //여기서 map.vue clickPDF함수 실행시키고 map.vue에서 맵그리고 html2pdf다운로드 하게하기 => best => 다른component의 함수 호출하기
       //Map.clickPdf() 호출 하면
       //emit 이부분을 div(초기화 한 후 핀만 찍은 새로운 맵)해서 받아오자 새창띄워서 div넘기고 사진찍기
