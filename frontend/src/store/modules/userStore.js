@@ -86,7 +86,7 @@ export const userStore = {
   actions: {
     async getUserInfo() {
       console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-      console.log(this.state.accessToken);
+      // console.log(this.state.accessToken);
       console.log(this.$state.accessToken);
       console.log(this.getAccessToken);
       console.log(this.getAccessToken());
