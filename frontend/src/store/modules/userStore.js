@@ -43,11 +43,9 @@ export const userStore = {
   mutations: {
     setUser(state, user) {
       state.user = user;
-      console.log("user -> ", state.user);
     },
     setUserId(state, userId) {
       state.userId = userId;
-      console.log("user -> ", state.userId);
     },
     setUserNickname(state, userNickname) {
       state.userNickname = userNickname;
@@ -78,7 +76,6 @@ export const userStore = {
       state.kakaoProfileImage = kakaoProfileImage;
     },
     setAccessToken(state, accessToken) {
-      console.log("ready to set accessToken: ", accessToken);
       state.accessToken = accessToken;
     },
   },

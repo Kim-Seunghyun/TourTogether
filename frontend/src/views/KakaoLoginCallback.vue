@@ -433,7 +433,6 @@ export default {
                 }).then((res) => {
                   store.commit("userStore/setUser", res.data.user);
                   store.commit("userStore/setUserId", res.data.user.userId);
-                  console.log(">>>>>>>>>>>>", res.data.user.userId);
                   store.commit("userStore/setUserLoginPlatform", "kakao");
                   store.commit(
                     "userStore/setUserClientId",
@@ -452,10 +451,6 @@ export default {
                     res.data.user.userProfileImage
                   );
                   store.commit("userStore/setAccessToken", res.data.token);
-                  console.log(
-                    "accessToken is set to: ",
-                    getters["userStore/getAccessToken"]
-                  );
                 });
               },
               fail: function (error) {
