@@ -84,7 +84,9 @@ export const userStore = {
   },
   actions: {
     async getUserInfo(token) {
-      console.log("token: " + token);
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
+      console.log(token);
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
       let decode_token = jwt_decode(token);
       console.log("decode_token: " + decode_token);
       console.log("디코드콘솔 ID" + decode_token.id);
