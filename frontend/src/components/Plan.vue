@@ -71,19 +71,22 @@ export default {
   name: "Plan",
   props: {
     tourData: Object,
-    //아이디 장소 날짜
+    //아이디 장소 날짜 인덱스
   },
-  // emits: ["emitLine"],
+
   setup(props, { emit }) {
     const state = reactive({
-      tourList: [],
-      selectedIndex: null,
-      propsData: null,
-      user: getters["userStore/getUserNickname"],
-      my: true,
-      ws: Stomp.over(sock),
-      id: null,
+      tourList: [], //일정 배열
+      selectedIndex: null, //현재 보고 있는 Day
+      user: getters["userStore/getUserNickname"], //유저 정보
+      my: true, // 실험중
+      ws: Stomp.over(sock), //webSocket
+      id: null, //sessionId
     });
+    /*
+      addDay : 일정 하루 추가
+      설명 : 일정 하루 추가 후 Map.vue으로 emit요청
+    */
     const addDay = () => {
       let len = state.tourList.length;
       state.tourList[len] = { list: new Array(), index: len };
@@ -179,12 +182,10 @@ export default {
     onMounted(() => {
       state.tourList = [];
       state.selectedIndex = 0;
-      state.id = window.location.pathname;
-      console.log(state.id);
+      state.id = window.location.pathname.split("/")[1];
       state.tourList[0] = { list: new Array(), index: 0 };
       // addDay();
       init();
-      emit("getDay", state.tourList.length);
       blockRightClick();
       makeSortable();
     });
@@ -199,6 +200,7 @@ export default {
     const goEmit = () => {
       emitDay();
       emitLine();
+      sendMessage();
       //redis로 보내기
     };
     //redis 에서 받기

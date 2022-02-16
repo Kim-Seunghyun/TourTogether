@@ -44,6 +44,8 @@
 import axios from "axios";
 import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/UserVideo";
+import store from "@/store";
+const getters = store.getters;
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -67,8 +69,8 @@ export default {
       publisher: undefined,
       subscribers: [],
       message: undefined,
-      mySessionId: "SessionA",
-      myUserName: "Participant" + Math.floor(Math.random() * 100),
+      mySessionId: window.location.pathname.split("/")[1],
+      myUserName: getters["userStore/getUserNickname"],
     };
   },
 
