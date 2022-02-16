@@ -451,7 +451,7 @@ export default {
                   // res.data.user.userProfileImage
                   // );
                   store.commit("userStore/setAccessToken", res.data.token);
-                  store.dispatch("getUserInfo", res.data.token);
+                  store.dispatch("userStore/getUserInfo", res.data.token);
                 });
               },
               fail: function (error) {
