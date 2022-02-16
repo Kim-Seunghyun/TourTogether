@@ -416,10 +416,10 @@ export default {
                   email = response.kakao_account.email;
                 }
                 console.log(response);
-                store.commit(
-                  "userStore/setKakaoProfileImage",
-                  response.properties.profile_image
-                );
+                // store.commit(
+                // "userStore/setKakaoProfileImage",
+                // response.properties.profile_image
+                // );
                 axios({
                   method: "post",
                   url: API_BASE_URL + "user/login",

@@ -89,7 +89,8 @@ export const userStore = {
       console.log("decode_token: ^^^^^^");
       console.log(decode_token);
       await getUserByClientId(
-        decode_token.userClientId
+        decode_token.userClientId,
+        store.state
         // ({ _user }) => {
         // commit("SET_USER_INFO", data.userInfo);
         // console.log("decode_token: " + decode_token);
@@ -116,8 +117,7 @@ export const userStore = {
       // console.log(error);
       // });
 
-      async function getUserByClientId(userClientId) {
-        var _this = this;
+      async function getUserByClientId(userClientId, state) {
         axios({
           method: "get",
           url: API_BASE_URL + "user/info",
@@ -130,7 +130,14 @@ export const userStore = {
           },
         })
           .then((response) => {
-            _this.setUser(response.user);
+            state.user = response.user;
+            state.userId = response.user.userId;
+            state.userNickname = response.user.userNickname;
+            state.userProfileImage = response.user.userProfileImage;
+            state.userInputNickname = response.user.userInputNickname;
+            state.userLoginPlatform = response.user.userLoginPlatform;
+            state.userClientId = response.user.userClientId;
+            state.kakaoProfileImage = response.user.kakaoProfileImage;
           })
           .catch((error) => {
             console.log(error);
