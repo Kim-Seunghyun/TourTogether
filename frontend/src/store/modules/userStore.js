@@ -85,22 +85,10 @@ export const userStore = {
   },
   actions: {
     async getUserInfo(store) {
-      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
-      // console.log(this.state.accessToken);
-      // console.log(this.$state.accessToken);+
-      console.log(store);
-      console.log(store.state);
-      console.log(store.state.accessToken);
-      // console.log(this.getAccessToken);
-      // console.log(this.getAccessToken());
-      // console.log(this.getAccessToken(this.state));
-      // console.log(this.getAccessToken(this.$state));
       let token = store.state.accessToken;
-      console.log(token);
-      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
       let decode_token = jwt_decode(token);
-      console.log("decode_token: " + decode_token);
-      console.log("디코드콘솔 ID" + decode_token.id);
+      console.log("decode_token: ^^^^^^");
+      console.log(decode_token);
       await getUserByClientId(
         decode_token.userClientId,
         ({ data }) => {
@@ -133,6 +121,7 @@ export const userStore = {
           url: API_BASE_URL + "user/info",
           data: {
             userClientId: userClientId,
+            userLoginPlatform: "kakao",
           },
         })
           .then(success)
