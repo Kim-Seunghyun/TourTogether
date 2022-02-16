@@ -62,7 +62,12 @@
           >
             Close
           </button>
-          <button type="button" class="btn btn-info" @click="copyToClipboard()">
+          <button
+            type="button"
+            class="btn"
+            @click="copyToClipboard()"
+            style="background-color: rgb(125 185 233); color: white;"
+          >
             COPY
           </button>
         </div>
@@ -77,11 +82,11 @@
     aria-labelledby="exampleModalLabel"
     aria-hidden="true"
   >
-    <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
       <div class="modal-content">
         <div class="modal-header" style="border-bottom: none">
           <h5 class="modal-title" id="exampleModalLabel">
-            여행 유형을 선택하고 일정을 마무리하세요!
+            🙂 여행 유형을 선택하고 일정을 마무리하세요! 
           </h5>
           <button
             type="button"
@@ -91,7 +96,7 @@
           ></button>
         </div>
         <div class="modal-body">
-          <div class="d-flex p-2 bd-highlight">동행인</div>
+          <div class="d-flex p-2 bd-highlight select-title">동행인 👬</div>
           <div class="nav-wrapper position-relative end-0">
             <!-- 사람유형 -->
             <ul class="nav nav-pills nav-fill p-1" role="tablist" data-id="hi">
@@ -106,16 +111,17 @@
                   data-bs-toggle="tab"
                   role="tab"
                   aria-selected="true"
+                  style="cursor: pointer;"
                 >
-                  #{{ item }}
+                  # {{ item }}
                 </a>
               </li>
             </ul>
           </div>
-          <div class="d-flex p-2 bd-highlight">계절</div>
+          <div class="d-flex p-2 bd-highlight select-title">계절 🌸</div>
           <div class="nav-wrapper position-relative end-0">
-            <!-- 계절 유형 -->
-            <ul class="nav nav-pills nav-fill p-1" role="tablist">
+            <!-- 계절유형 -->
+            <ul class="nav nav-pills nav-fill p-1" role="tablist" data-id="hi">
               <li
                 class="nav-item"
                 v-for="(item, index) in seasonArr"
@@ -127,13 +133,14 @@
                   data-bs-toggle="tab"
                   role="tab"
                   aria-selected="true"
+                  style="cursor: pointer;"
                 >
-                  #{{ item }}
+                  # {{ item }}
                 </a>
               </li>
             </ul>
           </div>
-          <div class="d-flex p-2 bd-highlight">지역</div>
+          <div class="d-flex p-2 bd-highlight select-title">지역 🏙️</div>
           <div class="nav-wrapper position-relative end-0">
             <!-- 지역유형 -->
             <ul class="nav nav-pills nav-fill p-1" role="tablist">
@@ -148,13 +155,14 @@
                   data-bs-toggle="tab"
                   role="tab"
                   aria-selected="true"
+                  style="cursor: pointer;"
                 >
-                  #{{ item }}
+                  # {{ item }}
                 </a>
               </li>
             </ul>
           </div>
-          <div class="d-flex p-2 bd-highlight">테마</div>
+          <div class="d-flex p-2 bd-highlight select-title">테마 🌄</div>
           <div class="nav-wrapper position-relative end-0">
             <!-- 여행 유형 -->
             <ul class="nav nav-pills nav-fill p-1" role="tablist">
@@ -169,8 +177,9 @@
                   role="tab"
                   aria-selected="true"
                   @click="selectTheme(index)"
+                  style="cursor: pointer;"
                 >
-                  #{{ item }}
+                  # {{ item }}
                 </a>
               </li>
             </ul>
@@ -186,8 +195,9 @@
           </button>
           <button
             type="button"
-            class="btn btn-primary"
+            class="btn"
             @click="setBoardCategory()"
+            style="background-color: rgb(125 185 233); color: white;"
           >
             완료하기
           </button>
@@ -222,10 +232,10 @@ export default {
       seasonArr: ["상관없음", "봄", "여름", "가을", "겨울"],
       areaArr: ["상관없음", "서울", "부산", "여수", "대구", "제주도", "기타"],
       themeArr: ["상관없음", "바다,강", "산", "액티비티", "호캉스", "기타"],
-      withWhom: "0",
-      season: "0",
-      area: "0",
-      theme: "0",
+      withWhom: null,
+      season: null,
+      area: null,
+      theme: null,
     };
   },
   created() {
@@ -341,6 +351,7 @@ export default {
 }
 
 .modal-content {
+  width: 700px;
   padding: 2px;
 }
 
@@ -362,5 +373,8 @@ export default {
 .btn-green {
   background-color: #77af9c;
   color: #d7fff1;
+}
+.select-title {
+  font-weight: bold;
 }
 </style>
