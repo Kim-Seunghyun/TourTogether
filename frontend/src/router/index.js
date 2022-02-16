@@ -16,7 +16,7 @@ import store from "@/store/index.js";
 
 const onlyAuthUser = async (to, from, next) => {
   const checkUserInfo = store.getters["userStore/getUserId"];
-  const getUserInfo = store.actions["userStore/getUserInfo"];
+  const getUserInfo = store._actions["userStore/getUserInfo"];
   let token = sessionStorage.getItem("access-token");
   if (checkUserInfo == null && token) {
     await getUserInfo(token);
