@@ -6,26 +6,8 @@
 
     <div v-if="session" id="session">
       <!-- 비디오 -->
-      <div>
-        <user-video :stream-manager="mainStreamManager" class="box" />
-        <div class="video-ctr-btn-group">
-          <button
-            @click="toggleVideo()"
-            class="video-ctr-btn"
-            title="비디오 on/off"
-          >
-            📷
-          </button>
-          <button
-            @click="toggleAudio()"
-            class="video-ctr-btn"
-            title="마이크 on/off"
-          >
-            🎙️
-          </button>
-        </div>
-      </div>
       <div id="video_wrapper">
+        <user-video :stream-manager="mainStreamManager" class="box" />
         <user-video
           v-for="sub in subscribers"
           :key="sub.stream.connection.connectionId"
@@ -37,6 +19,22 @@
         </user-video>
       </div>
       <!-- 비디오설정버튼 -->
+      <div class="video-ctr-btn-group">
+        <button
+          @click="toggleVideo()"
+          class="video-ctr-btn"
+          title="비디오 on/off"
+        >
+          📷
+        </button>
+        <button
+          @click="toggleAudio()"
+          class="video-ctr-btn"
+          title="마이크 on/off"
+        >
+          🎙️
+        </button>
+      </div>
     </div>
     <div v-show="session && this.chatToggle" class="chattingPart">
       <!-- 채팅화면 -->
@@ -377,6 +375,7 @@ joinSession() {
 
 .video-ctr-btn-group {
   display: inline;
+  position: fixed;
 }
 
 #chattingInput {
