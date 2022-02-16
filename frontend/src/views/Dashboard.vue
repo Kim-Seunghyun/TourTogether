@@ -1,5 +1,5 @@
 <template>
-  <div class="py-4 container-fluid" ref="pdfarea">
+  <div class="py-4 container-fluid">
     <div class="row">
       <div class="col-lg-7 mb-lg-0 mb-4">
         <div class="card">
@@ -135,7 +135,6 @@
         </div>
       </div>
     </div>
-
     <!-- 유형 선택하기 -->
     <div class="mt-4 row">
       <div class="mb-4 col-lg-12 mb-lg-0">
@@ -148,28 +147,15 @@
             <br />
           </div>
           <div style="display: flex">
-            <div v-for="(board, index) in boards" :key="index" style="flex: 1">
-              <div
-                class="col-lg-6 card z-index-2"
-                style="border: 3px solid #90d5eb; text-align: center"
-              >
-                {{ board.boardName }} <br />
-                {{ board.boardLikesCount }}
-                <div>
-                  <img
-                    v-if="this.favoriteBoardId.includes(board.boardId)"
-                    src="@/assets/img/full_heart.png"
-                    width="30"
-                    @click="likeCancel(board.boardId)"
-                  />
-                  <img
-                    v-if="!this.favoriteBoardId.includes(board.boardId)"
-                    src="@/assets/img/empty_heart.png"
-                    width="30"
-                    @click="likeClick(board.boardId)"
-                  />
-                </div>
-              </div>
+            <div v-if="boards.length == 0">
+              <h5>선택하신 유형에 해당되는 여행 계획이 없습니다.😭</h5>
+            </div>
+            <div v-else class="row card-container">
+              <BoardByCategory
+                v-for="board in boards"
+                :board="board"
+                :key="board"
+              />
             </div>
           </div>
         </div>
@@ -178,7 +164,9 @@
   </div>
 </template>
 <script>
+import BoardByCategory from "@/components/BoardByCategory.vue";
 import BoardCategory from "./components/BoardCategory.vue";
+// import DefaultInfoCard from "@/examples/Cards/DefaultInfoCard.vue";
 import { API_BASE_URL } from "@/config/index.js";
 import { mapMutations, mapState } from "vuex";
 // import { useStore } from "vuex";
@@ -197,12 +185,15 @@ export default {
   name: "dashboard",
   data() {
     return {
+      salary: {
+        classIcon: "✈️",
+      },
       boards: [],
       favoriteBoardId: [],
       boardName: "",
       boardRandom: "",
       // userId: "",
-      propTitle: "mypdf",
+      // propTitle: "mypdf",
       stats: {
         iconBackground: "bg-gradient-success",
       },
@@ -267,61 +258,11 @@ export default {
         location.href = `/board/${this.boardRandom}`;
       });
     },
-    likeClick(boardId) {
-      console.log("좋아요 누르기 ");
-      axios({
-        method: "patch",
-        url: API_BASE_URL + "board/clickBoardLike",
-        data: {
-          boardId: boardId,
-          userId: this.userId,
-        },
-      }).then((res) => {
-        this.favoriteBoardId = res.data.favoriteBoardId;
-        this.getListByCategory(
-          this.withWhom,
-          this.season,
-          this.area,
-          this.theme
-        );
-      });
-    },
-    likeCancel(boardId) {
-      console.log("좋아요 취소하기");
-      axios({
-        method: "patch",
-        url: API_BASE_URL + "board/cancelBoardLike",
-        data: {
-          boardId: boardId,
-          userId: this.userId,
-        },
-      }).then((res) => {
-        this.favoriteBoardId = res.data.favoriteBoardId;
-        this.getListByCategory(
-          this.withWhom,
-          this.season,
-          this.area,
-          this.theme
-        );
-      });
-    },
-    getListByCategory(withWhom, season, area, theme) {
-      axios({
-        method: "post",
-        url: API_BASE_URL + "board/searchByCategory",
-        data: {
-          categoryArea: area,
-          categorySeason: season,
-          categoryTheme: theme,
-          categoryWithWhom: withWhom,
-        },
-      }).then((res) => {
-        this.setSearchByCategoryBoards(res.data.boards);
-      });
-    },
   },
   components: {
     BoardCategory,
+    BoardByCategory,
+    // DefaultInfoCard,
   },
 };
 </script>

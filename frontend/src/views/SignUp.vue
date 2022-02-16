@@ -138,7 +138,7 @@ import VsudCheckbox from "@/components/VsudCheckbox.vue";
 import VsudButton from "@/components/VsudButton.vue";
 
 export default {
-  name: "sign-up",
+  name: "SignUp",
   components: {
     Navbar,
     AppFooter,
