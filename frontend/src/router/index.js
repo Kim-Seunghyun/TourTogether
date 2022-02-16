@@ -15,7 +15,7 @@ import store from "@/store/index.js";
 
 const onlyAuthUser = async (to, from, next) => {
   const checkUserInfo = store.getters["userStore/getUserId"];
-  const token = store.getters("userStore/getAccessToken");
+  const token = store.getters["userStore/getAccessToken"];
   console.log("checkUserInfo!!!!! -> " + checkUserInfo);
   console.log("token!!!!! -> " + token);
   if (!checkUserInfo || !token) {
