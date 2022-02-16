@@ -98,14 +98,12 @@ export const userStore = {
         },
       })
         .then((response) => {
-          console.log(store.state);
           let user = response.data.user;
-          store.state.user = user;
-          store.state.userId = user.userId;
-          store.state.userNickname = user.userNickname;
-          store.state.userProfileImage = user.userProfileImage;
-          store.state.userInputNickname = user.userNickname;
-          console.log(store.state);
+          store.commit("userStore/setUser", user);
+          store.commit("userStore/setUserId", user.userId);
+          store.commit("userStore/setUserNickname", user.userNickname);
+          store.commit("userStore/setUserProfileImage", user.userProfileImage);
+          store.commit("userStore/setUserInputNickname", user.userNickname);
         })
         .catch((error) => {
           console.log(error);
