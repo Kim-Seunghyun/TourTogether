@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.tourtogether.api.request.UserDeleteDeleteReq;
-import com.ssafy.tourtogether.api.request.UserInfoGetReq;
 import com.ssafy.tourtogether.api.request.UserLoginPostReq;
 import com.ssafy.tourtogether.api.request.UserUpdateImagePatchReq;
 import com.ssafy.tourtogether.api.request.UserUpdateNicknamePatchReq;
@@ -51,12 +50,9 @@ public class UserController {
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 	public ResponseEntity<UserInfoGetRes> getInfo(
-			@RequestParam @ApiParam(value = "유저 정보", required = true) UserInfoGetReq userInfoGetReq) {
+			@RequestParam String userClientId, @RequestParam String userLoginPlatformString) {
 //		if (jwtService.isUsable(request.getHeader("Authorization"))) {
-			System.out.println("사용 가능한 토큰!!!");
-
-			String userClientId = userInfoGetReq.getUserClientId();
-			String userLoginPlatformString = userInfoGetReq.getUserLoginPlatform();
+//			System.out.println("사용 가능한 토큰!!!");
 
 			int userLoginPlatform = -1;
 
