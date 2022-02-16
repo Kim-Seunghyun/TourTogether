@@ -79,7 +79,6 @@ export const userStore = {
       state.kakaoProfileImage = kakaoProfileImage;
     },
     setAccessToken(state, accessToken) {
-      console.log("@@@@@@@@@@@@@@@@@setAccessToken: ", accessToken);
       state.accessToken = accessToken;
     },
   },
@@ -103,6 +102,8 @@ export const userStore = {
         }
       )
         .then((res) => {
+          console.log("res^^^^^^^^^^^^^^^^^^^");
+          console.log(res);
           this.setUser(res.data.user);
           this.setUserId(res.data.user.userId);
           this.setUserLoginPlatform("kakao");
