@@ -50,14 +50,6 @@
             >
 
             <router-link
-              to="/memo"
-              v-if="user"
-              class="px-0 nav-link font-weight-bold"
-              :class="textWhite ? textWhite : 'text-body'"
-              >memo &nbsp;</router-link
-            >
-
-            <router-link
               to="/dashboard"
               v-if="user"
               v-on:click="logout()"
@@ -129,6 +121,8 @@ export default {
         store.commit("userStore/setUserNickname", "");
         store.commit("userStore/setUserInputNickname", "");
         store.commit("userStore/setUserProfileImage", "");
+        store.commit("userStore/setKakaoProfileImage", "");
+        store.commit("userStore/setAccessToken", "");
         // console.log(getters.getUserId);
         alert("로그아웃 되었습니다!");
       });
