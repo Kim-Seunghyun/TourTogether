@@ -48,7 +48,7 @@
         placeholder="메시지 입력"
         v-model="message"
         id="chattingInput"
-        style="position: relative"
+        style="position: relative; width: 250px"
       />
     </div>
     <button class="c-btn popup-btn" @click="changeChatToggle()">채팅</button>
@@ -324,7 +324,7 @@ export default {
   float: left;
 }
 #chatting-wrapper {
-  width: 350px;
+  width: 250px;
   height: 300px;
   overflow-y: auto;
   border: none;
