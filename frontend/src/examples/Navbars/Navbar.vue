@@ -4,7 +4,7 @@
     v-bind="$attrs"
     id="navbarBlur"
     data-scroll="true"
-    style="margin-top: 0px;"
+    style="margin-top: 0px"
   >
     <div class="px-3 py-1 container-fluid">
       <router-link to="/" class="px-0 nav-link font-weight-bold"
@@ -92,7 +92,7 @@ export default {
     this.minNav;
   },
   methods: {
-    ...mapMutations(["navbarMinimize", "toggleConfigurator"]),
+    ...mapMutations(["navbarMinimize"]),
     ...mapActions(["toggleSidebarColor"]),
 
     toggleSidebar() {
@@ -105,8 +105,8 @@ export default {
     const getters = store.getters;
     const login = () => {
       window.Kakao.Auth.authorize({
-        redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback",
-        // redirectUri: "http://localhost:8080/kakao-login-callback",
+        // redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback",
+        redirectUri: "http://localhost:8080/kakao-login-callback",
       });
     };
     const logout = () => {
