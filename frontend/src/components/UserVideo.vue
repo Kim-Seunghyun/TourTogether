@@ -56,4 +56,9 @@ export default {
 .deHighlighting {
   border: 0px solid;
 }
+
+#shape {
+  width: 120px;
+  height: 120px;
+}
 </style>

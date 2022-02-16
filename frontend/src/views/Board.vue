@@ -42,6 +42,7 @@ export default {
     webRTC,
     BoardButtons,
   },
+
   created() {
     var boardRandom = window.location.pathname.substr(7);
     this.findBoardId(boardRandom);
