@@ -96,7 +96,6 @@ export const userStore = {
         // commit("SET_USER_INFO", data.userInfo);
         // console.log("decode_token: " + decode_token);
         // set ~~~~~~~~~~;
-        // axios.defaults.headers.common["Authorization"] = token;
         // console.log("회원정보>>" + _user);
         // },
         // (error) => {
@@ -119,6 +118,7 @@ export const userStore = {
       // });
 
       async function getUserByClientId(userClientId, state) {
+        axios.defaults.headers.common["Authorization"] = token;
         axios({
           method: "get",
           url: API_BASE_URL + "user/info",
@@ -126,9 +126,9 @@ export const userStore = {
             userClientId: userClientId,
             userLoginPlatformString: "kakao",
           },
-          headers: {
-            Authorization: "Bearer " + token,
-          },
+          // headers: {
+          // Authorization: "Bearer " + token,
+          // },
         })
           .then((response) => {
             console.log(state);
