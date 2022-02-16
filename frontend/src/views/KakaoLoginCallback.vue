@@ -434,11 +434,11 @@ export default {
                   let token = res.data.accessToken;
                   // store.commit("userStore/setUser", res.data.user);
                   // store.commit("userStore/setUserId", res.data.user.userId);
-                  // store.commit("userStore/setUserLoginPlatform", "kakao");
-                  // store.commit(
-                  // "userStore/setUserClientId",
-                  // res.data.user.userClientId
-                  // );
+                  store.commit("userStore/setUserLoginPlatform", "kakao");
+                  store.commit(
+                    "userStore/setUserClientId",
+                    res.data.user.userClientId
+                  );
                   // store.commit(
                   // "userStore/setUserNickname",
                   // res.data.user.userNickname
