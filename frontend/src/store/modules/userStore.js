@@ -87,62 +87,29 @@ export const userStore = {
     async getUserInfo(store) {
       let token = store.state.accessToken;
       let decode_token = jwt_decode(token);
-      console.log("decode_token: ^^^^^^");
-      console.log(decode_token);
-      await getUserByClientId(
-        decode_token.userClientId
-        // ({ _user }) => {
-        // commit("SET_USER_INFO", data.userInfo);
-        // console.log("decode_token: " + decode_token);
-        // set ~~~~~~~~~~;
-        // console.log("회원정보>>" + _user);
-        // },
-        // (error) => {
-        // console.log("로그인에러", error);
-        // }
-      );
-      // .then(() => {
-      // console.log("로그인 완료");
-      // console.log(user);
-      // this.setUser(user);
-      // this.setUserId(user.userId);
-      // this.setUserLoginPlatform("kakao");
-      // this.setUserClientId(user.userClientId);
-      // this.setUserNickname(user.userNickname);
-      // this.setUserInputNickname(user.userInputNinkname);
-      // this.setUserProfileImage(user.userProfileImage);
-      // })
-      // .catch((error) => {
-      // console.log(error);
-      // });
 
-      async function getUserByClientId(userClientId, state) {
-        axios.defaults.headers.common["Authorization"] = token;
-        axios({
-          method: "get",
-          url: API_BASE_URL + "user/info",
-          params: {
-            userClientId: userClientId,
-            userLoginPlatformString: "kakao",
-          },
-          // headers: {
-          // Authorization: "Bearer " + token,
-          // },
+      axios.defaults.headers.common["Authorization"] = token;
+      axios({
+        method: "get",
+        url: API_BASE_URL + "user/info",
+        params: {
+          userClientId: decode_token.userClientId,
+          userLoginPlatformString: "kakao",
+        },
+      })
+        .then((response) => {
+          console.log(store.state);
+          let user = response.data.user;
+          store.state.user = user;
+          store.state.userId = user.userId;
+          store.state.userNickname = user.userNickname;
+          store.state.userProfileImage = user.userProfileImage;
+          store.state.userInputNickname = user.userNickname;
+          console.log(store.state);
         })
-          .then((response) => {
-            console.log(state);
-            let user = response.data.user;
-            state.user = user;
-            state.userId = user.userId;
-            state.userNickname = user.userNickname;
-            state.userProfileImage = user.userProfileImage;
-            state.userInputNickname = user.userNickname;
-            console.log(state);
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      }
+        .catch((error) => {
+          console.log(error);
+        });
     },
   },
   // modules: {},
