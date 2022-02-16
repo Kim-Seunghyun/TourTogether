@@ -450,8 +450,11 @@ export default {
                   // "userStore/setUserProfileImage",
                   // res.data.user.userProfileImage
                   // );
-                  store.commit("userStore/setAccessToken", res.data.token);
-                  store.dispatch("userStore/getUserInfo", res.data.token);
+                  store.commit(
+                    "userStore/setAccessToken",
+                    res.data.accessToken
+                  );
+                  store.dispatch("userStore/getUserInfo", res.data.accessToken);
                 });
               },
               fail: function (error) {
