@@ -130,14 +130,15 @@ export const userStore = {
           },
         })
           .then((response) => {
+            console.log(response);
             state.user = response.user;
-            state.userId = response.user.userId;
-            state.userNickname = response.user.userNickname;
-            state.userProfileImage = response.user.userProfileImage;
-            state.userInputNickname = response.user.userInputNickname;
-            state.userLoginPlatform = response.user.userLoginPlatform;
-            state.userClientId = response.user.userClientId;
-            state.kakaoProfileImage = response.user.kakaoProfileImage;
+            // state.userId = response.user.userId;
+            // state.userNickname = response.user.userNickname;
+            // state.userProfileImage = response.user.userProfileImage;
+            // state.userInputNickname = response.user.userInputNickname;
+            // state.userLoginPlatform = response.user.userLoginPlatform;
+            // state.userClientId = response.user.userClientId;
+            // state.kakaoProfileImage = response.user.kakaoProfileImage;
           })
           .catch((error) => {
             console.log(error);
