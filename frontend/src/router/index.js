@@ -92,12 +92,6 @@ const routes = [
     name: "Sch2",
     component: Sch2,
   },
-  {
-    path: "/board",
-    name: "Board",
-    // beforeEnter: onlyAuthUser,
-    component: Board,
-  },
 ];
 
 const router = createRouter({
