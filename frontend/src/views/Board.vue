@@ -1,21 +1,27 @@
 <template>
   <div id="whole_wrapper">
     <div id="map_wrapper">
+
       <Map />
+
     </div>
-    <div id="memo_wrapper">
+    <!-- <div id="memo_wrapper">
       <Memo />
-    </div>
-    <div id="webrtc_wrapper">
-      <webRTC />
-      <board-buttons />
+    </div> -->
+    <div class="container" style="padding: 0;">
+      <div id="webRTC" class="col-9">
+        <webRTC />
+      </div>
+      <div id="buttons" class="col-3">
+        <board-buttons />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import Map from "@/views/Map.vue";
-import Memo from "@/views/Memo.vue";
+// import Memo from "@/views/Memo.vue";
 import webRTC from "@/views/WebRTC.vue";
 import BoardButtons from "@/views/components/BoardButtons.vue";
 import axios from "axios";
@@ -32,7 +38,7 @@ export default {
   },
   components: {
     Map,
-    Memo,
+    // Memo,
     webRTC,
     BoardButtons,
   },
@@ -97,11 +103,11 @@ export default {
   height: 100%;
 }
 #map_wrapper {
-  width: 95%;
-  height: 60%;
-  left: 2%;
+  /* left: 2%; */
   position: relative;
+  margin: 0 auto;
 }
+
 #memo_wrapper {
   width: 20%;
   height: 30%;
@@ -113,6 +119,8 @@ export default {
   z-index: 3;
   background-color: white;
 }
-#webrtc_wrapper {
+
+.container {
+  display: flex;
 }
 </style>
