@@ -84,15 +84,16 @@ export const userStore = {
     },
   },
   actions: {
-    async getUserInfo() {
+    async getUserInfo(state) {
       console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
       // console.log(this.state.accessToken);
       // console.log(this.$state.accessToken);+
-      console.log(this.getAccessToken);
+      console.log(state.accessToken);
+      // console.log(this.getAccessToken);
       console.log(this.getAccessToken());
       console.log(this.getAccessToken(this.state));
       console.log(this.getAccessToken(this.$state));
-      let token = this.state.accessToken;
+      let token = state.accessToken;
       console.log(token);
       console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@");
       let decode_token = jwt_decode(token);
