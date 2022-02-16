@@ -49,27 +49,29 @@ public class UserController {
 	@ApiOperation(value = "유저 정보 반환", notes = "JWT 토큰을 통해 인증된 유저의 정보를 반환한다.")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
-	public ResponseEntity<UserInfoGetRes> getInfo(
-			@RequestParam String userClientId, @RequestParam String userLoginPlatformString) {
+	public ResponseEntity<UserInfoGetRes> getInfo(@RequestParam String userClientId,
+			@RequestParam String userLoginPlatformString) {
 //		if (jwtService.isUsable(request.getHeader("Authorization"))) {
 //			System.out.println("사용 가능한 토큰!!!");
+		
+		System.out.println("getInfo: "+userClientId+" "+userLoginPlatformString);
 
-			int userLoginPlatform = -1;
+		int userLoginPlatform = -1;
 
-			if (userLoginPlatformString.compareTo("kakao") == 0)
-				userLoginPlatform = 1;
-			else if (userLoginPlatformString.compareTo("naver") == 0)
-				userLoginPlatform = 2;
-			else if (userLoginPlatformString.compareTo("google") == 0)
-				userLoginPlatform = 3;
+		if (userLoginPlatformString.compareTo("kakao") == 0)
+			userLoginPlatform = 1;
+		else if (userLoginPlatformString.compareTo("naver") == 0)
+			userLoginPlatform = 2;
+		else if (userLoginPlatformString.compareTo("google") == 0)
+			userLoginPlatform = 3;
 
-			User user = userService.getUserByUserId(userClientId, userLoginPlatform);
+		User user = userService.getUserByUserId(userClientId, userLoginPlatform);
 
-			if (user == null) {
-				return ResponseEntity.status(401).body(UserInfoGetRes.of(401, "유효하지 않은 유저", null));
-			} else {
-				return ResponseEntity.ok(UserInfoGetRes.of(200, "Success", user));
-			}
+		if (user == null) {
+			return ResponseEntity.status(401).body(UserInfoGetRes.of(401, "유효하지 않은 유저", null));
+		} else {
+			return ResponseEntity.ok(UserInfoGetRes.of(200, "Success", user));
+		}
 
 //		} else {
 //			System.out.println("사용 불가능 토큰!!!");
