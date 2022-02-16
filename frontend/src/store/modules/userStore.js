@@ -122,7 +122,7 @@ export const userStore = {
           url: API_BASE_URL + "user/info",
           params: {
             userClientId: userClientId,
-            userLoginPlatform: "kakao",
+            userLoginPlatformString: "kakao",
           },
           headers: {
             Authorization: "Bearer " + token,
