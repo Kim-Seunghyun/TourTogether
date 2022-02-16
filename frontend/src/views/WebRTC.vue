@@ -374,7 +374,7 @@ joinSession() {
 }
 
 .video-ctr-btn-group {
-  position: absolute;
+  position: relative;
   top: 120px;
 }
 
