@@ -130,6 +130,7 @@ export const userStore = {
           },
         })
           .then((response) => {
+            console.log(state);
             console.log(response);
             let user = response.user;
             state.user = user;
@@ -137,7 +138,6 @@ export const userStore = {
             state.userNickname = user.userNickname;
             state.userProfileImage = user.userProfileImage;
             state.userInputNickname = user.userNickname;
-            state.kakaoProfileImage = user.userProfileImage;
           })
           .catch((error) => {
             console.log(error);
