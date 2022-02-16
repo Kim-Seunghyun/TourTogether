@@ -1,3 +1,7 @@
+import jwt_decode from "jwt-decode";
+import axios from "axios";
+import { API_BASE_URL } from "@/config/index.js";
+
 export const userStore = {
   namespaced: true,
   state: {
@@ -70,7 +74,6 @@ export const userStore = {
       this.setUserProfileImage("");
       this.setUser("");
       this.setAccessToken("");
-      console.log(this.getUser);
     },
     setKakaoProfileImage(state, kakaoProfileImage) {
       state.kakaoProfileImage = kakaoProfileImage;
@@ -80,24 +83,48 @@ export const userStore = {
     },
   },
   actions: {
-    // async findById(userid, success, fail) {
-    // api.defaults.headers["access-token"] = sessionStorage.getItem("access-token");
-    // await api.get(`/user/info/${userid}`).then(success).catch(fail);
-    // },
-
     async getUserInfo(token) {
       console.log("token: " + token);
-      // let decode_token = jwt_decode(token);
-      // console.log("decode_token: "+decode_token);
-      // console.log("디코드콘솔"+decode_token.id)
-      // await findById(decode_token.userClientId, ({ data }) => {
-      // commit("SET_USER_INFO", data.userInfo);
-      // console.log("decode_token: "+decode_token);
-      // setAccessToken
-      // console.log("회원정보>>"+data.userInfo)
-      // }, (error) => {
-      // console.log("로그인에러", error);
-      // });
+      let decode_token = jwt_decode(token);
+      console.log("decode_token: " + decode_token);
+      console.log("디코드콘솔 ID" + decode_token.id);
+      await getUserByClientId(
+        decode_token.userClientId,
+        ({ data }) => {
+          // commit("SET_USER_INFO", data.userInfo);
+          console.log("decode_token: " + decode_token);
+          // set ~~~~~~~~~~;
+          axios.defaults.headers.common["Authorization"] = token;
+          console.log("회원정보>>" + data.userInfo);
+        },
+        (error) => {
+          console.log("로그인에러", error);
+        }
+      )
+        .then((res) => {
+          this.setUser(res.data.user);
+          this.setUserId(res.data.user.userId);
+          this.setUserLoginPlatform("kakao");
+          this.setUserClientId(res.data.user.userClientId);
+          this.setUserNickname(res.data.user.userNickname);
+          this.setUserInputNickname(res.data.user.userInputNinkname);
+          this.setUserProfileImage(res.data.user.userProfileImage);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+      async function getUserByClientId(userClientId, success, fail) {
+        axios({
+          method: "get",
+          url: API_BASE_URL + "user/info",
+          data: {
+            userClientId: userClientId,
+          },
+        })
+          .then(success)
+          .catch(fail);
+      }
     },
   },
   // modules: {},

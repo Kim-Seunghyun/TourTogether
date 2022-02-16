@@ -431,26 +431,27 @@ export default {
                     userProfileImage: response.properties.profile_image,
                   },
                 }).then((res) => {
-                  store.commit("userStore/setUser", res.data.user);
-                  store.commit("userStore/setUserId", res.data.user.userId);
-                  store.commit("userStore/setUserLoginPlatform", "kakao");
-                  store.commit(
-                    "userStore/setUserClientId",
-                    res.data.user.userClientId
-                  );
-                  store.commit(
-                    "userStore/setUserNickname",
-                    res.data.user.userNickname
-                  );
-                  store.commit(
-                    "userStore/setUserInputNickname",
-                    res.data.user.userNickname
-                  );
-                  store.commit(
-                    "userStore/setUserProfileImage",
-                    res.data.user.userProfileImage
-                  );
+                  // store.commit("userStore/setUser", res.data.user);
+                  // store.commit("userStore/setUserId", res.data.user.userId);
+                  // store.commit("userStore/setUserLoginPlatform", "kakao");
+                  // store.commit(
+                  // "userStore/setUserClientId",
+                  // res.data.user.userClientId
+                  // );
+                  // store.commit(
+                  // "userStore/setUserNickname",
+                  // res.data.user.userNickname
+                  // );
+                  // store.commit(
+                  // "userStore/setUserInputNickname",
+                  // res.data.user.userNickname
+                  // );
+                  // store.commit(
+                  // "userStore/setUserProfileImage",
+                  // res.data.user.userProfileImage
+                  // );
                   store.commit("userStore/setAccessToken", res.data.token);
+                  await store.dispatch("getUserInfo", res.data.token);
                 });
               },
               fail: function (error) {

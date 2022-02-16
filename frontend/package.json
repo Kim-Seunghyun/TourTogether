@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@popperjs/core": "2.10.2",
-    "@tiptap/vue-3": "2.0.0-beta.85",
     "@vue/cli-plugin-babel": "4.1.1",
     "@vue/reactivity": "^3.2.30",
     "@vue/runtime-core": "^3.2.30",
@@ -27,6 +26,7 @@
     "jquery": "^3.6.0",
     "jquery-ui": "^1.13.1",
     "jspdf": "^2.5.1",
+    "jwt-decode": "^3.1.2",
     "lodash": "4.17.21",
     "node-sass": "^6.0.1",
     "openvidu-browser": "^2.21.0-beta1",

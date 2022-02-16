@@ -2,20 +2,11 @@ package com.ssafy.tourtogether.api.service;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
-//import com.ssafy.tourtogether.api.exception.UnAuthorizedException;
-
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
@@ -62,24 +53,24 @@ public class JwtServiceImpl implements JwtService {
 		}
 	}
 
-	@Override
-	public Map<String, Object> get(String key) {
-		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
-				.getRequest();
-		String jwt = request.getHeader("access-token");
-		Jws<Claims> claims = null;
-		try {
-			claims = Jwts.parser().setSigningKey(SALT.getBytes("UTF-8")).parseClaimsJws(jwt);
-		} catch (Exception e) {
-			logger.error(e.getMessage());
-		}
-		Map<String, Object> value = claims.getBody();
-		logger.info("value : {}", value);
-		return value;
-	}
-
-	@Override
-	public String getUserId() {
-		return (String) this.get("user").get("userid");
-	}
+//	@Override
+//	public Map<String, Object> get(String key) {
+//		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes())
+//				.getRequest();
+//		String jwt = request.getHeader("access-token");
+//		Jws<Claims> claims = null;
+//		try {
+//			claims = Jwts.parser().setSigningKey(SALT.getBytes("UTF-8")).parseClaimsJws(jwt);
+//		} catch (Exception e) {
+//			logger.error(e.getMessage());
+//		}
+//		Map<String, Object> value = claims.getBody();
+//		logger.info("value : {}", value);
+//		return value;
+//	}
+//
+//	@Override
+//	public String getUserId() {
+//		return (String) this.get("user").get("userid");
+//	}
 }
