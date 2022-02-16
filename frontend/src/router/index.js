@@ -15,11 +15,9 @@ import store from "@/store/index.js";
 
 const onlyAuthUser = async (to, from, next) => {
   const checkUserInfo = store.getters["userStore/getUserId"];
-  let token = localStorage.getItem("userStore/accessToken");
+  const token = store.getters("userStore/getAccessToken");
   console.log("checkUserInfo!!!!! -> " + checkUserInfo);
   console.log("token!!!!! -> " + token);
-  console.log("tooken!!!!! -> " + localStorage.getItem("userStore"));
-  console.log("toooken!!!!! -> " + localStorage.getItem("accessToken"));
   if (!checkUserInfo || !token) {
     alert("로그인이 필요한 페이지입니다..");
     router.push({ name: "Dashboard" });
