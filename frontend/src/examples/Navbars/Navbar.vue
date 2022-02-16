@@ -120,6 +120,7 @@ export default {
         store.commit("userStore/setUserNickname", "");
         store.commit("userStore/setUserInputNickname", "");
         store.commit("userStore/setUserProfileImage", "");
+        store.commit("userStore/setKakaoProfileImage", "");
         store.commit("userStore/setAccessToken", "");
         // console.log(getters.getUserId);
         alert("로그아웃 되었습니다!");
