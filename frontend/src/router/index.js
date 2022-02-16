@@ -9,7 +9,6 @@ import Tables from "@/views/Tables.vue";
 import Profile from "@/views/Profile.vue";
 import SignIn from "@/views/SignIn.vue";
 import SignUp from "@/views/SignUp.vue";
-import Memo from "../views/Memo.vue";
 import Sch2 from "../views/Sch2.vue";
 import Board from "@/views/Board.vue";
 import store from "@/store/index.js";
@@ -85,12 +84,6 @@ const routes = [
     path: "/sign-up",
     name: "SignUp",
     component: SignUp,
-  },
-  {
-    path: "/memo",
-    name: "Memo",
-    beforeEnter: onlyAuthUser,
-    component: Memo,
   },
   {
     path: "/sch2",
