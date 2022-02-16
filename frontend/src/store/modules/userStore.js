@@ -71,6 +71,7 @@ export const userStore = {
       this.setUserNickname("");
       this.setUserProfileImage("");
       this.setUser("");
+      this.setAccessToken("");
       console.log(this.getUser);
     },
     setKakaoProfileImage(state, kakaoProfileImage) {

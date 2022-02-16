@@ -451,10 +451,10 @@ export default {
                     "userStore/setUserProfileImage",
                     res.data.user.userProfileImage
                   );
-                  store.commit("userStore/setAccessToken", res.data.user.token);
+                  store.commit("userStore/setAccessToken", res.data.token);
                   console.log(
                     "accessToken is set to: ",
-                    getters["userStore/accessToken"]
+                    getters["userStore/getAccessToken"]
                   );
                 });
               },
