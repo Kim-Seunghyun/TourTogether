@@ -284,7 +284,6 @@ export default {
         location.href = `/dashboard`;
       });
     },
-
     copyToClipboard() {
       const copyText = document.getElementById("myInput");
       copyText.select();
