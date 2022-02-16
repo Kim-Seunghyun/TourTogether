@@ -6,19 +6,7 @@
 
     <div v-if="session" id="session">
       <!-- 비디오 -->
-      <div id="video_wrapper">
-        <user-video :stream-manager="mainStreamManager" class="box" />
-        <user-video
-          v-for="sub in subscribers"
-          :key="sub.stream.connection.connectionId"
-          :stream-manager="sub"
-          @click="updateMainVideoStreamManager(sub)"
-          class="box"
-        >
-          {{ sub.stream.connection.connectionId }}
-        </user-video>
-      </div>
-      <!-- 비디오설정버튼 -->
+      <user-video :stream-manager="mainStreamManager" class="box" />
       <div class="video-ctr-btn-group">
         <button
           @click="toggleVideo()"
@@ -35,6 +23,18 @@
           🎙️
         </button>
       </div>
+      <div id="video_wrapper">
+        <user-video
+          v-for="sub in subscribers"
+          :key="sub.stream.connection.connectionId"
+          :stream-manager="sub"
+          @click="updateMainVideoStreamManager(sub)"
+          class="box"
+        >
+          {{ sub.stream.connection.connectionId }}
+        </user-video>
+      </div>
+      <!-- 비디오설정버튼 -->
     </div>
     <div v-show="session && this.chatToggle" class="chattingPart">
       <!-- 채팅화면 -->
@@ -51,7 +51,7 @@
         style="position: relative"
       />
     </div>
-    <button class="c-btn popup-btn" @click="changeChatToggle()">채팅</button>
+    <button class="c-btn popup-btn chat-btn" @click="changeChatToggle()">채팅</button>
   </div>
 </template>
 
@@ -408,5 +408,8 @@ joinSession() {
   background-color: white;
   border-radius: 5px;
 }
-
+.chat-btn {
+  position: fixed;
+  left: 970px;
+}
 </style>
