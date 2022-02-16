@@ -15,13 +15,10 @@ import store from "@/store/index.js";
 
 const onlyAuthUser = async (to, from, next) => {
   const checkUserInfo = store.getters["userStore/getUserId"];
-  const getUserInfo = store._actions["userStore/getUserInfo"];
-  let token = sessionStorage.getItem("access-token");
-  if (checkUserInfo == null && token) {
-    await getUserInfo(token);
-  }
+  let token = localStorage.getItem("userStore/accessToken");
   console.log("checkUserInfo!!!!! -> " + checkUserInfo);
-  if (!checkUserInfo) {
+  console.log("token!!!!! -> " + token);
+  if (!checkUserInfo || !token) {
     alert("로그인이 필요한 페이지입니다..");
     router.push({ name: "Dashboard" });
   } else {
