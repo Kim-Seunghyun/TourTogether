@@ -91,14 +91,11 @@ export default {
     };
   },
   methods: {
-    joinSession() {
+joinSession() {
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
 
-      //mySessionId: "SessionA",
-      myUserName: "Participant" + Math.floor(Math.random() * 100),
-      // 토글버튼
-      chatToggle: false, --- Init a session ---
+      // --- Init a session ---
       this.session = this.OV.initSession();
 
       // --- Specify the actions when events take place in the session ---
