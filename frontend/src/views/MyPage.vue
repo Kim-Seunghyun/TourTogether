@@ -87,14 +87,14 @@
             :key="board"
             />
         </div>
-        <div v-show="state.isBoardDone">
+        <div v-show="state.isBoardDone" class="row card-container">
           <BoardDone 
             v-for="board in computedGetters['boardStore/getBoardsDone']"
             :board="board"
             :key="board"
           />
         </div>
-        <div v-show="state.isBoardLike">
+        <div v-show="state.isBoardLike" class="row card-container">
           <BoardLike
             v-for="board in computedGetters['boardStore/getBoardsLike']"
             :board="board"

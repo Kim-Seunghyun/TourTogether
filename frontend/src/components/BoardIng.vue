@@ -10,7 +10,7 @@
     </div>
     <img src="@/assets/trip-route.jpg" alt="trip-route">
     <div class="board-info d-flex justify-content-between">
-      <div>{{ board.boardName  }}</div>
+      <div>{{ board.boardName }}</div>
       <div>
         <img
           class="heart cursur-pointer"
@@ -78,6 +78,7 @@ import axios from "axios";
 import { useStore } from "vuex";
 import { API_BASE_URL } from "@/config/index.js";
 import { computed } from "vue";
+// import { reactive } from "vue";
 
 export default {
   name: 'BoardIng',
@@ -88,9 +89,6 @@ export default {
     const store = useStore();
     const computedGetters = computed(() => store.getters);
     const getters = store.getters;
-    // const state = reactive({
-    //   isLiked: getters["boardStore/getBoardsLike"].includes(props.board),
-    // })
     const deleteBoard = () => {
       axios({
         method: 'delete',
@@ -101,6 +99,7 @@ export default {
       }).then(res => {
           console.log(res)
           store.commit("boardStore/deleteBoardIng", props.board.boardId)
+          getBoardsLike()
         })
     };
     const like = () => {
@@ -114,6 +113,8 @@ export default {
       }).then(() => {
         store.commit("boardStore/addBoardLike", props.board)
         getBoardsLike()
+        // 이걸 실행하는 이유는 mypage에서 computed로 boarding들을 뿌리기 때문!
+        getBoardsIng()
         // isLiked()
       });
     }
@@ -128,6 +129,7 @@ export default {
       }).then(() => {
         store.commit("boardStore/cancelBoardLike", props.board)
         getBoardsLike()
+        getBoardsIng()
         // isLiked()
         });
     }
@@ -141,17 +143,20 @@ export default {
         },
       }).then(res => {
         store.commit("boardStore/setBoardsLike", res.data.myBoards)
+        store.commit("boardStore/setBoardsLikeId", res.data.myBoards)
         });
     }
-    // const isLiked = () => {
-    //   computedGetters.value["boardStore/getBoardsLike"].forEach(board => {
-    //     if (board.boardId === props.board.boardId) {
-    //       state.isLiked = true
-    //     } else {
-    //       state.isLiked = false
-    //     }
-    //   });
-    // }
+    const getBoardsIng = () => {
+      axios({
+        method: 'post',
+        url: API_BASE_URL + 'board/searchByUserId/proceeding',
+        data: {
+          userId: getters["userStore/getUserId"],
+        }
+      }).then(res => {
+        store.commit("boardStore/setBoardsIng", res.data.myBoards)
+      })
+    }
     
     return {
       // getters는 등록을 안해줘도 되나?????
@@ -159,9 +164,8 @@ export default {
       like,
       likeCancel,
       computedGetters,
-      // state,
-      // isLiked
-      getBoardsLike
+      getBoardsLike,
+      getBoardsIng
     };
   }
 }
@@ -176,7 +180,7 @@ export default {
 
 .delete-button-div {
   position: relative;
-  left: 125px;
+  left: 120px;
   bottom: 12px;
 }
 
