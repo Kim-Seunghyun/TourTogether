@@ -1,5 +1,7 @@
 package com.ssafy.tourtogether.api.controller;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,9 +52,9 @@ public class UserController {
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 	public ResponseEntity<UserInfoGetRes> getInfo(@RequestParam String userClientId,
-			@RequestParam String userLoginPlatformString) {
-//		if (jwtService.isUsable(request.getHeader("Authorization"))) {
-//			System.out.println("사용 가능한 토큰!!!");
+			@RequestParam String userLoginPlatformString, HttpServletRequest request) {
+		if (jwtService.isUsable(request.getHeader("Authorization"))) {
+			System.out.println("사용 가능한 토큰!!!");
 		
 		System.out.println("getInfo: "+userClientId+" "+userLoginPlatformString);
 
@@ -73,10 +75,10 @@ public class UserController {
 			return ResponseEntity.ok(UserInfoGetRes.of(200, "Success", user));
 		}
 
-//		} else {
-//			System.out.println("사용 불가능 토큰!!!");
-//			return ResponseEntity.status(401).body(UserInfoGetRes.of(401, "유효하지 않은 유저", null));
-//		}
+		} else {
+			System.out.println("사용 불가능 토큰!!!");
+			return ResponseEntity.status(401).body(UserInfoGetRes.of(401, "유효하지 않은 유저", null));
+		}
 	}
 
 	@PostMapping("/login")
