@@ -431,6 +431,9 @@ export default {
                     userProfileImage: response.properties.profile_image,
                   },
                 }).then((res) => {
+                  let token = res.data.accessToken;
+                  console.log(token);
+                  console.log(typeof token);
                   console.log(res.data.accessToken);
                   console.log(typeof res.data.accessToken);
                   // store.commit("userStore/setUser", res.data.user);
@@ -454,9 +457,11 @@ export default {
                   // );
                   store.commit(
                     "userStore/setAccessToken",
-                    res.data.accessToken
+                    // res.data.accessToken
+                    token
                   );
-                  store.dispatch("userStore/getUserInfo", res.data.accessToken);
+                  // store.dispatch("userStore/getUserInfo", res.data.accessToken);
+                  store.dispatch("userStore/getUserInfo", token);
                 });
               },
               fail: function (error) {

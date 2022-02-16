@@ -79,6 +79,7 @@ export const userStore = {
       state.kakaoProfileImage = kakaoProfileImage;
     },
     setAccessToken(state, accessToken) {
+      console.log("@@@@@@@@@@@@@@@@@setAccessToken: ", accessToken);
       state.accessToken = accessToken;
     },
   },
