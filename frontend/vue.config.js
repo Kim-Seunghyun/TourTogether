@@ -36,6 +36,30 @@ module.exports = {
       //   target: "https://i6a105.p.ssafy.io:8090",
       //   changeOrigin: true,
       // },
+      "/api/board/searchByUserId": {
+          target: "https://i6a105.p.ssafy.io:8080",
+          changeOrigin: true,
+      },
+      "/api/board/searchLikeBoardByUserId": {
+        target: "https://i6a105.p.ssafy.io:8080",
+        changeOrigin: true,
+      },
+      "/api/board/searchByUserId/finish": {
+        target: "https://i6a105.p.ssafy.io:8080",
+        changeOrigin: true,
+      },
+      "/api/board/searchByUserId/proceeding": {
+        target: "https://i6a105.p.ssafy.io:8080",
+        changeOrigin: true,
+      },
+      "/api/board/delete": {
+        target: "https://i6a105.p.ssafy.io:8080",
+        changeOrigin: true,
+      },
+      "/api/board/clickBoardLike": {
+        target: "https://i6a105.p.ssafy.io:8080",
+        changeOrigin: true,
+      }
     },
   },
 };

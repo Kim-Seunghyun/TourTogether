@@ -7,7 +7,7 @@
   >
     <div class="px-3 py-1 container-fluid">
       <router-link to="/" class="px-0 nav-link font-weight-bold"
-        >TOUR TOGETHER</router-link
+        ><h5>TOUR TOGETHER ✈️</h5></router-link
       >
 
       <div
@@ -28,17 +28,17 @@
               @click="login()"
             />
 
-            <h6 v-if="user" class="px-0 nav-link font-weight-bold">
+            <!-- <h6 v-if="user" class="px-0 nav-link font-weight-bold">
               {{ user.userNickname }} 님 &nbsp;
-            </h6>
+            </h6> -->
 
-            <router-link
+            <!-- <router-link
               to="/favoritepage"
               v-if="user"
               class="px-0 nav-link font-weight-bold"
               :class="textWhite ? textWhite : 'text-body'"
               >FavoritePage &nbsp;</router-link
-            >
+            > -->
 
             <router-link
               to="/mypage"
@@ -49,11 +49,11 @@
             >
 
             <router-link
-              to="/memo2"
+              to="/memo"
               v-if="user"
               class="px-0 nav-link font-weight-bold"
               :class="textWhite ? textWhite : 'text-body'"
-              >memo2 &nbsp;</router-link
+              >memo &nbsp;</router-link
             >
 
             <router-link
@@ -112,8 +112,8 @@ export default {
     const getters = store.getters;
     const login = () => {
       window.Kakao.Auth.authorize({
-        redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback",
-        // redirectUri: "http://localhost:8080/kakao-login-callback",
+        // redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback",
+        redirectUri: "http://localhost:8080/kakao-login-callback",
       });
     };
     const logout = () => {
@@ -129,9 +129,9 @@ export default {
         store.commit("userStore/setUserInputNickname", "");
         store.commit("userStore/setUserProfileImage", "");
         // console.log(getters.getUserId);
-        alert('로그아웃 되었습니다!')
+        alert("로그아웃 되었습니다!");
       });
-    }
+    };
     onUpdated(() => {
       const navbar = document.getElementById("navbarBlur");
       window.addEventListener("scroll", () => {

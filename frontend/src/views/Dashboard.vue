@@ -48,8 +48,9 @@
             <span class="mask bg-gradient-dark"></span>
             <div
               class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3"
+              style="background-color: #90d5eb"
             >
-              <h1 class="text-white font-weight-bolder mb-4 pt-2">✈️</h1>
+              <h1 class="text-white font-weight-bolder mb-4 pt-2">📅</h1>
               <p class="text-white">
                 친구들과 실시간으로 소통하며 여행 계획을 짜고 싶은 사람!<br />
                 다른 사람들의 기깔나는 여행 계획을 추천받고 싶은 사람! <br />
@@ -74,11 +75,12 @@
 
                   <button
                     type="button"
-                    class="btn btn-primary"
+                    class="btn btn-primary text-black"
                     data-bs-toggle="modal"
                     data-bs-target="#modal"
+                    :style="goToBoardBtn"
                   >
-                    일정 짜기 START
+                    일정짜러 가기
                   </button>
                 </h4>
               </a>
@@ -133,40 +135,42 @@
         </div>
       </div>
     </div>
+
     <!-- 유형 선택하기 -->
     <div class="mt-4 row">
       <div class="mb-4 col-lg-12 mb-lg-0">
-        <h4>여행지 추천</h4>
+        <h4>🌏 추천</h4>
         <div class="card z-index-2">
-          <div class="p-3 card-body">
-            <!-- <div data-html2canvas-ignore="true">
-              출력하지 않고 싶은 영역은 태그에 'data-html2canvas-ignore'
-              attribute를 넣어주면된다.
-            </div> -->
-
+          <div class="p-3 card-body d-flex justify-content-center">
             <div class="col-lg-4 col-sm-8">
               <board-category />
             </div>
             <br />
           </div>
-          <div v-for="(board, index) in boards" :key="index">
-            <div class="col-lg-6 col-sm-8">
-              {{ board.boardId }} // {{ board.boardName }} //
-              {{ board.boardLikesCount }}
-              <img
-                v-if="this.favoriteBoardId.includes(board.boardId)"
-                src="@/assets/img/full_heart.png"
-                width="30"
-                @click="likeCancel(board.boardId)"
-              />
-              <img
-                v-if="!this.favoriteBoardId.includes(board.boardId)"
-                src="@/assets/img/empty_heart.png"
-                width="30"
-                @click="likeClick(board.boardId)"
-              />
+          <div style="display: flex">
+            <div v-for="(board, index) in boards" :key="index" style="flex: 1">
+              <div
+                class="col-lg-6 card z-index-2"
+                style="border: 3px solid #90d5eb; text-align: center"
+              >
+                {{ board.boardName }} <br />
+                {{ board.boardLikesCount }}
+                <div>
+                  <img
+                    v-if="this.favoriteBoardId.includes(board.boardId)"
+                    src="@/assets/img/full_heart.png"
+                    width="30"
+                    @click="likeCancel(board.boardId)"
+                  />
+                  <img
+                    v-if="!this.favoriteBoardId.includes(board.boardId)"
+                    src="@/assets/img/empty_heart.png"
+                    width="30"
+                    @click="likeClick(board.boardId)"
+                  />
+                </div>
+              </div>
             </div>
-            <div class="col-lg-6 col-sm-8"></div>
           </div>
         </div>
       </div>
@@ -176,7 +180,6 @@
 <script>
 import BoardCategory from "./components/BoardCategory.vue";
 import { API_BASE_URL } from "@/config/index.js";
-
 import { mapMutations, mapState } from "vuex";
 // import { useStore } from "vuex";
 import { onMounted } from "vue";
@@ -203,7 +206,10 @@ export default {
       stats: {
         iconBackground: "bg-gradient-success",
       },
-      sales: {},
+      goToBoardBtn: {
+        backgroundColor: "#fffff0",
+        color: "#1D2225",
+      },
     };
   },
   computed: {

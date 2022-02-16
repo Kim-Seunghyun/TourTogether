@@ -1,13 +1,14 @@
 export const userStore = {
   namespaced: true,
   state: {
-    user: [],
+    user: null,
     userId: "",
     userNickname: "",
     userProfileImage: "",
     userInputNickname: "",
     userLoginPlatform: "",
     userClientId: "",
+    kakaoProfileImage: null,
   },
   getters: {
     getUser(state) {
@@ -31,6 +32,9 @@ export const userStore = {
     getUserClientId(state) {
       return state.userClientId;
     },
+    getKakaoProfileImage(state) {
+      return state.kakaoProfileImage
+    }
   },
   mutations: {
     setUser(state, user) {
@@ -39,6 +43,7 @@ export const userStore = {
     },
     setUserId(state, userId) {
       state.userId = userId;
+      console.log("user -> ", state.userId);
     },
     setUserNickname(state, userNickname) {
       state.userNickname = userNickname;
@@ -63,6 +68,9 @@ export const userStore = {
       this.setUserProfileImage("")
       this.setUser("")
       console.log(this.getUser)
+    },
+    setKakaoProfileImage(state, kakaoProfileImage) {
+      state.kakaoProfileImage = kakaoProfileImage
     }
   },
   actions: {},

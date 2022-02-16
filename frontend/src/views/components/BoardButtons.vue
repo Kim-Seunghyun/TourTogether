@@ -241,7 +241,7 @@ export default {
         },
       }).then((res) => {
         console.log(res.data);
-        this.boardId = res.data.boardId;
+        this.boardId = res.data.board.boardId;
       });
     },
     selectWithWhom(index) {
@@ -289,7 +289,7 @@ export default {
       const copyText = document.getElementById("myInput");
       copyText.select();
       document.execCommand("copy");
-      alert(copyText.value + "을 복사했습니다.");
+      // alert(copyText.value + "을 복사했습니다.");
     },
     exportToPDF() {
       //window.scrollTo(0, 0);
