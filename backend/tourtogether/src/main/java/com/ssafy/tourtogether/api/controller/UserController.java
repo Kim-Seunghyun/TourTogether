@@ -52,9 +52,8 @@ public class UserController {
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = UserLoginPostRes.class),
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 	public ResponseEntity<UserInfoGetRes> getInfo(
-			@RequestBody @ApiParam(value = "유저 Cline Id", required = true) UserInfoGetReq userInfoGetReq,
-			HttpServletRequest request) {
-		if (jwtService.isUsable(request.getHeader("Authorization"))) {
+			@RequestBody @ApiParam(value = "유저 정보", required = true) UserInfoGetReq userInfoGetReq) {
+//		if (jwtService.isUsable(request.getHeader("Authorization"))) {
 			System.out.println("사용 가능한 토큰!!!");
 
 			String userClientId = userInfoGetReq.getUserClientId();
@@ -77,10 +76,10 @@ public class UserController {
 				return ResponseEntity.ok(UserInfoGetRes.of(200, "Success", user));
 			}
 
-		} else {
-			System.out.println("사용 불가능 토큰!!!");
-			return ResponseEntity.status(401).body(UserInfoGetRes.of(401, "유효하지 않은 유저", null));
-		}
+//		} else {
+//			System.out.println("사용 불가능 토큰!!!");
+//			return ResponseEntity.status(401).body(UserInfoGetRes.of(401, "유효하지 않은 유저", null));
+//		}
 	}
 
 	@PostMapping("/login")
