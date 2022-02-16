@@ -17,6 +17,7 @@ import com.ssafy.tourtogether.api.response.UserDeleteDeleteRes;
 import com.ssafy.tourtogether.api.response.UserLoginPostRes;
 import com.ssafy.tourtogether.api.response.UserUpdateImagePatchRes;
 import com.ssafy.tourtogether.api.response.UserUpdateNicknamePatchRes;
+import com.ssafy.tourtogether.api.service.JwtServiceImpl;
 import com.ssafy.tourtogether.api.service.UserService;
 import com.ssafy.tourtogether.common.model.response.BaseResponseBody;
 //import com.ssafy.tourtogether.common.util.JwtTokenUtil;
@@ -37,6 +38,9 @@ import io.swagger.annotations.ApiResponses;
 public class UserController {
 	@Autowired
 	UserService userService;
+	
+	@Autowired
+	private JwtServiceImpl jwtService;
 
 	@PostMapping("/login")
 	@ApiOperation(value = "로그인", notes = "소셜로그인 API를 통해 로그인 한다.")
@@ -66,7 +70,7 @@ public class UserController {
 		} else
 			System.out.println("기존유저");
 		System.out.println("Return user: " + user.toString());
-		return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", user/* JwtTokenUtil.getToken(userId) */));
+		return ResponseEntity.ok(UserLoginPostRes.of(200, "Success", user, jwtService.create("userClientId", userClientId, "access-token")));
 	}
 
 	@DeleteMapping("/delete")

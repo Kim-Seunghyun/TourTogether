@@ -21,14 +21,16 @@ public class UserLoginPostRes extends BaseResponseBody {
 //	String accessToken;
 
 	User user;
+	String token;
 
-	public static UserLoginPostRes of(Integer statusCode, String message, User user) {
+	public static UserLoginPostRes of(Integer statusCode, String message, User user, String token) {
 		System.out.println(user.getUserId());
 		UserLoginPostRes res = new UserLoginPostRes();
 		res.setStatusCode(statusCode);
 		res.setMessage(message);
 //		res.setAccessToken(accessToken);
 		res.setUser(user);
+		res.setToken(token);
 		return res;
 	}
 }
