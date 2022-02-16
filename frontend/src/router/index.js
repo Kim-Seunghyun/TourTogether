@@ -15,10 +15,10 @@ import store from "@/store/index.js";
 
 const onlyAuthUser = async (to, from, next) => {
   const checkUserInfo = store.getters["userStore/getUserId"];
-  const getUserInfo = store._actions["userStore/getUserInfo"];
+  // const getUserInfo = store._actions["userStore/getUserInfo"];
   const token = store.getters["userStore/getAccessToken"];
   if (!checkUserInfo && token) {
-    await getUserInfo(token);
+    // await getUserInfo(token);
   }
   if (!checkUserInfo) {
     alert("로그인이 필요한 페이지입니다..");
