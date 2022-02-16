@@ -32,13 +32,13 @@
               {{ user.userNickname }} 님 &nbsp;
             </h6> -->
 
-            <router-link
+            <!-- <router-link
               to="/favoritepage"
               v-if="user"
               class="px-0 nav-link font-weight-bold"
               :class="textWhite ? textWhite : 'text-body'"
               >FavoritePage &nbsp;</router-link
-            >
+            > -->
 
             <router-link
               to="/mypage"
@@ -112,8 +112,8 @@ export default {
     const getters = store.getters;
     const login = () => {
       window.Kakao.Auth.authorize({
-        // redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback",
-        redirectUri: "http://localhost:8080/kakao-login-callback",
+        redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback",
+        // redirectUri: "http://localhost:8080/kakao-login-callback",
       });
     };
     const logout = () => {

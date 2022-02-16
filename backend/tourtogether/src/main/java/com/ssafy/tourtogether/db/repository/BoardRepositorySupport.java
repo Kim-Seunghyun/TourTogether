@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
-import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
 import com.ssafy.tourtogether.api.request.BoardSearchBoardIdByBoardRandomPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
@@ -74,8 +73,8 @@ public class BoardRepositorySupport {
 	}
 
 	@Transactional
-	public void updateFinish(BoardFinishPatchReq boardFinishInfo) {
-		jpaQueryFactory.update(qBoard).where(qBoard.boardId.eq(boardFinishInfo.getBoardId()))
+	public void updateFinish(int boardId) {
+		jpaQueryFactory.update(qBoard).where(qBoard.boardId.eq(boardId))
 				.set(qBoard.boardIsActive, true).execute();
 	}
 
@@ -175,7 +174,8 @@ public class BoardRepositorySupport {
 		for (int boardId : myBoardIds) {
 			Board board = jpaQueryFactory.select(qBoard).from(qBoard).where(qBoard.boardId.eq(boardId))
 					.where(qBoard.boardIsActive.eq(true)).fetchFirst();
-			boardList.add(board);
+			if (board != null)
+				boardList.add(board);
 		}
 
 		return boardList;
@@ -191,7 +191,8 @@ public class BoardRepositorySupport {
 		for (int boardId : myBoardIds) {
 			Board board = jpaQueryFactory.select(qBoard).from(qBoard).where(qBoard.boardId.eq(boardId))
 					.where(qBoard.boardIsActive.eq(false)).fetchFirst();
-			boardList.add(board);
+			if (board != null)
+				boardList.add(board);
 		}
 
 		return boardList;

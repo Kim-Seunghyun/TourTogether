@@ -3,7 +3,7 @@ import { createStore } from "vuex";
 
 import { userStore } from "@/store/modules/userStore.js";
 import { boardStore } from "@/store/modules/boardStore.js";
-import createPersistedState from 'vuex-persistedstate';
+import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
   namespaced: true,
@@ -68,6 +68,7 @@ export default createStore({
   plugins: [
     createPersistedState({
       // 브라우저 종료시 제거하기 위해 localStorage가 아닌 sessionStorage로 변경. (default: localStorage)
+      // storage: sessionStorage,
       storage: sessionStorage,
     }),
   ],

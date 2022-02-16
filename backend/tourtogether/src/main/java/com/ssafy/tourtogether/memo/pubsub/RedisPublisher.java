@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
 import org.springframework.stereotype.Service;
 
+import com.ssafy.tourtogether.db.entity.BaseMessage;
 import com.ssafy.tourtogether.db.entity.MemoMessage;
 
 @RequiredArgsConstructor
@@ -16,4 +17,5 @@ public class RedisPublisher {
     public void publish(ChannelTopic topic, MemoMessage message) {
         redisTemplate.convertAndSend(topic.getTopic(), message);
     }
+
 }

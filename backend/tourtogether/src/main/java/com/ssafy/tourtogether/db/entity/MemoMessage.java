@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class MemoMessage {
+public class MemoMessage{
 
     // 메시지 타입 : 입장, 채팅
 //    public enum MessageType {
@@ -19,4 +19,5 @@ public class MemoMessage {
     private String user;
     private Object delta; // 메시지
     private String content;
+  
 }

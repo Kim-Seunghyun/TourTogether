@@ -35,7 +35,7 @@
 
 <script>
 import axios from "axios";
-import SockJS from "sockjs-client";
+// import SockJS from "sockjs-client";
 import { API_BASE_URL } from "@/config/index.js";
 
 export default {
@@ -69,7 +69,8 @@ export default {
   computed: {},
   methods: {
     connectSocket() {
-      this.sockjs = new SockJS("http://localhost:8080/api/sch2");
+      // this.sockjs = new SockJS("http://localhost:8080/api/sch2");
+      this.sockjs = Object;
       this.sockjs.onopen = function () {
         // websocket을 열어줄 때 redis에서 data를 가져와야할거같음
         // console.log(this.arr);
