@@ -37,7 +37,6 @@ export default {
     BoardButtons,
   },
   created() {
-    console.log(this.$refs.Map);
     var boardRandom = window.location.pathname.substr(7);
     this.findBoardId(boardRandom);
     // this.checkUser();

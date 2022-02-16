@@ -6,6 +6,8 @@
           v-on:getLine="emitList"
           :tourData="state.tmp"
           v-on:getDay="emitDay"
+          :pdfflag="state.emitflag"
+          v-on:asdasd="emittotallist"
         />
       </div>
     </div>
@@ -23,6 +25,7 @@ import { onMounted } from "vue";
 import Plan from "@/components/Plan.vue";
 import { API_BASE_URL } from "@/config/index.js";
 import axios from "axios";
+import html2pdf from "html2pdf.js";
 export default {
   name: "Map",
   components: {
@@ -63,6 +66,7 @@ export default {
       ps: null,
       tmp: Object,
       day: null,
+      emitflag: false,
     });
     onMounted(() => {
       window.kakao && window.kakao.maps ? initMap() : addKakaoMapScript();
@@ -568,7 +572,34 @@ export default {
         displayPolyline();
       }
     };
+    const aaa = () => {
+      console.log("aaa");
+      state.emitflag = !state.emitflag;
+    }
+    const emittotallist = function (list) {
+      clickPDF(list);
+    };
     const clickPDF = (daylist) => {
+      html2pdf(this.$refs.pdfarea, {
+        margin: 0,
+        filename: "document.pdf",
+        image: { type: "jpg", quality: 0.95 },
+        //	allowTaint 옵션추가
+        html2canvas: {
+          useCORS: true,
+          scrollY: 0,
+          scale: 1,
+          dpi: 300,
+          letterRendering: true,
+          allowTaint: false, //useCORS를 true로 설정 시 반드시 allowTaint를 false처리 해주어야함
+        },
+        jsPDF: {
+          orientation: "portrait",
+          unit: "mm",
+          format: "a4",
+          compressPDF: true,
+        },
+      });
       for (var i = 0; i < daylist.length; i++) {
         var bounds = new kakao.maps.LatLngBounds();
         var path = [];
@@ -615,11 +646,13 @@ export default {
       getListItem,
       removeAllChildNods,
       emitList,
+      emittotallist,
       emitDay,
       click,
       clickPDF,
       showDepth0,
       showDepth1,
+      aaa,
     };
   },
 };
