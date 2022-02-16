@@ -90,27 +90,27 @@ export const userStore = {
       console.log(decode_token);
       await getUserByClientId(
         decode_token.userClientId,
-        ({ data }) => {
+        ({ user }) => {
           // commit("SET_USER_INFO", data.userInfo);
           console.log("decode_token: " + decode_token);
           // set ~~~~~~~~~~;
           // axios.defaults.headers.common["Authorization"] = token;
-          console.log("회원정보>>" + data.userInfo);
+          console.log("회원정보>>" + user);
         },
         (error) => {
           console.log("로그인에러", error);
         }
       )
-        .then((res) => {
-          console.log("res^^^^^^^^^^^^^^^^^^^");
-          console.log(res);
-          this.setUser(res.data.user);
-          this.setUserId(res.data.user.userId);
+        .then((_user) => {
+          console.log("_user^^^^^^^^^^^^^^^^^^^");
+          console.log(_user);
+          this.setUser(_user);
+          this.setUserId(_user.userId);
           this.setUserLoginPlatform("kakao");
-          this.setUserClientId(res.data.user.userClientId);
-          this.setUserNickname(res.data.user.userNickname);
-          this.setUserInputNickname(res.data.user.userInputNinkname);
-          this.setUserProfileImage(res.data.user.userProfileImage);
+          this.setUserClientId(_user.userClientId);
+          this.setUserNickname(_user.userNickname);
+          this.setUserInputNickname(_user.userInputNinkname);
+          this.setUserProfileImage(_user.userProfileImage);
         })
         .catch((error) => {
           console.log(error);
