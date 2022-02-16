@@ -6,12 +6,10 @@
 
 <script>
 export default {
-  name: 'BoardLike',
+  name: "BoardLike",
   props: {
     board: Object,
   },
-  setup() {
-
-  }
-}
+  setup() {},
+};
 </script>

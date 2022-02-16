@@ -182,7 +182,8 @@ export default {
     onMounted(() => {
       state.tourList = [];
       state.selectedIndex = 0;
-      state.id = window.location.pathname.split("/")[1];
+      state.id = window.location.pathname;
+      console.log(state.id);
       state.tourList[0] = { list: new Array(), index: 0 };
       // addDay();
       init();

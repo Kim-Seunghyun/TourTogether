@@ -37,8 +37,8 @@ module.exports = {
       //   changeOrigin: true,
       // },
       "/api/board/searchByUserId": {
-          target: "https://i6a105.p.ssafy.io:8080",
-          changeOrigin: true,
+        target: "https://i6a105.p.ssafy.io:8080",
+        changeOrigin: true,
       },
       "/api/board/searchLikeBoardByUserId": {
         target: "https://i6a105.p.ssafy.io:8080",
@@ -59,7 +59,7 @@ module.exports = {
       "/api/board/clickBoardLike": {
         target: "https://i6a105.p.ssafy.io:8080",
         changeOrigin: true,
-      }
+      },
     },
   },
 };

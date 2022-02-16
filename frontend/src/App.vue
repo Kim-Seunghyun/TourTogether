@@ -67,9 +67,7 @@ export default {
   beforeMount() {
     this.$store.state.isTransparent = "bg-transparent";
   },
-  setup() {
-
-  },
+  setup() {},
   // watch: {
   //   accessToken: function () { // 토큰이 변경 확인
   //     console.log(this.accessToken);
