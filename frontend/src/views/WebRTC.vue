@@ -375,7 +375,8 @@ joinSession() {
 
 .video-ctr-btn-group {
   position: relative;
-  top: 120px;
+  top: 125px;
+  right: 274px;
 }
 
 #chattingInput {
