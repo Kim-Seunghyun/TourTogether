@@ -5,7 +5,7 @@
         <div v-for="item in state.tourList" v-bind:key="item.list">
           <div class="day_item day sort" @click="showPlan(item.index)">
             {{ item.index + 1 }}일차
-            <div v-if="state.selectedIndex === item.index">
+            <div v-if="state.selectedIndex === item.index" class="selected">
               <div
                 v-for="tourItem in item.list"
                 v-bind:key="tourItem"
@@ -70,6 +70,7 @@ export default {
   name: "Plan",
   props: {
     tourData: Object,
+    emitFlag: Boolean,
     //아이디 장소 날짜 인덱스
   },
 
@@ -292,19 +293,10 @@ export default {
         }
       );
     };
-    const boardFinish = () => {
-      axios({
-        method: "patch",
-        url: API_BASE_URL + "board/finish",
-        params: {},
-      })
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    const emitTotalList = () => {
+      // emit("", );/
     };
+    watch(props.emitFlag, () => {});
     onBeforeUnmount(() => {
       sendMessage();
     }),
@@ -371,7 +363,7 @@ export default {
       sendMessage,
       init,
       updateList,
-      boardFinish,
+      emitTotalList,
     };
   },
 };
@@ -381,6 +373,11 @@ export default {
 .day {
   list-style: none;
   padding-top: 10%;
+  background-color: rgba(255, 255, 255, 0.849);
+  border-radius: 10px;
+  box-shadow: 2px 2px gray;
+  border-top: 1px solid rgb(187, 187, 187);
+  border-left: 1px solid rgb(187, 187, 187);
 }
 .day_item {
   position: relative;
@@ -389,15 +386,16 @@ export default {
   cursor: pointer;
   min-height: 5vh;
   z-index: 2;
+  margin: auto;
 }
 .tour_item {
-  border: 1px solid #888;
+  border: 1px solid rgb(187, 187, 187);
   cursor: pointer;
   border-radius: 5px;
   margin: 3px;
   padding-right: 0;
   z-index: 3;
-  background-color: rgb(238, 231, 231);
+  background-color: rgba(250, 250, 250, 0.95);
   /* box-shadow: 1px 1px 1px 1px gray; */
   /* border-collapse: collapse; */
   /* position: relative; */
@@ -411,8 +409,8 @@ export default {
   z-index: 5;
   width: 20px;
   height: 20px;
-  right: 0;
-  top: 0;
+  right: -3px;
+  top: -5px;
   margin-top: -15 px;
   float: right;
   position: absolute;
@@ -440,5 +438,11 @@ export default {
 }
 .button_wrapper button {
   margin-left: 10px;
+}
+.selected {
+  border-radius: 1px solid black;
+}
+#day_wrap {
+  margin: auto;
 }
 </style>
