@@ -1,4 +1,5 @@
-`<template>
+`
+<template>
   <div class="pb-4 container-fluid">
     <div class="row">
       <div class="col-lg-7 mb-lg-0 mb-4">
@@ -50,15 +51,16 @@
               class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3"
               style="background-color: rgb(180 211 245)"
             >
-              <h2 class="text-white font-weight-bolder mb-4 pt-2">🗓️👭✈️👬🚢</h2>
-              <p class="" style="font-weight: bold;">
+              <h2 class="text-white font-weight-bolder mb-4 pt-2">
+                🗓️👭✈️👬🚢
+              </h2>
+              <p class="" style="font-weight: bold">
                 친구들과 실시간으로 소통하며 여행 계획을 짜고 싶은 사람!<br />
                 다른 사람들의 기깔나는 여행 계획을 추천받고 싶은 사람! <br />
                 여행지는 정했지만 어디 가야할지 도저히 모르겠는 사람!
                 <br /><br />
                 Tour Together을 통해 실시간으로 소통하고,<br />
-                인기있는 여행계획을 둘러보고,
-                관광지를 추천받으세요!
+                인기있는 여행계획을 둘러보고, 관광지를 추천받으세요!
                 <br />
                 당신의 완벽한 여행을 위해 Tour Together가 도와줍니다.
               </p>
@@ -118,7 +120,7 @@
                   v-model="boardName"
                   placeholder="여행 제목을 입력해주세요"
                   required
-                  @keyup.enter="createBoard"
+                  @onkeyup.enter="createBoard"
                 />
               </div>
               <div class="modal-footer">
@@ -139,19 +141,28 @@
     <!-- 유형 선택하기 -->
     <div class="mt-4 row">
       <div class="mb-4 col-lg-12 mb-lg-0">
-        <h4 style="text-align: left; margin-left: 60px;">🌏 추천</h4>
+        <h4 style="text-align: left; margin-left: 60px">🌏 추천</h4>
         <div class="card z-index-2">
           <div class="p-3 card-body d-flex">
-            <div class="col-lg-7 col-sm-8" style="text-align: left; margin-left: 40px;">
+            <div
+              class="col-lg-7 col-sm-8"
+              style="text-align: left; margin-left: 40px"
+            >
               <board-category />
             </div>
             <br />
           </div>
           <div>
-            <div v-if="boards.length == 0" style="text-align: center;" class="d-flex justify-content-center">
-              <h5 style="text-align: center; margin: 7px;">선택하신 유형에 해당되는 여행 계획이 없습니다.😭</h5>
+            <div
+              v-if="boards.length == 0"
+              style="text-align: center"
+              class="d-flex justify-content-center"
+            >
+              <h5 style="text-align: center; margin: 7px">
+                선택하신 유형에 해당되는 여행 계획이 없습니다.😭
+              </h5>
             </div>
-            <div v-else class="row card-container" style="padding: 0 33px;">
+            <div v-else class="row card-container" style="padding: 0 33px">
               <BoardByCategory
                 v-for="board in boards"
                 :board="board"
@@ -244,7 +255,7 @@ export default {
       });
     },
     createBoard() {
-      // alert("send create board data");
+      alert("send create board data");
       axios({
         method: "post",
         url: API_BASE_URL + "board/create",
