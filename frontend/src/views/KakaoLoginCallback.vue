@@ -48,15 +48,17 @@
             <span class="mask bg-gradient-dark"></span>
             <div
               class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3"
+              style="background-color: rgb(171 200 231)"
             >
               <h1 class="text-white font-weight-bolder mb-4 pt-2">✈️</h1>
               <p class="text-white">
                 친구들과 실시간으로 소통하며 여행 계획을 짜고 싶은 사람!<br />
                 다른 사람들의 기깔나는 여행 계획을 추천받고 싶은 사람! <br />
                 여행지는 정했지만 어디 가야할지 도저히 모르겠는 사람!
-                <br /><br /><br />
-                Tour Together을 통해 실시간으로 소통하고, 인기있는 여행계획을
-                둘러보고, 관광지를 추천받으세요!
+                <br /><br />
+                Tour Together을 통해 실시간으로 소통하고,<br />
+                인기있는 여행계획을 둘러보고,
+                관광지를 추천받으세요!
                 <br />
                 당신의 완벽한 여행을 위해 Tour Together가 도와줍니다.
               </p>
@@ -357,8 +359,8 @@ export default {
         var details = {
           grant_type: "authorization_code",
           client_id: process.env.VUE_APP_KAKAO_RESTAPI_KEY,
-          // redirect_uri: "https://i6a105.p.ssafy.io/kakao-login-callback",
-          redirect_uri: "http://localhost:8080/kakao-login-callback",
+          redirect_uri: "https://i6a105.p.ssafy.io/kakao-login-callback",
+          // redirect_uri: "http://localhost:8080/kakao-login-callback",
           code: code,
         };
         var formBody = [];

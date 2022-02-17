@@ -3,23 +3,24 @@
     <button v-if="!session" class="c-btn w-btn-green2" @click="joinSession()">
       Join!
     </button>
-
-    <div v-if="session" id="session">
-      <!-- 비디오 -->
-      <div id="video_wrapper">
-        <user-video :stream-manager="mainStreamManager" class="box" />
-        <user-video
-          v-for="sub in subscribers"
-          :key="sub.stream.connection.connectionId"
-          :stream-manager="sub"
-          @click="updateMainVideoStreamManager(sub)"
-          class="box"
-        >
-          {{ sub.stream.connection.connectionId }}
-        </user-video>
+    <div>
+      <div v-if="session" id="session">
+        <!-- 비디오 -->
+        <div id="video_wrapper">
+          <user-video :stream-manager="mainStreamManager" class="box" />
+          <user-video
+            v-for="sub in subscribers"
+            :key="sub.stream.connection.connectionId"
+            :stream-manager="sub"
+            @click="updateMainVideoStreamManager(sub)"
+            class="box"
+          >
+            {{ sub.stream.connection.connectionId }}
+          </user-video>
+        </div>
+        <!-- 비디오설정버튼 -->
       </div>
-      <!-- 비디오설정버튼 -->
-      <div class="video-ctr-btn-group">
+      <div v-if="session" class="video-ctr-btn-group">
         <button
           @click="toggleVideo()"
           class="video-ctr-btn"
@@ -48,10 +49,12 @@
         placeholder="메시지 입력"
         v-model="message"
         id="chattingInput"
-        style="position: relative"
+        style="position: relative; width: 250px"
       />
     </div>
-    <button class="c-btn popup-btn" @click="changeChatToggle()">채팅</button>
+    <button class="c-btn popup-btn chat-btn" @click="changeChatToggle()">
+      채팅
+    </button>
   </div>
 </template>
 
@@ -337,7 +340,7 @@ export default {
   float: left;
 }
 #chatting-wrapper {
-  width: 350px;
+  width: 250px;
   height: 300px;
   overflow-y: auto;
   border: none;
@@ -385,7 +388,9 @@ export default {
 }
 
 .video-ctr-btn-group {
-  display: inline;
+  position: absolute;
+  top: 125px;
+  left: 26px;
 }
 
 #chattingInput {
@@ -431,5 +436,9 @@ export default {
 }
 .eaChatting {
   margin-top: 5px;
+}
+.chat-btn {
+  position: fixed;
+  left: 970px;
 }
 </style>

@@ -4,12 +4,13 @@
     v-bind="$attrs"
     id="navbarBlur"
     data-scroll="true"
-    style="margin-top: 0px"
+    style="margin-top: 0px; padding-bottom: 0px;"
   >
     <div class="px-3 py-1 container-fluid">
-      <router-link to="/" class="px-0 nav-link font-weight-bold"
-        ><h5>TOUR TOGETHER ✈️</h5></router-link
-      >
+      <router-link to="/" class="px-0 nav-link font-weight-bold">
+        <!-- <h5>TOUR TOGETHER ✈️</h5> 51 --> 
+        <img src="@/assets/img/logo2.png" alt="logo" style="height: 50px;">
+      </router-link>
 
       <div
         class="mt-2 collapse navbar-collapse mt-sm-0 me-md-0 me-sm-4"
@@ -105,8 +106,8 @@ export default {
     const getters = store.getters;
     const login = () => {
       window.Kakao.Auth.authorize({
-        // redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback",
-        redirectUri: "http://localhost:8080/kakao-login-callback",
+        redirectUri: "https://i6a105.p.ssafy.io/kakao-login-callback",
+        // redirectUri: "http://localhost:8080/kakao-login-callback",
       });
     };
     const logout = () => {
