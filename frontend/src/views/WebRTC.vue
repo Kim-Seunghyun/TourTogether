@@ -403,7 +403,7 @@ export default {
 
 .video-ctr-btn-group {
   position: absolute;
-  top: 700px;
+  top: 727px;
   margin-left: 47px;
 }
 
@@ -458,7 +458,7 @@ export default {
   position: relative;
 }
 .chat-btn {
-  position: fixed;
+  position: absolute;
   left: 970px;
 }
 .left {
