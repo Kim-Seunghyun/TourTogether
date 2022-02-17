@@ -271,6 +271,7 @@ export default {
           let res = {};
           res.content = response.data.schedule.scheduleContent;
           updateList(res);
+          goEmit();
         })
         .catch((error) => {
           console.log(error);
@@ -288,6 +289,7 @@ export default {
           ws.subscribe(subUrl, function (message) {
             var resMessage = JSON.parse(message.body);
             updateList(resMessage);
+            goEmit();
           });
         },
         function (error) {

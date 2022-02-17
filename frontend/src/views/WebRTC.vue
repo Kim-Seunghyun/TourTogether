@@ -91,7 +91,7 @@ export default {
     };
   },
   methods: {
-joinSession() {
+    joinSession() {
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
 
@@ -163,11 +163,22 @@ joinSession() {
         // console.log(event.type); // The type of message
 
         // 여기에 div 찾아서 내용 넣고 올리기
-        const el = document.createElement("li");
         const dest = document.getElementById("chatting");
+        const el = document.createElement("li");
+        const chattingDiv = document.createElement("div");
+        chattingDiv.classList.add("eaChatting");
+
         const wrapper = document.getElementById("chatting-wrapper");
-        el.innerText =
-          event.from.data.split(":")[1].split('"')[1] + "\t" + event.data;
+        const nameTag = document.createElement("div");
+        nameTag.classList.add("nameTag");
+        const contentTag = document.createElement("div");
+        contentTag.classList.add("contentTag");
+        nameTag.innerText = event.from.data.split(":")[1].split('"')[1];
+        contentTag.innerText = event.data;
+
+        chattingDiv.append(nameTag);
+        chattingDiv.append(contentTag);
+        el.append(chattingDiv);
         dest.append(el);
         wrapper.scrollTop = wrapper.scrollHeight;
       });
@@ -312,7 +323,7 @@ joinSession() {
       } else {
         alert("화상채팅을 켜주세요!");
       }
-    }
+    },
   },
 };
 </script>
@@ -408,5 +419,17 @@ joinSession() {
   background-color: white;
   border-radius: 5px;
 }
-
+.nameTag {
+  left: 10%;
+  box-shadow: 1px 1px gray;
+  position: absolute;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.726);
+}
+.contentTag {
+  text-align: right;
+}
+.eaChatting {
+  margin-top: 5px;
+}
 </style>
