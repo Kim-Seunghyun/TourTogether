@@ -82,7 +82,6 @@ export default {
           boardRandom: boardRandom,
         },
       }).then((res) => {
-        // console.log(res.data);
         this.boardId = res.data.board.boardId;
         this.boardName = res.data.board.boardName;
         this.checkUser();
@@ -97,14 +96,12 @@ export default {
           userId: this.getUserId(),
         },
       }).then((res) => {
-        console.log(res.data.included);
         if (!res.data.included) {
           this.addParticipant();
         }
       });
     },
     addParticipant() {
-      console.log("add Participant!!!");
       axios({
         method: "post",
         url: API_BASE_URL + "board/addParticipant",
@@ -112,9 +109,7 @@ export default {
           boardId: this.boardId,
           userId: this.getUserId(),
         },
-      }).then((res) => {
-        console.log(res);
-      });
+      }).then(() => {});
     },
   },
 };
