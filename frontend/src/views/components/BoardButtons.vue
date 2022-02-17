@@ -1,30 +1,35 @@
 <template>
-  <button class="c-btn btn-green" @click="togglePlan()">일정 확인 🗓️</button>
-  &nbsp;
-  <button
-    class="c-btn btn-green"
-    data-bs-toggle="modal"
-    data-bs-target="#inviteModal"
-  >
-    친구 초대 👭
-  </button>
-  &nbsp;
-  <button
-    class="c-btn btn-green"
-    data-bs-toggle="modal"
-    data-bs-target="#finishModal"
-  >
-    일정 완료 💾
-  </button>
-  &nbsp;
-  <button type="button" class="c-btn popup-btn" @click="writeMemo()">
-    메모 작성 📄
-  </button>
-  &nbsp;
-  <button type="button" class="c-btn btn-green" @click="goToDashboard()">
-    회의 종료 🚪
-  </button>
-  &nbsp;
+  <div class="d-flex flex-column">
+    <div class="d-flex flex-row-reverse">
+      <button
+        class="c-btn btn-green"
+        data-bs-toggle="modal"
+        data-bs-target="#inviteModal"
+      >
+        친구 초대 👭
+      </button>
+      <button class="c-btn btn-green" @click="togglePlan()">
+        일정 확인 🗓️
+      </button>
+    </div>
+    <div class="d-flex flex-row-reverse">
+      <button
+        class="c-btn btn-green"
+        data-bs-toggle="modal"
+        data-bs-target="#finishModal"
+      >
+        일정 완료 💾
+      </button>
+      <button type="button" class="c-btn popup-btn" @click="writeMemo()">
+        메모 작성 📄
+      </button>
+    </div>
+    <div class="d-flex flex-row-reverse">
+      <button type="button" class="c-btn btn-green" @click="goToDashboard()">
+        회의 종료 🚪
+      </button>
+    </div>
+  </div>
   <!-- Modal -->
   <div
     class="modal fade"
@@ -368,9 +373,6 @@ export default {
     },
     togglePlan() {
       let flag = !store.getters["boardStore/getPlanFlag"];
-      console.log("----");
-      console.log(flag);
-      console.log("----");
       store.commit("boardStore/setPlanFlag", flag);
     },
   },

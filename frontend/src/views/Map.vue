@@ -1,13 +1,17 @@
 <template>
   <div id="zzz">
     <div id="map" class="map" style="width: 100%">
-      <div id="plan_wrap" style="display: block">
-        <Plan
-          v-on:getLine="emitList"
-          :tourData="state.tmp"
-          v-on:getDay="emitDay"
-        />
-      </div>
+      <draggable-div id="plan_wrap" class="resize" style="display: block">
+        <template v-slot:header> 계획 헤더 </template>
+        <template v-slot:main>
+          <Plan
+            v-on:getLine="emitList"
+            :tourData="state.tmp"
+            v-on:getDay="emitDay"
+          />
+        </template>
+        <!-- <template v-slot:footer> footer </template> -->
+      </draggable-div>
     </div>
     <div id="list_wrap"></div>
   </div>
@@ -16,7 +20,7 @@
 <script>
 import { reactive } from "vue";
 import { onMounted, watch } from "vue";
-
+import DraggableDiv from "@/components/DraggableDiv.vue";
 import Plan from "@/components/Plan.vue";
 import { API_BASE_URL } from "@/config/index.js";
 import axios from "axios";
@@ -28,6 +32,7 @@ export default {
   name: "Map",
   components: {
     Plan,
+    DraggableDiv,
   },
   setup() {
     const store = useStore();
@@ -914,8 +919,11 @@ export default {
   /* font-size: 12px; */
 }
 #map {
-  width: 100vw;
-  height: 67vh;
+  width: 100%;
+  /* height: calc(100vh-90px-120px-20px); */
+  height: 77vh;
+  /* height: 100%; */
+  /* margin: 0 0; */
   position: relative;
 }
 

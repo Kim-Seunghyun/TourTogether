@@ -9,11 +9,11 @@
       <!-- <template v-slot:footer> footer </template> -->
     </draggable-div>
 
-    <div class="container" style="padding: 0">
-      <div id="webRTC" class="col-9">
+    <div class="container">
+      <div id="webRTC">
         <webRTC />
       </div>
-      <div id="buttons" class="col-3">
+      <div id="buttons">
         <board-buttons />
       </div>
     </div>
@@ -32,6 +32,18 @@ import { mapGetters } from "vuex";
 import store from "@/store";
 const userStore = "userStore";
 export default {
+  beforeMount() {
+    this.$store.state.hideConfigButton = true;
+    this.$store.state.showSidenav = false;
+    this.$store.state.showFooter = false;
+    // body.classList.remove("bg-gray-100");
+  },
+  beforeUnmount() {
+    this.$store.state.hideConfigButton = false;
+    this.$store.state.showSidenav = true;
+    this.$store.state.showFooter = true;
+    // body.classList.add("bg-gray-100");
+  },
   data() {
     return {
       boardName: "",
@@ -111,13 +123,20 @@ export default {
 <style>
 #whole_wrapper {
   width: 100%;
-  height: 100%;
-  margin-bottom: 35px;
+  /* height: 100%; */
+  /* margin-bottom: 35px; */
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* background: #999; */
 }
 #map_wrapper {
   /* left: 2%; */
+  width: 100%;
+  /* height: 100%; */
+  /* display: flex; */
   position: relative;
-  margin: 0 auto;
+  /* margin: 0 0; */
+  /* flex: 1; */
 }
 
 #memo_wrapper {
@@ -125,10 +144,10 @@ export default {
   height: 30%;
   overflow: scroll;
   position: absolute;
-  top: 75%;
-  left: 77%;
+  bottom: 0;
+  right: 0;
   border: solid 1px #888;
-  z-index: 3;
+  z-index: 51;
   background-color: white;
 }
 .resize {
@@ -137,6 +156,23 @@ export default {
   background-color: #c3e2ce;
 }
 .container {
+  padding-left: 0;
+  padding-right: 0;
   display: flex;
+  position: FIXED;
+  bottom: 0;
+  height: 120px;
+  width: 100%;
+  /* background: white; */
+  z-index: 50;
+}
+#buttons {
+  height: 120px;
+  width: 240px;
+  position: FIXED;
+  right: 0;
+  bottom: 0;
+  /* background: white; */
+  z-index: 52;
 }
 </style>

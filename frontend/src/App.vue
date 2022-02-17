@@ -18,6 +18,7 @@
       :textWhite="this.$store.state.isAbsolute ? 'text-white opacity-8' : ''"
       :minNav="navbarMinimize"
       v-if="this.$store.state.showNavbar"
+      style="height: 90px"
     />
     <router-view />
     <app-footer v-show="this.$store.state.showFooter" />
@@ -87,6 +88,7 @@ export default {
 
 #nav {
   padding: 30px;
+  height: ;
 }
 
 #nav a {
