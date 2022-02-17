@@ -1,14 +1,12 @@
 <template>
   <div id="whole_wrapper">
     <div id="map_wrapper">
-
       <Map />
-
     </div>
-    <!-- <div id="memo_wrapper">
+    <div v-show="memovisible" id="memo_wrapper">
       <Memo />
-    </div> -->
-    <div class="container" style="padding: 0;">
+    </div>
+    <div class="container" style="padding: 0">
       <div id="webRTC" class="col-9">
         <webRTC />
       </div>
@@ -21,12 +19,13 @@
 
 <script>
 import Map from "@/views/Map.vue";
-// import Memo from "@/views/Memo.vue";
+import Memo from "@/views/Memo.vue";
 import webRTC from "@/views/WebRTC.vue";
 import BoardButtons from "@/views/components/BoardButtons.vue";
 import axios from "axios";
 import { API_BASE_URL } from "@/config/index.js";
 import { mapGetters } from "vuex";
+import store from "@/store";
 const userStore = "userStore";
 export default {
   data() {
@@ -34,13 +33,21 @@ export default {
       boardName: "",
       boardId: "",
       popup: false,
+      // memovisible: this.$store.memovisible,
     };
   },
   components: {
     Map,
-    // Memo,
+    Memo,
     webRTC,
     BoardButtons,
+  },
+
+  computed: {
+    memovisible() {
+      const memovisible = store.state.memovisible;
+      return memovisible;
+    },
   },
 
   created() {
