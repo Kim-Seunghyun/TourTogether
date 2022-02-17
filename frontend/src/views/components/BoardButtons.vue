@@ -15,8 +15,8 @@
     일정 완료 💾
   </button>
   &nbsp;
-  <button type="button" class="c-btn btn-green" @click="exportToPDF()">
-    PDF 저장 📄
+  <button type="button" class="c-btn popup-btn" @click="writeMemo()">
+    메모 작성 📄
   </button>
   &nbsp;
   <button type="button" class="c-btn btn-green" @click="goToDashboard()">
@@ -66,7 +66,7 @@
             type="button"
             class="btn"
             @click="copyToClipboard()"
-            style="background-color: rgb(125 185 233); color: white;"
+            style="background-color: rgb(125 185 233); color: white"
           >
             COPY
           </button>
@@ -86,7 +86,7 @@
       <div class="modal-content">
         <div class="modal-header" style="border-bottom: none">
           <h5 class="modal-title" id="exampleModalLabel">
-            🙂 여행 유형을 선택하고 일정을 마무리하세요! 
+            🙂 여행 유형을 선택하고 일정을 마무리하세요!
           </h5>
           <button
             type="button"
@@ -111,7 +111,7 @@
                   data-bs-toggle="tab"
                   role="tab"
                   aria-selected="true"
-                  style="cursor: pointer;"
+                  style="cursor: pointer"
                 >
                   # {{ item }}
                 </a>
@@ -133,7 +133,7 @@
                   data-bs-toggle="tab"
                   role="tab"
                   aria-selected="true"
-                  style="cursor: pointer;"
+                  style="cursor: pointer"
                 >
                   # {{ item }}
                 </a>
@@ -155,7 +155,7 @@
                   data-bs-toggle="tab"
                   role="tab"
                   aria-selected="true"
-                  style="cursor: pointer;"
+                  style="cursor: pointer"
                 >
                   # {{ item }}
                 </a>
@@ -177,7 +177,7 @@
                   role="tab"
                   aria-selected="true"
                   @click="selectTheme(index)"
-                  style="cursor: pointer;"
+                  style="cursor: pointer"
                 >
                   # {{ item }}
                 </a>
@@ -197,7 +197,7 @@
             type="button"
             class="btn"
             @click="setBoardCategory()"
-            style="background-color: rgb(125 185 233); color: white;"
+            style="background-color: rgb(125 185 233); color: white"
           >
             완료하기
           </button>
@@ -211,7 +211,7 @@
 import setNavPills from "@/assets/js/nav-pills.js";
 import axios from "axios";
 import { API_BASE_URL } from "@/config/index.js";
-import html2pdf from "html2pdf.js";
+// import html2pdf from "html2pdf.js";
 
 export default {
   name: "boardbuttons",
@@ -311,32 +311,33 @@ export default {
       document.execCommand("copy");
       // alert(copyText.value + "을 복사했습니다.");
     },
-    exportToPDF() {
-      //여기서 map.vue clickPDF함수 실행시키고 map.vue에서 맵그리고 html2pdf다운로드 하게하기 => best => 다른component의 함수 호출하기
-      //Map.clickPdf() 호출 하면
-      //emit 이부분을 div(초기화 한 후 핀만 찍은 새로운 맵)해서 받아오자 새창띄워서 div넘기고 사진찍기
-      //window.scrollTo(0, 0);
-      html2pdf(this.$refs.pdfarea, {
-        margin: 0,
-        filename: "document.pdf",
-        image: { type: "jpg", quality: 0.95 },
-        //	allowTaint 옵션추가
-        html2canvas: {
-          useCORS: true,
-          scrollY: 0,
-          scale: 1,
-          dpi: 300,
-          letterRendering: true,
-          allowTaint: false, //useCORS를 true로 설정 시 반드시 allowTaint를 false처리 해주어야함
-        },
-        jsPDF: {
-          orientation: "portrait",
-          unit: "mm",
-          format: "a4",
-          compressPDF: true,
-        },
-      });
-    },
+    // exportToPDF() {
+    //   //여기서 map.vue clickPDF함수 실행시키고 map.vue에서 맵그리고 html2pdf다운로드 하게하기 => best => 다른component의 함수 호출하기
+    //   //Map.clickPdf() 호출 하면
+    //   //emit 이부분을 div(초기화 한 후 핀만 찍은 새로운 맵)해서 받아오자 새창띄워서 div넘기고 사진찍기
+    //   //window.scrollTo(0, 0);
+    //   html2pdf(this.$refs.pdfarea, {
+    //     margin: 0,
+    //     filename: "document.pdf",
+    //     image: { type: "jpg", quality: 0.95 },
+    //     //	allowTaint 옵션추가
+    //     html2canvas: {
+    //       useCORS: true,
+    //       scrollY: 0,
+    //       scale: 1,
+    //       dpi: 300,
+    //       letterRendering: true,
+    //       allowTaint: false, //useCORS를 true로 설정 시 반드시 allowTaint를 false처리 해주어야함
+    //     },
+    //     jsPDF: {
+    //       orientation: "portrait",
+    //       unit: "mm",
+    //       format: "a4",
+    //       compressPDF: true,
+    //     },
+    //   });
+    // },
+    writeMemo() {},
   },
 };
 </script>
