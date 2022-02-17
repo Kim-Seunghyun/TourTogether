@@ -35,7 +35,7 @@ export default {
       quill: null,
       my: true,
       user: getters["userStore/getUserNickname"],
-      id: window.location.pathname.split("/")[1],
+      id: window.location.pathname.split("/")[2],
 
       // dynamicComponent: null,
       content: "",
