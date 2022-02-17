@@ -9,7 +9,9 @@
         />
       </div>
     </div>
-    <ul id="placesList"></ul>
+    <div id="list_wrap">
+
+    </div>
   </div>
 </template>
 
@@ -145,6 +147,10 @@ export default {
     };
     const displayMarker = (depth, areaNum) => {
       removeAllChildNods(); // list 초기화
+      var list = document.getElementById("list_wrap");
+      var ul = document.createElement("ul");
+      ul.id = "placesList";
+      list.appendChild(ul);
       var index = 0;
       if (depth > 1) {
         removeMarker(depth);
@@ -550,7 +556,7 @@ export default {
       var itemStr = document.createElement("span");
       var img = document.createElement("img");
       img.className = "img";
-      img.setAttribute("style", "width:100px; height:100px");
+      img.setAttribute("style", "width:60px; height:60px");
       img.src = state.src[tourspot.tourSpotId % 10];
       itemStr.appendChild(img);
 
@@ -558,7 +564,7 @@ export default {
       info.className = "info";
       itemStr.appendChild(info);
 
-      var htag = document.createElement("h5");
+      var htag = document.createElement("span");
       htag.className = "htag";
       htag.innerText = tourspot.tourSpotName;
       info.appendChild(htag);
@@ -573,8 +579,11 @@ export default {
     };
     const removeAllChildNods = () => {
       var listEl = document.getElementById("placesList");
-      while (listEl.firstChild) {
-        listEl.removeChild(listEl.firstChild);
+      if (listEl) {
+        while (listEl.firstChild) {
+          listEl.removeChild(listEl.firstChild);
+        }
+        listEl.remove();
       }
     };
     const emitList = function (abc) {
@@ -666,8 +675,7 @@ export default {
 .bg_white {
   background: #fff;
 }
-#zzz {
-}
+
 #placesList {
   z-index: 3;
   position: absolute;
@@ -676,7 +684,12 @@ export default {
   width: 400px;
   height: 570px;
   overflow-y: scroll;
+  background-color: #96b7e8ba;
+  border-radius: 5px;
+  padding: 0px;
+  margin-left: 10px;
 }
+
 #placesList::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera*/
 }
@@ -695,13 +708,19 @@ export default {
   border-bottom: 1px solid #888;
   overflow: hidden;
   cursor: pointer;
-  min-height: 100px;
+  min-height: 70px;
 }
 #placesList .item span {
   display: block;
   margin-top: 4px;
+  margin-left: 1px;
+  margin-right: 2px;
+  padding-right: 2px;
+  font-size: 15px;
 }
-#placesList .item h5,
+#placesList .item .htag {
+  font-weight: bold;
+}
 #placesList .item .info {
   text-overflow: ellipsis;
   /* overflow: hidden; */
@@ -711,14 +730,14 @@ export default {
   padding: 10px 0 10px 55px;
 }
 #placesList .info .spantag {
-  color: #009900;
+  color: white;
 }
 #placesList .item .img {
   float: left;
   position: relative;
   width: 37px;
   height: 37px;
-  margin: 10px 0 0 10px;
+  margin: 5px;
   /* //background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
     no-repeat; */
 }
@@ -782,7 +801,7 @@ export default {
   color: #777;
 }
 .overlay_info {
-  border-radius: 6px;
+  border-radius: 5px;
   margin-bottom: 12px;
   float: left;
   position: relative;
@@ -810,12 +829,13 @@ export default {
 }
 .overlay_info .title {
   display: block;
-  background: #d95050;
+  background: #ec6868;
   text-decoration: none;
   color: #fff;
+  font-weight: bold;
   padding: 12px 36px 12px 14px;
   font-size: 14px;
-  border-radius: 6px 6px 0 0;
+  border-radius: 5px 5px 0 0;
 }
 .overlay_info .close {
   position: absolute;
@@ -838,6 +858,7 @@ export default {
   width: 128px;
   height: 128px;
   vertical-align: top;
+  margin-bottom: 10px
 }
 .desc div {
   text-align: left;
@@ -867,22 +888,28 @@ export default {
 
 #selectedApt_wrap {
   position: absolute;
-  top: 0;
-  right: 2%;
+  top: 0.5%;
+  right: 0.5%;
   bottom: 0;
-  width: 16%;
-  height: 50%;
+  width: 250px;
+  height: 338px;
+  padding: 0;
+  border-radius: 5px;
   /* margin: 10px 0 30px 0px; */
-  padding: 5px;
   overflow-y: auto;
   background: rgba(245, 245, 245, 1);
   z-index: 3;
   /* font-size: 12px; */
-  border-radius: 10px;
 }
 #map {
   width: 100vw;
   height: 67vh;
   position: relative;
+}
+
+
+#placesList {
+  height: 570px;
+  margin-bottom: 0;
 }
 </style>
