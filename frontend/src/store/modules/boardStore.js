@@ -11,7 +11,7 @@ export const boardStore = {
     boardsDone: [],
     boardsLike: null,
     boardsLikeId: [],
-    boardToDelete: null,
+    boardToDelete: { boardId: 0},
     tourList: [],
     planFlag: true,
   },
