@@ -30,7 +30,7 @@
                 @keyup.enter="submitNickname"
               />
               <button class="button-change-nickname" @click="[toggleChangeNickname(), submitNickname()]">확인</button>
-              <button class="button-change-nickname" @click="toggleChangeNickname" style="margin-left: 0px;">취소</button>
+              <button class="button-change-nickname" @click="toggleChangeNickname">취소</button>
             </div>
           </div>
           <div id="userDelete">
