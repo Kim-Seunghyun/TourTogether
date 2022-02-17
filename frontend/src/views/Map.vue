@@ -702,7 +702,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .bg_white {
   background: #fff;
 }
@@ -944,5 +944,10 @@ export default {
 #placesList {
   height: 570px;
   margin-bottom: 0;
+}
+.resize {
+  overflow: hidden;
+  resize: both;
+  background-color: #c3e2ce;
 }
 </style>

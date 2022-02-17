@@ -9,6 +9,7 @@
       <div>{{ board.boardName }}</div>
       <div>
         <img
+          class="cursur-pointer"
           style="margin: 0 3px"
           v-if="this.favoriteBoardId.includes(board.boardId)"
           src="@/assets/img/full_heart.png"
@@ -16,6 +17,7 @@
           @click="likeCancel(board.boardId)"
         />
         <img
+          class="cursur-pointer"
           style="margin: 0 3px"
           v-if="!this.favoriteBoardId.includes(board.boardId)"
           src="@/assets/img/empty_heart.png"
@@ -159,7 +161,9 @@ export default {
   object-fit: contain;
   position: relative;
 }
-
+.cursur-pointer {
+  cursor: pointer;
+}
 .delete-button-div {
   position: relative;
   left: 125px;

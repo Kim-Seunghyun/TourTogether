@@ -379,7 +379,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 #myInput {
   border: none;
   border-radius: 5px;

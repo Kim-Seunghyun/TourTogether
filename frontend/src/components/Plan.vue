@@ -384,7 +384,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .day {
   list-style: none;
   padding-top: 5%;

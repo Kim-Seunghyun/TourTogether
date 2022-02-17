@@ -49,7 +49,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .highlighting {
   border: 4px solid rgb(88, 236, 59);
 }
