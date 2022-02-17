@@ -1,6 +1,10 @@
 <template>
   <div class="card col-3">
-    <img src="@/assets/trip-route.jpg" alt="trip-route" style="margin-top: 30px;">
+    <img
+      src="@/assets/trip-route.jpg"
+      alt="trip-route"
+      style="margin-top: 30px"
+    />
     <div class="board-info d-flex justify-content-between">
       <div>{{ board.boardName }}</div>
       <div>
@@ -28,7 +32,7 @@ import { API_BASE_URL } from "@/config/index.js";
 import { computed } from "vue";
 
 export default {
-  name: 'BoardIng',
+  name: "BoardIng",
   props: {
     board: Object,
   },
@@ -37,33 +41,36 @@ export default {
     const computedGetters = computed(() => store.getters);
     const getters = store.getters;
     const likeCancel = () => {
-      axios({
-        method: "patch",
-        url: API_BASE_URL + "board/cancelBoardLike",
-        data: {
-          boardId: props.board.boardId,
-          userId: getters["userStore/getUserId"],
-        },
-      }).then(() => {
-        store.commit("boardStore/cancelBoardLike", props.board)
+      if (!getters["userStore/getUserId"]) {
+        alert("로그인 해주세요!");
+      } else {
         axios({
-          method: "post",
-          url: 
-          API_BASE_URL + "board/searchLikeBoardByUserId",
+          method: "patch",
+          url: API_BASE_URL + "board/cancelBoardLike",
           data: {
+            boardId: props.board.boardId,
             userId: getters["userStore/getUserId"],
           },
-        }).then(res => {
-          store.commit("boardStore/setBoardsLike", res.data.myBoards)
+        }).then(() => {
+          store.commit("boardStore/cancelBoardLike", props.board);
+          axios({
+            method: "post",
+            url: API_BASE_URL + "board/searchLikeBoardByUserId",
+            data: {
+              userId: getters["userStore/getUserId"],
+            },
+          }).then((res) => {
+            store.commit("boardStore/setBoardsLike", res.data.myBoards);
           });
         });
       }
+    };
     return {
       likeCancel,
       computedGetters,
     };
-  }
-}
+  },
+};
 </script>
 <style scoped>
 .card {
@@ -80,5 +87,4 @@ export default {
 .board-info {
   margin: 5px;
 }
-
 </style>

@@ -35,7 +35,7 @@ export default {
       quill: null,
       my: true,
       user: getters["userStore/getUserNickname"],
-      id: window.location.pathname.split("/")[1],
+      id: window.location.pathname.split("/")[2],
 
       // dynamicComponent: null,
       content: "",
@@ -45,20 +45,22 @@ export default {
           toolbar: [
             // custom toolbars options
             // will override the default configuration
-            ["bold", "italic", "underline", "strike"],
-            ["blockquote", "code-block"],
-            [{ header: 1 }, { header: 2 }],
-            [{ list: "ordered" }, { list: "bullet" }],
-            [{ script: "sub" }, { script: "super" }],
-            [{ indent: "-1" }, { indent: "+1" }],
-            [{ direction: "rtl" }],
-            [{ size: ["small", false, "large", "huge"] }],
-            [{ header: [1, 2, 3, 4, 5, 6, false] }],
-            [{ color: [] }, { background: [] }],
-            [{ font: [] }],
-            [{ align: [] }],
-            ["clean"],
-            ["link", "image", "video"],
+            [
+              "bold",
+              "italic",
+              "underline",
+              "strike",
+              { header: 1 },
+              { header: 2 },
+            ],
+            [
+              { list: "ordered" },
+              { list: "bullet" },
+              { color: [] },
+              { align: [] },
+              "link",
+              "image",
+            ],
           ],
           // other moudle options here
         },

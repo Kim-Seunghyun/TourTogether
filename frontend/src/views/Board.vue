@@ -1,14 +1,16 @@
 <template>
   <div id="whole_wrapper">
     <div id="map_wrapper">
-
       <Map />
-
     </div>
-    <!-- <div id="memo_wrapper">
-      <Memo />
-    </div> -->
-    <div class="container" style="padding: 0;">
+
+    <draggable-div v-show="memovisible" id="memo_wrapper">
+      <template v-slot:header> 메모장 헤더 </template>
+      <template v-slot:main> <memo /> </template>
+      <!-- <template v-slot:footer> footer </template> -->
+    </draggable-div>
+
+    <div class="container" style="padding: 0">
       <div id="webRTC" class="col-9">
         <webRTC />
       </div>
@@ -21,12 +23,14 @@
 
 <script>
 import Map from "@/views/Map.vue";
-// import Memo from "@/views/Memo.vue";
+import Memo from "@/views/Memo.vue";
 import webRTC from "@/views/WebRTC.vue";
 import BoardButtons from "@/views/components/BoardButtons.vue";
+import DraggableDiv from "@/components/DraggableDiv.vue";
 import axios from "axios";
 import { API_BASE_URL } from "@/config/index.js";
 import { mapGetters } from "vuex";
+import store from "@/store";
 const userStore = "userStore";
 export default {
   data() {
@@ -34,16 +38,25 @@ export default {
       boardName: "",
       boardId: "",
       popup: false,
+      // memovisible: this.$store.memovisible,
     };
   },
   components: {
     Map,
-    // Memo,
+    Memo,
     webRTC,
     BoardButtons,
+    DraggableDiv,
   },
+
+  computed: {
+    memovisible() {
+      const memovisible = store.state.memovisible;
+      return memovisible;
+    },
+  },
+
   created() {
-    console.log(this.$refs.Map);
     var boardRandom = window.location.pathname.substr(7);
     this.findBoardId(boardRandom);
     // this.checkUser();
@@ -101,6 +114,7 @@ export default {
 #whole_wrapper {
   width: 100%;
   height: 100%;
+  margin-bottom: 35px;
 }
 #map_wrapper {
   /* left: 2%; */

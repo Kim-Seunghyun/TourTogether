@@ -1,16 +1,22 @@
 <template>
-  <div class="card col-3">
-    <img src="@/assets/trip-route.jpg" alt="trip-route" />
+  <div class="card col-xxl-12">
+    <img
+      src="@/assets/trip-route.jpg"
+      alt="trip-route"
+      style="margin-top: 13px"
+    />
     <div class="board-info d-flex justify-content-between">
       <div>{{ board.boardName }}</div>
       <div>
         <img
+          style="margin: 0 3px"
           v-if="this.favoriteBoardId.includes(board.boardId)"
           src="@/assets/img/full_heart.png"
           width="30"
           @click="likeCancel(board.boardId)"
         />
         <img
+          style="margin: 0 3px"
           v-if="!this.favoriteBoardId.includes(board.boardId)"
           src="@/assets/img/empty_heart.png"
           width="30"
@@ -70,42 +76,50 @@ export default {
       });
     },
     likeClick(boardId) {
-      console.log("좋아요 누르기 ");
-      axios({
-        method: "patch",
-        url: API_BASE_URL + "board/clickBoardLike",
-        data: {
-          boardId: boardId,
-          userId: this.userId,
-        },
-      }).then((res) => {
-        this.favoriteBoardId = res.data.favoriteBoardId;
-        this.getListByCategory(
-          this.withWhom,
-          this.season,
-          this.area,
-          this.theme
-        );
-      });
+      if (!this.userId) {
+        alert("로그인 해주세요!");
+      } else {
+        console.log("좋아요 누르기 ");
+        axios({
+          method: "patch",
+          url: API_BASE_URL + "board/clickBoardLike",
+          data: {
+            boardId: boardId,
+            userId: this.userId,
+          },
+        }).then((res) => {
+          this.favoriteBoardId = res.data.favoriteBoardId;
+          this.getListByCategory(
+            this.withWhom,
+            this.season,
+            this.area,
+            this.theme
+          );
+        });
+      }
     },
     likeCancel(boardId) {
-      console.log("좋아요 취소하기");
-      axios({
-        method: "patch",
-        url: API_BASE_URL + "board/cancelBoardLike",
-        data: {
-          boardId: boardId,
-          userId: this.userId,
-        },
-      }).then((res) => {
-        this.favoriteBoardId = res.data.favoriteBoardId;
-        this.getListByCategory(
-          this.withWhom,
-          this.season,
-          this.area,
-          this.theme
-        );
-      });
+      if (!this.userId) {
+        alert("로그인 해주세요!");
+      } else {
+        console.log("좋아요 취소하기");
+        axios({
+          method: "patch",
+          url: API_BASE_URL + "board/cancelBoardLike",
+          data: {
+            boardId: boardId,
+            userId: this.userId,
+          },
+        }).then((res) => {
+          this.favoriteBoardId = res.data.favoriteBoardId;
+          this.getListByCategory(
+            this.withWhom,
+            this.season,
+            this.area,
+            this.theme
+          );
+        });
+      }
     },
     getListByCategory(withWhom, season, area, theme) {
       axios({
@@ -144,8 +158,8 @@ export default {
 
 .card {
   border: 1px solid gray;
-  margin: 25px;
-  width: 250px;
+  margin: 23px;
+  width: 280px;
 }
 
 .board-info {

@@ -14,6 +14,7 @@
           data-bs-toggle="tab"
           role="tab"
           aria-selected="true"
+          style="cursor: pointer;"
         >
           #{{ item }}
         </a>
@@ -35,6 +36,7 @@
           data-bs-toggle="tab"
           role="tab"
           aria-selected="true"
+          style="cursor: pointer;"
         >
           #{{ item }}
         </a>
@@ -56,6 +58,7 @@
           data-bs-toggle="tab"
           role="tab"
           aria-selected="true"
+          style="cursor: pointer;"
         >
           #{{ item }}
         </a>
@@ -77,6 +80,7 @@
           data-bs-toggle="tab"
           role="tab"
           aria-selected="true"
+          style="cursor: pointer;"
         >
           #{{ item }}
         </a>

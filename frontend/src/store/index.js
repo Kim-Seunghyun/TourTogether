@@ -25,12 +25,10 @@ export default createStore({
     showNavbar: true,
     showFooter: true,
     showMain: true,
+    memovisible: false,
   },
   getters: {},
   mutations: {
-    toggleConfigurator(state) {
-      state.showConfig = !state.showConfig;
-    },
     navbarMinimize(state) {
       const sidenav_show = document.querySelector(".g-sidenav-show");
       const sidenav = document.getElementById("sidenav-main");
@@ -58,6 +56,9 @@ export default createStore({
       } else {
         state.isNavFixed = false;
       }
+    },
+    setMemovisible(state) {
+      state.memovisible = !state.memovisible;
     },
   },
   actions: {

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="zzz">
     <div id="map" class="map" style="width: 100%">
       <div id="selectedApt_wrap" style="display: block">
         <Plan
@@ -9,9 +9,8 @@
         />
       </div>
     </div>
-    <div id="menu_wrap" class="bg_white">
-      <ul id="placesList"></ul>
-      <div id="pagination"></div>
+    <div id="list_wrap">
+
     </div>
   </div>
 </template>
@@ -23,6 +22,8 @@ import { onMounted } from "vue";
 import Plan from "@/components/Plan.vue";
 import { API_BASE_URL } from "@/config/index.js";
 import axios from "axios";
+import html2pdf from "html2pdf.js";
+import html2canvas from "html2canvas";
 export default {
   name: "Map",
   components: {
@@ -63,6 +64,7 @@ export default {
       ps: null,
       tmp: Object,
       day: null,
+      emitflag: false,
     });
     onMounted(() => {
       window.kakao && window.kakao.maps ? initMap() : addKakaoMapScript();
@@ -84,6 +86,7 @@ export default {
       state.map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리
       kakao.maps.event.addListener(state.map, "rightclick", function () {
         if (state.depthlevel === 1) {
+          removeAllChildNods();
           showDepth0();
         } else if (state.depthlevel === 2) {
           showDepth1();
@@ -116,6 +119,7 @@ export default {
           position: position,
           clickable: true,
         });
+        var index = tourSpotList[i].tourSpotId;
         if (tourSpotList[i].tourSpotIsTop100 === true) {
           var markerImage = new kakao.maps.MarkerImage(
             "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png",
@@ -123,29 +127,38 @@ export default {
             new kakao.maps.Point(13, 34)
           );
           marker.setImage(markerImage);
-          state.tourspot_top100.push(i); // 그 i를 저장
+          state.tourspot_top100.push(index); // 그 i를 저장
         } else {
-          state.tourspot.push(i);
+          state.tourspot.push(index);
         }
-        state.spot[i] = [marker, tourSpotList[i]];
-        let event = click(marker, tourSpotList[i], i);
+        state.spot[index] = [marker, tourSpotList[i]];
+        let event = click(marker, tourSpotList[i], index);
         kakao.maps.event.addListener(marker, "click", event);
       }
     };
     const click = (marker, tourlist, index) => {
       kakao.maps.event.addListener(marker, "click", function () {
         state.index++;
+        console.log(tourlist.tourSpotId);
+        console.log(index);
         makeCustomOverlay(marker.getPosition(), tourlist, index);
         displayCustomOverlay();
       });
     };
     const displayMarker = (depth, areaNum) => {
       removeAllChildNods(); // list 초기화
+      var list = document.getElementById("list_wrap");
+      var ul = document.createElement("ul");
+      ul.id = "placesList";
+      list.appendChild(ul);
       var index = 0;
       if (depth > 1) {
         removeMarker(depth);
         for (i = 0; i < state.tourspot.length; i++) {
           var tmp = state.tourspot[i];
+          if (!state.spot[tmp]) {
+            continue;
+          }
           if (String(state.spot[tmp][1].tourSpotTwoDepthCode) !== areaNum) {
             continue;
           }
@@ -159,6 +172,9 @@ export default {
       } else if (depth > 0) {
         for (var i = 0; i < state.tourspot_top100.length; i++) {
           tmp = state.tourspot_top100[i];
+          if (!state.spot[tmp]) {
+            continue;
+          }
           if (
             String(state.spot[tmp][1].tourSpotTwoDepthCode).substr(0, 2) !==
             areaNum
@@ -178,6 +194,9 @@ export default {
       if (depth === 2) {
         for (var i = 0; i < state.tourspot.length; i++) {
           var index = state.tourspot[i];
+          if (!state.spot[index]) {
+            continue;
+          }
           state.spot[index][0].setMap(null);
         }
       }
@@ -244,7 +263,7 @@ export default {
       for (var j = 1; j <= state.day; j++) {
         var tmp = document.createElement("option");
         tmp.value = j;
-        tmp.innerHTML = j;
+        tmp.innerHTML = j + "일차";
         selectbar.appendChild(tmp);
       }
       selectbar.onchange = function () {
@@ -469,10 +488,14 @@ export default {
       }
       for (i = 0; i < state.tourspot_top100.length; i++) {
         var index = state.tourspot_top100[i];
+        if (!state.spot[index]) {
+          continue;
+        }
         state.spot[index][0].setMap(null);
       }
       for (i = 0; i < state.sido_polygon.length; i++) {
         state.sido_polygon[i][2].setMap(state.map);
+  
       }
     };
     const showDepth1 = () => {
@@ -483,6 +506,9 @@ export default {
       }
       for (i = 0; i < state.tourspot.length; i++) {
         var index = state.tourspot[i];
+        if (!state.spot[index]) {
+          continue;
+        }
         state.spot[index][0].setMap(null);
       }
     };
@@ -509,7 +535,6 @@ export default {
     };
     const displayPlaces = (listindex, tourspot, markerindex) => {
       var listEl = document.getElementById("placesList");
-      var menuEl = document.getElementById("menu_wrap");
       removeMarker();
       var itemEl = getListItem(listindex, tourspot);
       itemEl.onclick = function () {
@@ -522,18 +547,24 @@ export default {
         displayCustomOverlay();
       };
       listEl.appendChild(itemEl);
-      menuEl.scrollTop = 0;
+      listEl.scrollTop = 0;
     };
     const getListItem = (index, tourspot) => {
       var el = document.createElement("li");
+      el.className = "item";
 
       var itemStr = document.createElement("span");
-      itemStr.className = "markerbg marker_" + index;
+      var img = document.createElement("img");
+      img.className = "img";
+      img.setAttribute("style", "width:60px; height:60px");
+      img.src = state.src[tourspot.tourSpotId % 10];
+      itemStr.appendChild(img);
+
       var info = document.createElement("div");
       info.className = "info";
       itemStr.appendChild(info);
 
-      var htag = document.createElement("h5");
+      var htag = document.createElement("span");
       htag.className = "htag";
       htag.innerText = tourspot.tourSpotName;
       info.appendChild(htag);
@@ -542,14 +573,17 @@ export default {
       spantag.className = "spantag";
       spantag.innerText = tourspot.tourSpotAddress;
       info.appendChild(spantag);
+
       el.appendChild(itemStr);
-      el.className = "item";
       return el;
     };
     const removeAllChildNods = () => {
       var listEl = document.getElementById("placesList");
-      while (listEl.firstChild) {
-        listEl.removeChild(listEl.firstChild);
+      if (listEl) {
+        while (listEl.firstChild) {
+          listEl.removeChild(listEl.firstChild);
+        }
+        listEl.remove();
       }
     };
     const emitList = function (abc) {
@@ -568,27 +602,39 @@ export default {
         displayPolyline();
       }
     };
-    const clickPDF = (daylist) => {
-      for (var i = 0; i < daylist.length; i++) {
-        var bounds = new kakao.maps.LatLngBounds();
-        var path = [];
-        if (state.polyline) {
-          nondisplayPolyline();
-          removePolyline();
-        }
-        var list = daylist[i];
-        for (var j = 0; j < list.length; j++) {
-          var location = state.spot[list[i].index][0].getPosition();
-          bounds.extend(location);
-          state.spot[list[i].index].setMap(state.map);
-          path.push(location);
-        }
-        addPolyline(path);
-        displayPolyline();
-        state.map.setBounds(bounds);
-        // pdf 한장 내보내기 또는 한장 찍어두기
+    const aaa = () => {
+      console.log("aaa");
+      //state.emitflag = !state.emitflag;
+      var element = document.getElementById("zzz");
+      html2canvas(element).then(function (canvas) {
+        saveAs(canvas.toDataURL("image/png"), "capture-test.png");
+      });
+      html2pdf()
+        .from(element)
+        .set({
+          margin: 10,
+          filename: "filename.pdf",
+          html2canvas: { scale: 1 },
+          jsPDF: {
+            orientation: "landscape",
+            unit: "mm",
+            format: "a4",
+            compressPDF: true,
+          },
+        })
+        .save();
+    };
+    const saveAs = (url, filename) => {
+      var link = document.createElement("a");
+      if (typeof link.download === "string") {
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        window.open(url);
       }
-      //일정 완료하기 호출
     };
     const emitDay = (day) => {
       state.day = day;
@@ -617,9 +663,9 @@ export default {
       emitList,
       emitDay,
       click,
-      clickPDF,
       showDepth0,
       showDepth1,
+      aaa,
     };
   },
 };
@@ -629,7 +675,25 @@ export default {
 .bg_white {
   background: #fff;
 }
-#menu_wrap hr {
+
+#placesList {
+  z-index: 3;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 400px;
+  height: 95%;
+  overflow-y: scroll;
+  background-color: #96b7e8ba;
+  border-radius: 5px;
+  padding: 0px;
+  margin-left: 10px;
+}
+
+#placesList::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera*/
+}
+#placesList hr {
   display: block;
   height: 1px;
   border: 0;
@@ -644,34 +708,40 @@ export default {
   border-bottom: 1px solid #888;
   overflow: hidden;
   cursor: pointer;
-  min-height: 100px;
+  min-height: 70px;
 }
 #placesList .item span {
   display: block;
   margin-top: 4px;
+  margin-left: 1px;
+  margin-right: 2px;
+  padding-right: 2px;
+  font-size: 15px;
 }
-#placesList .item h5,
+#placesList .item .htag {
+  font-weight: bold;
+}
 #placesList .item .info {
   text-overflow: ellipsis;
   /* overflow: hidden; */
-  white-space: nowrap;
+  white-space: normal;
 }
 #placesList .item .info {
   padding: 10px 0 10px 55px;
 }
 #placesList .info .spantag {
-  color: #009900;
+  color: white;
 }
-#placesList .item .markerbg {
+#placesList .item .img {
   float: left;
-  position: absolute;
-  width: 36px;
+  position: relative;
+  width: 37px;
   height: 37px;
-  margin: 10px 0 0 10px;
-  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
-    no-repeat;
+  margin: 5px;
+  /* //background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
+    no-repeat; */
 }
-#placesList .item .marker_1 {
+/* #placesList .item .marker_1 {
   background-position: 0 -10px;
 }
 #placesList .item .marker_2 {
@@ -715,7 +785,7 @@ export default {
 }
 #placesList .item .marker_15 {
   background-position: 0 -654px;
-}
+} */
 
 #pagination {
   margin: 10px auto;
@@ -731,7 +801,7 @@ export default {
   color: #777;
 }
 .overlay_info {
-  border-radius: 6px;
+  border-radius: 5px;
   margin-bottom: 12px;
   float: left;
   position: relative;
@@ -759,12 +829,13 @@ export default {
 }
 .overlay_info .title {
   display: block;
-  background: #d95050;
+  background: #ec6868;
   text-decoration: none;
   color: #fff;
+  font-weight: bold;
   padding: 12px 36px 12px 14px;
   font-size: 14px;
-  border-radius: 6px 6px 0 0;
+  border-radius: 5px 5px 0 0;
 }
 .overlay_info .close {
   position: absolute;
@@ -787,15 +858,16 @@ export default {
   width: 128px;
   height: 128px;
   vertical-align: top;
+  margin-bottom: 10px
 }
 .desc div {
   text-align: left;
   font-size: 12px;
 }
 .desc .register {
-  width: 17px;
-  height: 17px;
-  background: url("../assets/kakao_login_large_wide.png");
+  width: 32px;
+  height: 32px;
+  background: url("../assets/circularplusbutton_121982.png");
 }
 .desc .register:hover {
   cursor: pointer;
@@ -816,22 +888,28 @@ export default {
 
 #selectedApt_wrap {
   position: absolute;
-  top: 0;
-  right: 2%;
+  top: 0.5%;
+  right: 0.5%;
   bottom: 0;
-  width: 16%;
-  height: 50%;
+  width: 250px;
+  height: 338px;
+  padding: 0;
+  border-radius: 5px;
   /* margin: 10px 0 30px 0px; */
-  padding: 5px;
   overflow-y: auto;
   background: rgba(245, 245, 245, 1);
   z-index: 3;
   /* font-size: 12px; */
-  border-radius: 10px;
 }
 #map {
   width: 100vw;
-  height: 70vh;
+  height: 67vh;
   position: relative;
+}
+
+
+#placesList {
+  height: 570px;
+  margin-bottom: 0;
 }
 </style>

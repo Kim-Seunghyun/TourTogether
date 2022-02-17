@@ -19,8 +19,7 @@ import com.ssafy.tourtogether.db.entity.QScheduleDB;
 import com.ssafy.tourtogether.db.entity.Schedule;
 import com.ssafy.tourtogether.db.entity.ScheduleDB;
 import com.ssafy.tourtogether.db.entity.ScheduleRoom;
-//import com.ssafy.tourtogether.memo.pubsub.RedisSubscriber;
-import com.ssafy.tourtogether.memo.pubsub.ScheduleSubscriber;
+import com.ssafy.tourtogether.memo.pubsub.RedisSubscriber;
 
 import lombok.RequiredArgsConstructor;
 
@@ -35,7 +34,7 @@ public class ScheduleRepositorySupport {
 	// 메모(topic)에 발행되는 메시지를 처리할 Listner
 	private final RedisMessageListenerContainer redisMessageListener;
 	// 구독 처리 서비스
-	private final ScheduleSubscriber scheduleSubscriber;
+	private final RedisSubscriber redisSubscriber;
 	// Redis
 	private static final String SCHEDULE_ROOMS = "SCHEDULE_ROOM";
 	private final RedisTemplate<String, Object> redisTemplate;
@@ -72,7 +71,7 @@ public class ScheduleRepositorySupport {
 		ChannelTopic topic = topics.get(id);
 		if (topic == null)
 			topic = new ChannelTopic(id);
-		redisMessageListener.addMessageListener(scheduleSubscriber, topic);
+		redisMessageListener.addMessageListener(redisSubscriber, topic);
 		topics.put(id, topic);
 	}
 

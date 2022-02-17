@@ -1,39 +1,62 @@
 <template>
-  <div id="main-container" class="container" style="padding: 0;">
+  <div id="main-container" class="container" style="padding: 0; margin: 0">
     <button v-if="!session" class="c-btn w-btn-green2" @click="joinSession()">
       Join!
     </button>
-
-    <div v-if="session" id="session">
-      <!-- 비디오 -->
-      <div id="video_wrapper">
-        <user-video :stream-manager="mainStreamManager" class="box" />
-        <user-video
-          v-for="sub in subscribers"
-          :key="sub.stream.connection.connectionId"
-          :stream-manager="sub"
-          @click="updateMainVideoStreamManager(sub)"
-          class="box"
+    <!-- 비디오설정버튼 -->
+    <div class="d-flex align-items-center">
+      <div v-if="session">
+        <button
+          @click="toggleVideo()"
+          class="video-ctr-btn"
+          title="비디오 on/off"
         >
-          {{ sub.stream.connection.connectionId }}
-        </user-video>
+          📷
+        </button>
+        <button
+          @click="toggleAudio()"
+          class="video-ctr-btn"
+          title="마이크 on/off"
+        >
+          🎙️
+        </button>
       </div>
-      <!-- 비디오설정버튼 -->
-      <div>
-        <button @click="toggleVideo()" class="video-ctr-btn">📹</button>
-        <button @click="toggleAudio()" class="video-ctr-btn">🎙️</button>
+    </div>
+    <div>
+      <div v-if="session" id="session">
+        <!-- 비디오 -->
+        <div id="video_wrapper">
+          <user-video :stream-manager="mainStreamManager" class="box" />
+          <user-video
+            v-for="sub in subscribers"
+            :key="sub.stream.connection.connectionId"
+            :stream-manager="sub"
+            @click="updateMainVideoStreamManager(sub)"
+            class="box"
+          >
+            {{ sub.stream.connection.connectionId }}
+          </user-video>
+        </div>
       </div>
-      <!-- 채팅입력 -->
-      <input
-        @keyup.enter="submitChatting()"
-        placeholder="여기에 메시지 입력"
-        v-model="message"
-      />
+    </div>
+    <div v-show="session && this.chatToggle" class="chattingPart">
       <!-- 채팅화면 -->
       <div id="chatting-wrapper">
         <ul id="chatting"></ul>
+
+        <!-- 채팅입력 -->
       </div>
+      <input
+        @keyup.enter="submitChatting()"
+        placeholder="메시지 입력"
+        v-model="message"
+        id="chattingInput"
+        style="position: relative; width: 250px"
+      />
     </div>
+    <button class="c-btn popup-btn chat-btn" @click="changeChatToggle()">
+      채팅
+    </button>
   </div>
 </template>
 
@@ -66,11 +89,15 @@ export default {
       publisher: undefined,
       subscribers: [],
       message: undefined,
-      mySessionId: window.location.pathname.split("/")[1],
+      mySessionId: window.location.pathname.split("/")[2],
       myUserName: getters["userStore/getUserNickname"],
+      // 토글버튼
+      chatToggle: false,
     };
   },
-
+  unmounted() {
+    this.leaveSession();
+  },
   methods: {
     joinSession() {
       // --- Get an OpenVidu object ---
@@ -144,12 +171,33 @@ export default {
         // console.log(event.type); // The type of message
 
         // 여기에 div 찾아서 내용 넣고 올리기
-        const el = document.createElement("li");
         const dest = document.getElementById("chatting");
+        const el = document.createElement("li");
+        const chattingDiv = document.createElement("div");
+        el.classList.add("chattingLi");
+        chattingDiv.classList.add("eaChatting");
+
         const wrapper = document.getElementById("chatting-wrapper");
-        el.innerText =
-          event.from.data.split(":")[1].split('"')[1] + "\t" + event.data;
-        dest.append(el);
+        const nameTag = document.createElement("span");
+        nameTag.classList.add("nameTag");
+        const contentTag = document.createElement("span");
+
+        const nameDiv = document.createElement("div");
+        const contentDiv = document.createElement("div");
+
+        nameDiv.classList.add("left");
+        contentDiv.classList.add("right");
+        contentDiv.classList.add("contentDiv");
+
+        nameTag.innerText = event.from.data.split(":")[1].split('"')[1];
+        contentTag.classList.add("contentTag");
+        contentTag.innerText = event.data;
+        nameDiv.append(nameTag);
+        contentDiv.append(contentTag);
+        chattingDiv.appendChild(nameDiv);
+        chattingDiv.appendChild(contentDiv);
+        el.appendChild(chattingDiv);
+        dest.appendChild(el);
         wrapper.scrollTop = wrapper.scrollHeight;
       });
     },
@@ -283,6 +331,17 @@ export default {
           console.error(error);
         });
     },
+    changeChatToggle() {
+      if (this.session) {
+        if (this.chatToggle == false) {
+          this.chatToggle = true;
+        } else {
+          this.chatToggle = false;
+        }
+      } else {
+        alert("화상채팅을 켜주세요!");
+      }
+    },
   },
 };
 </script>
@@ -296,13 +355,15 @@ export default {
   float: left;
 }
 #chatting-wrapper {
-  width: 400px;
+  width: 250px;
   height: 300px;
   overflow-y: auto;
-  border: solid 1px black;
+  overflow-x: hidden;
+  border: none;
+  background: #96b7e8ba;
+  border-radius: 5px 5px 0px 0px;
   top: 130%;
   right: 10%;
-  position: absolute;
   z-index: 3;
 }
 
@@ -322,11 +383,12 @@ export default {
 }
 
 .w-btn-green2 {
-    background-color: #80da52;
-    color: white;
+  background-color: #80da52;
+  color: white;
 }
 
 #chatting {
+  width: 250px;
   list-style: none;
 }
 
@@ -337,7 +399,86 @@ export default {
 }
 
 #session {
-  width: 150px;
+  /* width: 150px; */
   /* height: 150px; */
+}
+
+.video-ctr-btn-group {
+  position: absolute;
+  top: 727px;
+  margin-left: 47px;
+}
+
+#chattingInput {
+  width: 250px;
+  background: #afafaf61;
+  bottom: 0;
+  width: 400px;
+  height: 40px;
+  border: none;
+  border-radius: 0px 0px 5px 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.box {
+  margin: 0 20px;
+}
+
+.popup-btn {
+  background-color: rgb(252, 160, 14);
+  color: rgb(84, 52, 4);
+}
+
+.chattingPart {
+  width: 250px;
+  position: absolute;
+  right: 0.5vw;
+  top: 5.7vw;
+  z-index: 5000;
+  opacity: 1;
+  background-color: white;
+  border-radius: 5px;
+}
+.nameTag {
+  /* margin-left: 0px; */
+  /* position: absolute; */
+  text-align: right;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid black 2px;
+  padding-bottom: 2px;
+  margin-left: 5px;
+  font-size: 12px;
+}
+.contentTag {
+  /* position: absolute;
+  left: 50%; */
+  text-align: right;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid black 2px;
+  padding-bottom: 2px;
+  margin-right: 5px;
+  font-size: 12px;
+}
+.eaChatting {
+  margin-top: 5px;
+  position: relative;
+}
+.chat-btn {
+  position: absolute;
+  left: 970px;
+}
+.left {
+  text-align: left;
+}
+.right {
+  text-align: right;
+}
+.contentDiv {
+  margin-right: 5px;
 }
 </style>
