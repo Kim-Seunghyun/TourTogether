@@ -674,7 +674,7 @@ export default {
   top: 0px;
   left: 0px;
   width: 400px;
-  height: 570px;
+  height: 95%;
   overflow-y: scroll;
 }
 #placesList::-webkit-scrollbar {
