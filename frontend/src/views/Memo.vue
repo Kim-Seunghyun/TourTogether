@@ -91,7 +91,6 @@ export default {
     };
 
     const sendMessage = function (delta, content) {
-      console.log("sendMessage", delta);
       state.ws.send(
         "/api/pub/memo",
         {},
@@ -119,7 +118,6 @@ export default {
   methods: {
     recvMessage(message) {
       // let _this = this;
-      console.log("recvMessage", message);
       if (message.user !== this.state.user) {
         this.state.my = false;
         this.state.quill.updateContents(message.delta);
@@ -130,13 +128,10 @@ export default {
     initRecv() {
       // 접속시 처음 값을 받아오도록 하기
       // 테스트 페이지인 경우와 아닌 경우로 분기
-      console.log("init RECV start");
       (response) => {
-        console.log("initRecv@@@@");
         console.log(response.data);
       },
         (err) => {
-          console.log("initRecv 실패");
           console.log(err);
         };
     },
@@ -153,7 +148,6 @@ export default {
         // },
       })
         .then((response) => {
-          console.log("@@@@return: ", response);
           this.state.my = false;
           this.state.content = response.data.memo.memoContent;
           this.state.my = true;
@@ -166,7 +160,6 @@ export default {
       var _this = this;
       this.ws = ws;
       var subUrl = "/api/sub/memo/" + _this.state.id;
-      console.log("채널 구독하기: ", subUrl);
       ws.connect(
         {
           userNickname: _this.state.user, // 이거 없으면 오류나는데, stomp API 내부적으로 쓰는거같음

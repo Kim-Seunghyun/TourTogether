@@ -109,15 +109,15 @@ export default {
     const store = useStore();
     const computedGetters = computed(() => store.getters);
     const getters = store.getters;
-    const deleteBoard = (boardId) => {
+    const deleteBoard = (board) => {
       axios({
         method: "delete",
         url: API_BASE_URL + "board/delete",
         data: {
-          boardId: boardId,
+          boardId: board.boardId,
         },
       }).then(() => {
-        store.commit("boardStore/deleteBoardIng", boardId);
+        store.commit("boardStore/deleteBoardIng", board.boardId);
         getBoardsLike();
       });
     };

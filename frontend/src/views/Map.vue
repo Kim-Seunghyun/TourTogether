@@ -166,8 +166,6 @@ export default {
     const click = (marker, tourlist, index) => {
       kakao.maps.event.addListener(marker, "click", function () {
         state.index++;
-        console.log(tourlist.tourSpotId);
-        console.log(index);
         makeCustomOverlay(marker.getPosition(), tourlist, index);
         displayCustomOverlay();
       });
@@ -617,7 +615,6 @@ export default {
         state.tmpList = abc;
         state.emitflag = true;
       }
-      console.log(abc);
       if (state.polyline) {
         nondisplayPolyline();
         removePolyline();
@@ -633,7 +630,6 @@ export default {
       }
     };
     const aaa = () => {
-      console.log("aaa");
       //state.emitflag = !state.emitflag;
       var element = document.getElementById("zzz");
       html2canvas(element).then(function (canvas) {

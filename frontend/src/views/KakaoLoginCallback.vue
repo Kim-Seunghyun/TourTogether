@@ -401,9 +401,10 @@ export default {
                 }
                 let imageURL = null;
                 if (response.properties.profile_image) {
-                  imageURL = response.properties.profile_image
+                  imageURL = response.properties.profile_image;
                 } else {
-                  imageURL = 'https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%ED%81%AC%EB%AA%BD.png'
+                  imageURL =
+                    "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%ED%81%AC%EB%AA%BD.png";
                 }
                 store.commit(
                   "userStore/setKakaoProfileImage",
