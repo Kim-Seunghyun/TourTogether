@@ -44,7 +44,7 @@
       </ul>
     </div>
     <div class="button_wrapper">
-      <button @click="addDay()" class="btn btn-primary">일정 추가</button>
+      <button @click="addDay()" class="btn btn-info">일정 추가</button>
       <button @click="deleteDay(0)" class="btn btn-secondary">
         일정 전체 삭제
       </button>
