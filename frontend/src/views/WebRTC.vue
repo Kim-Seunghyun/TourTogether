@@ -440,18 +440,27 @@ export default {
 }
 .nameTag {
   /* margin-left: 0px; */
-  box-shadow: 1px 1px gray;
   /* position: absolute; */
-  border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.726);
+  text-align: right;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid black 2px;
+  padding-bottom: 2px;
+  margin-left: 5px;
+  font-size: 12px;
 }
 .contentTag {
   /* position: absolute;
   left: 50%; */
   text-align: right;
-  box-shadow: 1px 1px gray;
-  border-radius: 4px;
-  background-color: rgba(255, 255, 255, 0.726);
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid black 2px;
+  padding-bottom: 2px;
+  margin-right: 5px;
+  font-size: 12px;
 }
 .eaChatting {
   margin-top: 5px;
