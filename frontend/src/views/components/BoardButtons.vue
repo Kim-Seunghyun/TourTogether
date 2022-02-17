@@ -295,11 +295,29 @@ export default {
       });
     },
     finishBoard() {
+      const getters = store.getters;
+      let tourList = getters["boardStore/getTourListFromStore"];
+      let schdeuleList = [];
+      let dayLen = tourList.length;
+      for (let i = 0; i < dayLen; i++) {
+        let schdeuleLen = tourList[i].list.length;
+        for (let j = 0; j < schdeuleLen; j++) {
+          let obj = {};
+          obj.scheduleDay = i + 1;
+          obj.scheduleOrd = j + 1;
+          obj.scheduleBoardId = this.boardId;
+          obj.scheduleTourSpotId = tourList[i].list[j].index;
+          obj.scheduleAdditional = tourList[i].list[j].name;
+          schdeuleList.push(obj);
+        }
+      }
+      console.log(schdeuleList);
       axios({
         method: "patch",
         url: API_BASE_URL + "board/finish",
         data: {
           boardId: this.boardId,
+          scheduleList: schdeuleList,
         },
       }).then((res) => {
         console.log(res);
