@@ -211,6 +211,7 @@
 import setNavPills from "@/assets/js/nav-pills.js";
 import axios from "axios";
 import { API_BASE_URL } from "@/config/index.js";
+import store from "@/store";
 // import html2pdf from "html2pdf.js";
 
 export default {
@@ -337,7 +338,14 @@ export default {
     //     },
     //   });
     // },
-    writeMemo() {},
+
+    writeMemo() {
+      // 작업장 workspace 나중에 지우기
+      // 1. 누르면 해당 div가 생겼다 없어졌다
+      // 2. 되고나면 위치, 사이즈 조절 추가해보기
+      // $("memo_wrapper").fadeOut(1000);;
+      store.commit("setMemovisible");
+    },
   },
 };
 </script>
