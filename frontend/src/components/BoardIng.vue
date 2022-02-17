@@ -19,7 +19,6 @@
     <div class="board-info d-flex justify-content-between">
       <div @click="openBoard" class="cursur-pointer">
         <h6>{{ board.boardName }}</h6>
-        {{board.boardId}}
       </div>
       <div>
         <img
