@@ -3,7 +3,7 @@
     <img
       src="@/assets/trip-route.jpg"
       alt="trip-route"
-      style="margin-top: 13px"
+      style="margin-top: 13px; cursor: pointer;"
     />
     <div class="board-info d-flex justify-content-between">
       <div>{{ board.boardName }}</div>

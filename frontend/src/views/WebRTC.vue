@@ -55,11 +55,11 @@
 
     <draggable-div
       v-show="session && this.chatToggle"
-      c
       id="plan_wrap"
       class="chattingPart"
+      style="overflow: auto"
     >
-      <template v-slot:header> 채팅 헤더 </template>
+      <template v-slot:header> 채팅 </template>
       <template v-slot:main>
         <!-- 채팅화면 -->
         <div id="chatting-wrapper">
@@ -72,7 +72,7 @@
           placeholder="메시지 입력"
           v-model="message"
           id="chattingInput"
-          style="position: relative; width: 250px"
+          style="position: relative; width: 250px; width: 100%"
         />
       </template>
     </draggable-div>
@@ -207,8 +207,10 @@ export default {
         const contentDiv = document.createElement("div");
 
         nameDiv.classList.add("left");
+        nameDiv.setAttribute("style", "text-align:left;");
         contentDiv.classList.add("right");
         contentDiv.classList.add("contentDiv");
+        contentDiv.setAttribute("style", "text-align: right;");
 
         nameTag.innerText = event.from.data.split(":")[1].split('"')[1];
         contentTag.classList.add("contentTag");
@@ -409,7 +411,6 @@ export default {
 }
 
 #chatting {
-  width: 250px;
   list-style: none;
 }
 

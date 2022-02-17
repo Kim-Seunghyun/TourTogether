@@ -20,12 +20,12 @@
       >
         일정 완료 💾
       </button>
-      <button type="button" class="c-btn popup-btn" @click="writeMemo()">
+      <button type="button" class="c-btn btn-green" @click="writeMemo()">
         메모 작성 📄
       </button>
     </div>
     <div class="d-flex flex-row-reverse">
-      <button type="button" class="c-btn btn-green" @click="goToDashboard()">
+      <button type="button" class="c-btn btn-red" @click="goToDashboard()">
         회의 종료 🚪
       </button>
     </div>
@@ -403,7 +403,9 @@ export default {
   width: 100px;
   height: 30px;
 }
-
+.btn-red {
+  background-color: red;
+}
 .btn-green {
   background-color: #77af9c;
   color: #d7fff1;
