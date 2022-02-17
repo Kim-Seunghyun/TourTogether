@@ -1,8 +1,8 @@
 <template>
   <div class="card col-3">
-    <img src="@/assets/trip-route.jpg" alt="trip-route" style="margin-top: 30px;">
+    <img @click="clickBoard" src="@/assets/trip-route.jpg" alt="trip-route" style="margin-top: 30px;">
     <div class="board-info d-flex justify-content-between">
-      <div>{{ board.boardName }}</div>
+      <div @click="clickBoard"><h6>{{ board.boardName }}</h6></div>
       <div>
         <!-- <img
           class="delete-button"
@@ -58,9 +58,27 @@ export default {
           });
         });
       }
+    const clickBoard = () => {
+      if (!props.board.boardIsActive) {
+        openBoard()
+      }
+    }
+    const openBoard = () => {
+      axios({
+        method: 'post',
+        url: API_BASE_URL + 'board/searchByBoardId',
+        data: {
+          boardId: props.board.boardId,
+        }
+      }).then(res => {
+        location.href = `/board/${res.data.board.boardRandom}`;
+      }) 
+    }
     return {
       likeCancel,
       computedGetters,
+      openBoard,
+      clickBoard
     };
   }
 }

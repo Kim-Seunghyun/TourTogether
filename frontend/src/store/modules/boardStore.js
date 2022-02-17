@@ -64,10 +64,12 @@ export const boardStore = {
     },
     setBoardsLikeId(state, boardsLike) {
       const boardIds = [];
-      state.boardsLikeId = boardsLike.forEach((board) => {
-        boardIds.push(board.boardId);
-      });
-      state.boardsLikeId = boardIds;
+      if (state.boardsLike) {
+        state.boardsLikeId = boardsLike.forEach((board) => {
+          boardIds.push(board.boardId);
+        });
+        state.boardsLikeId = boardIds;
+      }
     },
     deleteBoardIng(state, boardId) {
       state.boardsIng = state.boardsIng.filter((board) => {

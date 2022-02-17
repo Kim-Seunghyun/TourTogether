@@ -27,6 +27,7 @@
                 type="text"
                 @keyup="setUserInputNickname"
                 :value="computedGetters['userStore/getUserNickname']"
+                @keyup.enter="submitNickname"
               />
               <button class="button-change-nickname" @click="[toggleChangeNickname(), submitNickname()]">확인</button>
               <button class="button-change-nickname" @click="toggleChangeNickname" style="margin-left: 0px;">취소</button>
@@ -44,6 +45,7 @@
                 @keyup="setUserInputEmail"
                 placeholder="카카오계정 ID를 입력해주세요"
                 v-model="state.userInputEmail"
+                @keyup.enter="deleteAccount"
               />
               <button class="button-delete-account" @click="[toggleDeleteAccount(), deleteAccount()]">
                 회원탈퇴
@@ -145,18 +147,26 @@ export default {
       store.commit("userStore/setUserInputNickname", event.target.value);
     };
     const submitNickname = () => {
-      axios({
-        method: "patch",
-        url: API_BASE_URL + "user/updateNickname/",
-        data: {
-          userLoginPlatform: getters["userStore/getUserLoginPlatform"],
-          userNickname: getters["userStore/getUserNickname"],
-          userClientId: getters["userStore/getUserClientId"],
-          newUserNickname: getters["userStore/getUserInputNickname"],
-        },
-      }).then((res) => {
-        store.commit("userStore/setUserNickname", res.data.user.userNickname);
-      });
+      if (!getters["userStore/getUserInputNickname"]) {
+        alert('새로운 닉네임을 입력해주세요!')
+      } else {
+        axios({
+          method: "patch",
+          url: API_BASE_URL + "user/updateNickname/",
+          data: {
+            userLoginPlatform: getters["userStore/getUserLoginPlatform"],
+            userNickname: getters["userStore/getUserNickname"],
+            userClientId: getters["userStore/getUserClientId"],
+            newUserNickname: getters["userStore/getUserInputNickname"],
+          },
+        }).then((res) => {
+          store.commit("userStore/setUserNickname", res.data.user.userNickname);
+        }).catch(err => {
+          if (err.response.data.statusCode === 403) {
+            alert('이미 사용중인 닉네임입니다.')
+          }
+        })
+      }
     };
 
     const toggleDeleteAccount = () => {
@@ -175,29 +185,38 @@ export default {
           userEmail: state.userInputEmail,
         },
       })
-        .then(() => {
-          // unlink() {  // 카카오 계정 연결끊기
-          window.Kakao.API.request({
-            url: "/v1/user/unlink",
-            success: function () {
-              router.push("");
-              store.commit("userStore/setUser", null);
-              store.commit("userStore/setUserId", "");
-              store.commit("userStore/setUserLoginPlatform", "");
-              store.commit("userStore/setUserClientId", "");
-              store.commit("userStore/setUserNickname", "");
-              store.commit("userStore/setUserInputNickname", "");
-              store.commit("userStore/setUserProfileImage", "");
-              alert('탈퇴되었습니다!')
-            },
-            fail: function (error) {
-              alert(error);
-              return;
-            },
-          });
+        .then((res) => {
+          if(!res.data.successDelete) {
+            alert('입력하신 email이 카카오계정 ID와 다릅니다!')
+          } else {
+            // unlink() {  // 카카오 계정 연결끊기
+            window.Kakao.API.request({
+              url: "/v1/user/unlink",
+              success: function () {
+                router.push("/");
+                store.commit("userStore/setUser", null);
+                store.commit("userStore/setUserId", "");
+                store.commit("userStore/setUserLoginPlatform", "");
+                store.commit("userStore/setUserClientId", "");
+                store.commit("userStore/setUserNickname", "");
+                store.commit("userStore/setUserInputNickname", "");
+                store.commit("userStore/setUserProfileImage", "");
+                store.commit("boardStore/setBoardsIng", "");
+                store.commit("boardStore/setBoardsDone", "");
+                store.commit("boardStore/setBoardsLike", "");
+                store.commit("boardStore/setBoardsLikeId", "");
+                alert('탈퇴되었습니다!')
+              },
+              fail: function (error) {
+                alert(error);
+                return;
+              },
+            });
+          }
         })
-        .catch(() => {
-        });
+        // 모두 200으로 처리된다. true, false로 검증값 반환.
+        // .catch(() => {
+        // });
     };
 
     const toggleBoards = whichBoards => {
@@ -342,7 +361,7 @@ export default {
   text-decoration: none;
   font-weight: 600;
   transition: 0.25s;
-  margin: 3px;
+  margin: 3px 3px 3px 0;
 }
 
 input {
