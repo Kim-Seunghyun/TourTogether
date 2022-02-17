@@ -3,6 +3,25 @@
     <button v-if="!session" class="c-btn w-btn-green2" @click="joinSession()">
       Join!
     </button>
+    <!-- 비디오설정버튼 -->
+    <div class="d-flex align-items-center">
+      <div v-if="session">
+        <button
+          @click="toggleVideo()"
+          class="video-ctr-btn"
+          title="비디오 on/off"
+        >
+          📷
+        </button>
+        <button
+          @click="toggleAudio()"
+          class="video-ctr-btn"
+          title="마이크 on/off"
+        >
+          🎙️
+        </button>
+      </div>
+    </div>
     <div>
       <div v-if="session" id="session">
         <!-- 비디오 -->
@@ -18,23 +37,6 @@
             {{ sub.stream.connection.connectionId }}
           </user-video>
         </div>
-        <!-- 비디오설정버튼 -->
-      </div>
-      <div v-if="session" class="video-ctr-btn-group">
-        <button
-          @click="toggleVideo()"
-          class="video-ctr-btn"
-          title="비디오 on/off"
-        >
-          📷
-        </button>
-        <button
-          @click="toggleAudio()"
-          class="video-ctr-btn"
-          title="마이크 on/off"
-        >
-          🎙️
-        </button>
       </div>
     </div>
     <div v-show="session && this.chatToggle" class="chattingPart">
