@@ -188,6 +188,24 @@
             <h5 class="modal-title" id="exampleModalLabel">
               {{ this.selectBoardName }}
             </h5>
+            <div>
+              <img
+                class="cursur-pointer"
+                style="margin: 0 3px"
+                v-if="this.favoriteBoardId.includes(this.selectBoard)"
+                src="@/assets/img/full_heart.png"
+                width="30"
+                @click="likeCancel(this.selectBoard)"
+              />
+              <img
+                class="cursur-pointer"
+                style="margin: 0 3px"
+                v-if="!this.favoriteBoardId.includes(this.selectBoard)"
+                src="@/assets/img/empty_heart.png"
+                width="30"
+                @click="likeClick(this.selectBoard)"
+              />
+            </div>
           </div>
           <div class="modal-body">
             <div class="d-flex p-2 bd-highlight select-title">일차별</div>
@@ -238,24 +256,6 @@
             >
               Close
             </button>
-            <div>
-              <img
-                class="cursur-pointer"
-                style="margin: 0 3px"
-                v-if="this.favoriteBoardId.includes(this.selectBoard)"
-                src="@/assets/img/full_heart.png"
-                width="30"
-                @click="likeCancel(this.selectBoard)"
-              />
-              <img
-                class="cursur-pointer"
-                style="margin: 0 3px"
-                v-if="!this.favoriteBoardId.includes(this.selectBoard)"
-                src="@/assets/img/empty_heart.png"
-                width="30"
-                @click="likeClick(this.selectBoard)"
-              />
-            </div>
           </div>
         </div>
       </div>
