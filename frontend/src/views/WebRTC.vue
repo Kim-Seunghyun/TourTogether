@@ -90,8 +90,11 @@ export default {
       chatToggle: false,
     };
   },
+  unmounted() {
+    this.leaveSession();
+  },
   methods: {
-joinSession() {
+    joinSession() {
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
 
