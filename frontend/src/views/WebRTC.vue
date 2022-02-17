@@ -403,8 +403,8 @@ export default {
 
 .video-ctr-btn-group {
   position: absolute;
-  top: 1090px;
-  margin-left: 45px;
+  top: 700px;
+  margin-left: 47px;
 }
 
 #chattingInput {
