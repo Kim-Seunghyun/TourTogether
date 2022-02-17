@@ -94,7 +94,6 @@ export const boardStore = {
     },
     setBoardToDelete(state, boardId) {
       state.boardToDelete = boardId
-
     },
     setTourList(state, tourList) {
       state.tourList = tourList;

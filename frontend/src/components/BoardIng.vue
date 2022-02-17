@@ -10,10 +10,16 @@
         data-bs-target="#modal1"
       />
     </div>
-    <img src="@/assets/trip-route.jpg" alt="trip-route" />
+    <img
+      @click="openBoard"
+      class="cursur-pointer"
+      src="@/assets/trip-route.jpg"
+      alt="trip-route"
+    />
     <div class="board-info d-flex justify-content-between">
-      <div>{{ board.boardName }}</div>
-      <div>{{ board.boardId }}</div>
+      <div @click="openBoard" class="cursur-pointer">
+        <h6>{{ board.boardName }}</h6>
+      </div>
       <div>
         <img
           class="heart cursur-pointer"
@@ -179,6 +185,17 @@ export default {
     const pushDeleteBoardId = (boardId) => {
       store.commit("boardStore/setBoardToDelete", boardId);
     };
+    const openBoard = () => {
+      axios({
+        method: "post",
+        url: API_BASE_URL + "board/searchByBoardId",
+        data: {
+          boardId: props.board.boardId,
+        },
+      }).then((res) => {
+        location.href = `/board/${res.data.board.boardRandom}`;
+      });
+    };
 
     return {
       deleteBoard,
@@ -188,6 +205,7 @@ export default {
       getBoardsLike,
       getBoardsIng,
       pushDeleteBoardId,
+      openBoard,
     };
   },
 };
