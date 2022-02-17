@@ -120,7 +120,6 @@
                   v-model="boardName"
                   placeholder="여행 제목을 입력해주세요"
                   required
-                  @onkeyup.enter="createBoard"
                 />
               </div>
               <div class="modal-footer">
@@ -255,7 +254,6 @@ export default {
       });
     },
     createBoard() {
-      alert("send create board data");
       axios({
         method: "post",
         url: API_BASE_URL + "board/create",
