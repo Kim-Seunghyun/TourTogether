@@ -4,12 +4,12 @@
     v-bind="$attrs"
     id="navbarBlur"
     data-scroll="true"
-    style="margin-top: 0px; padding-bottom: 0px;"
+    style="margin-top: 0px; padding-bottom: 0px"
   >
     <div class="px-3 py-1 container-fluid">
       <router-link to="/" class="px-0 nav-link font-weight-bold">
-        <!-- <h5>TOUR TOGETHER ✈️</h5> 51 --> 
-        <img src="@/assets/img/logo2.png" alt="logo" style="height: 50px;">
+        <!-- <h5>TOUR TOGETHER ✈️</h5> 51 -->
+        <img src="@/assets/img/logo2.png" alt="logo" style="height: 50px" />
       </router-link>
 
       <div
