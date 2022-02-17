@@ -330,7 +330,7 @@ export default {
       const copyText = document.getElementById("myInput");
       copyText.select();
       document.execCommand("copy");
-      // alert(copyText.value + "을 복사했습니다.");
+      alert(copyText.value + "을 복사했습니다.");
     },
     // exportToPDF() {
     //   //여기서 map.vue clickPDF함수 실행시키고 map.vue에서 맵그리고 html2pdf다운로드 하게하기 => best => 다른component의 함수 호출하기
