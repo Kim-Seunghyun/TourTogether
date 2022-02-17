@@ -2,7 +2,7 @@
   <div id="zzz">
     <div id="map" class="map" style="width: 100%">
       <draggable-div id="plan_wrap" class="resize" style="display: block">
-        <template v-slot:header> 계획 헤더 </template>
+        <template v-slot:header> 계획 </template>
         <template v-slot:main>
           <Plan
             v-on:getLine="emitList"

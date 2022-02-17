@@ -59,7 +59,7 @@
       id="plan_wrap"
       class="chattingPart"
     >
-      <template v-slot:header> 채팅 헤더 </template>
+      <template v-slot:header> 채팅 </template>
       <template v-slot:main>
         <!-- 채팅화면 -->
         <div id="chatting-wrapper">

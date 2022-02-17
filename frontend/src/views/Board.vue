@@ -4,7 +4,7 @@
       <Map />
     </div>
     <draggable-div v-show="memovisible" id="memo_wrapper" class="resize">
-      <template v-slot:header> 메모장 헤더 </template>
+      <template v-slot:header> 메모장 </template>
       <template v-slot:main> <memo /> </template>
       <!-- <template v-slot:footer> footer </template> -->
     </draggable-div>
