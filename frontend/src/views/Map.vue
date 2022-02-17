@@ -259,7 +259,7 @@ export default {
       for (var j = 1; j <= state.day; j++) {
         var tmp = document.createElement("option");
         tmp.value = j;
-        tmp.innerHTML = j;
+        tmp.innerHTML = j + "일차";
         selectbar.appendChild(tmp);
       }
       selectbar.onchange = function () {
@@ -547,9 +547,15 @@ export default {
     };
     const getListItem = (index, tourspot) => {
       var el = document.createElement("li");
+      el.className = "item";
 
       var itemStr = document.createElement("span");
-      itemStr.className = "markerbg marker_" + index;
+      var img = document.createElement("img");
+      img.className = "img";
+      img.setAttribute('style', 'width:120px; height:120px');
+      img.src = state.src[tourspot.tourSpotId%10];
+      itemStr.appendChild(img);
+
       var info = document.createElement("div");
       info.className = "info";
       itemStr.appendChild(info);
@@ -563,8 +569,8 @@ export default {
       spantag.className = "spantag";
       spantag.innerText = tourspot.tourSpotAddress;
       info.appendChild(spantag);
+
       el.appendChild(itemStr);
-      el.className = "item";
       return el;
     };
     const removeAllChildNods = () => {
@@ -662,6 +668,9 @@ export default {
 .bg_white {
   background: #fff;
 }
+#zzz{
+  
+}
 #menu_wrap hr {
   display: block;
   height: 1px;
@@ -695,16 +704,16 @@ export default {
 #placesList .info .spantag {
   color: #009900;
 }
-#placesList .item .markerbg {
+#placesList .item .img {
   float: left;
-  position: absolute;
-  width: 36px;
+  position: relative;
+  width: 37px;
   height: 37px;
   margin: 10px 0 0 10px;
-  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
-    no-repeat;
+  /* //background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
+    no-repeat; */
 }
-#placesList .item .marker_1 {
+/* #placesList .item .marker_1 {
   background-position: 0 -10px;
 }
 #placesList .item .marker_2 {
@@ -748,7 +757,7 @@ export default {
 }
 #placesList .item .marker_15 {
   background-position: 0 -654px;
-}
+} */
 
 #pagination {
   margin: 10px auto;
@@ -826,9 +835,9 @@ export default {
   font-size: 12px;
 }
 .desc .register {
-  width: 17px;
-  height: 17px;
-  background: url("../assets/kakao_login_large_wide.png");
+  width: 32px;
+  height: 32px;
+  background: url("../assets/circularplusbutton_121982.png");
 }
 .desc .register:hover {
   cursor: pointer;
