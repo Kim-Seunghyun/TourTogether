@@ -184,7 +184,7 @@ public class BoardServiceImpl implements BoardService {
 		category.setCategoryWithWhom(boardCategoryInfo.getCategoryWithWhom());
 		category.setCategorySeason(boardCategoryInfo.getCategorySeason());
 		category.setCategoryArea(boardCategoryInfo.getCategoryArea());
-		category.setCategoryTheme(boardCategoryInfo.getCategorySeason());
+		category.setCategoryTheme(boardCategoryInfo.getCategoryTheme());
 		categoryRepository.save(category);
 	}
 
