@@ -1,18 +1,23 @@
 <template>
   <div class="card col-xxl-12">
-    <img src="@/assets/trip-route.jpg" alt="trip-route" style="margin-top: 13px;"/>
+    <img
+      class="modal_img"
+      src="@/assets/trip-route.jpg"
+      alt="trip-route"
+      style="margin-top: 13px"
+    />
     <div class="board-info d-flex justify-content-between">
-      <div>{{ board.boardName }}</div>
+      <div>{{ board.id }}</div>
       <div>
         <img
-          style="margin: 0 3px;"
+          style="margin: 0 3px"
           v-if="this.favoriteBoardId.includes(board.boardId)"
           src="@/assets/img/full_heart.png"
           width="30"
           @click="likeCancel(board.boardId)"
         />
         <img
-          style="margin: 0 3px;"
+          style="margin: 0 3px"
           v-if="!this.favoriteBoardId.includes(board.boardId)"
           src="@/assets/img/empty_heart.png"
           width="30"
@@ -40,6 +45,8 @@ export default {
     return {
       boards: [],
       favoriteBoardId: [],
+      dayArr: [],
+      day: null,
     };
   },
   computed: {
@@ -72,7 +79,6 @@ export default {
       });
     },
     likeClick(boardId) {
-      console.log("좋아요 누르기 ");
       axios({
         method: "patch",
         url: API_BASE_URL + "board/clickBoardLike",
@@ -82,6 +88,7 @@ export default {
         },
       }).then((res) => {
         this.favoriteBoardId = res.data.favoriteBoardId;
+        console.log(this.favoriteBoardId);
         this.getListByCategory(
           this.withWhom,
           this.season,
@@ -109,6 +116,9 @@ export default {
         );
       });
     },
+    selectDay(index) {
+      this.withWhom = index;
+    },
     getListByCategory(withWhom, season, area, theme) {
       axios({
         method: "post",
@@ -121,6 +131,15 @@ export default {
         },
       }).then((res) => {
         this.setSearchByCategoryBoards(res.data.boards);
+      });
+    },
+    clickBoard(boardId) {
+      console.log(boardId);
+      axios({
+        method: "post",
+        url: API_BASE_URL + "tourspot",
+      }).then((res) => {
+        console.log(res);
       });
     },
   },

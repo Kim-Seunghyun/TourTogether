@@ -1,4 +1,4 @@
-`<template>
+<template>
   <div class="pb-4 container-fluid">
     <div class="row">
       <div class="col-lg-7 mb-lg-0 mb-4">
@@ -43,27 +43,48 @@
       <div class="col-lg-5">
         <div class="card h-100 p-3">
           <div
-            class="overflow-hidden position-relative border-radius-lg bg-cover h-100"
+            class="
+              overflow-hidden
+              position-relative
+              border-radius-lg
+              bg-cover
+              h-100
+            "
           >
             <span class="mask bg-gradient-dark"></span>
             <div
-              class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3"
+              class="
+                card-body
+                position-relative
+                z-index-1
+                d-flex
+                flex-column
+                h-100
+                p-3
+              "
               style="background-color: rgb(180 211 245)"
             >
-              <h2 class="text-white font-weight-bolder mb-4 pt-2">🗓️👭✈️👬🚢</h2>
-              <p class="" style="font-weight: bold;">
+              <h2 class="text-white font-weight-bolder mb-4 pt-2">
+                🗓️👭✈️👬🚢
+              </h2>
+              <p class="" style="font-weight: bold">
                 친구들과 실시간으로 소통하며 여행 계획을 짜고 싶은 사람!<br />
                 다른 사람들의 기깔나는 여행 계획을 추천받고 싶은 사람! <br />
                 여행지는 정했지만 어디 가야할지 도저히 모르겠는 사람!
                 <br /><br />
                 Tour Together을 통해 실시간으로 소통하고,<br />
-                인기있는 여행계획을 둘러보고,
-                관광지를 추천받으세요!
+                인기있는 여행계획을 둘러보고, 관광지를 추천받으세요!
                 <br />
                 당신의 완벽한 여행을 위해 Tour Together가 도와줍니다.
               </p>
               <a
-                class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto"
+                class="
+                  text-white text-sm
+                  font-weight-bold
+                  mb-0
+                  icon-move-right
+                  mt-auto
+                "
                 href="javascript:;"
               >
                 <h4>
@@ -118,7 +139,6 @@
                   v-model="boardName"
                   placeholder="여행 제목을 입력해주세요"
                   required
-                  @keyup.enter="createBoard"
                 />
               </div>
               <div class="modal-footer">
@@ -139,25 +159,111 @@
     <!-- 유형 선택하기 -->
     <div class="mt-4 row">
       <div class="mb-4 col-lg-12 mb-lg-0">
-        <h4>🌏 추천</h4>
+        <h4 style="text-align: left; margin-left: 60px">🌏 추천</h4>
         <div class="card z-index-2">
-          <div class="p-3 card-body d-flex justify-content-center">
-            <div class="col-lg-4 col-sm-8">
+          <div class="p-3 card-body d-flex">
+            <div
+              class="col-lg-7 col-sm-8"
+              style="text-align: left; margin-left: 40px"
+            >
               <board-category />
             </div>
             <br />
           </div>
           <div>
-            <div v-if="boards.length == 0" style="text-align: center;" class="d-flex justify-content-center">
-              <h5 style="text-align: center; margin: 7px;">선택하신 유형에 해당되는 여행 계획이 없습니다.😭</h5>
+            <div
+              v-if="boards.length == 0"
+              style="text-align: center"
+              class="d-flex justify-content-center"
+            >
+              <h5 style="text-align: center; margin: 7px">
+                선택하신 유형에 해당되는 여행 계획이 없습니다.😭
+              </h5>
             </div>
-            <div v-else class="row card-container" style="padding: 0 33px;">
+            <div v-else class="row card-container" style="padding: 0 33px">
               <BoardByCategory
                 v-for="board in boards"
                 :board="board"
                 :key="board"
+                @click="showBoard(board)"
+                data-bs-toggle="modal"
+                data-bs-target="#boardModal"
               />
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="boardModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header" style="border-bottom: none">
+            <h5 class="modal-title" id="exampleModalLabel">
+              {{ this.selectBoardName }}
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Close"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex p-2 bd-highlight select-title">일차별</div>
+            <div class="nav-wrapper position-relative end-0">
+              <ul
+                class="nav nav-pills nav-fill p-1"
+                role="tablist"
+                data-id="hi"
+              >
+                <li
+                  class="nav-item"
+                  v-for="(item, index) in dayArr"
+                  :key="item"
+                  @click="selectDay(index)"
+                >
+                  <a
+                    class="nav-link mb-0 px-0 py-1 active"
+                    data-bs-toggle="tab"
+                    role="tab"
+                    aria-selected="true"
+                    style="cursor: pointer"
+                  >
+                    {{ item }}
+                  </a>
+                </li>
+              </ul>
+              <ul id="schedule_list">
+                <li
+                  class="tmp_list"
+                  v-for="value in this.tmp[this.day]"
+                  :key="value"
+                >
+                  <div class="info">
+                    <span class="name">
+                      {{ value.name }}
+                    </span>
+                    <span class="add"> 주소 : {{ value.add }} </span>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <div class="modal-footer" style="border-top: none">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Close
+            </button>
           </div>
         </div>
       </div>
@@ -165,6 +271,7 @@
   </div>
 </template>
 <script>
+import setNavPills from "@/assets/js/nav-pills.js";
 import BoardByCategory from "@/components/BoardByCategory.vue";
 import BoardCategory from "./components/BoardCategory.vue";
 // import DefaultInfoCard from "@/examples/Cards/DefaultInfoCard.vue";
@@ -190,7 +297,15 @@ export default {
         classIcon: "✈️",
       },
       boards: [],
+      selectBoard: null,
+      selectBoardName: null,
+      selectSchedule: [],
+      selectAddress: [],
+      tmp: [],
+      dayArr: [],
+      day: 0,
       favoriteBoardId: [],
+      tourspot: [],
       boardName: "",
       boardRandom: "",
       // userId: "",
@@ -216,8 +331,17 @@ export default {
     },
   },
   created() {
+    axios({
+      method: "get",
+      url: API_BASE_URL + "tourspot",
+    }).then((res) => {
+      this.tourspot = res.data.tourSpotList;
+    });
     // this.getAllBoards();
     this.getUserFavoriteBoards();
+  },
+  mounted() {
+    setNavPills();
   },
   methods: {
     ...mapMutations(boardStore, ["setAllBoards", "setSearchByCategoryBoards"]),
@@ -244,7 +368,6 @@ export default {
       });
     },
     createBoard() {
-      // alert("send create board data");
       axios({
         method: "post",
         url: API_BASE_URL + "board/create",
@@ -259,6 +382,53 @@ export default {
         location.href = `/board/${this.boardRandom}`;
       });
     },
+    showBoard(board) {
+      this.day = 0;
+      this.dayArr = [];
+      this.tmp = [];
+      this.selectBoard = board.boardId;
+      this.selectBoardName = board.boardName;
+      axios({
+        method: "post",
+        url: API_BASE_URL + "schedule/searchByBoardId",
+        data: {
+          boardId: this.selectBoard,
+        },
+      }).then((res) => {
+        this.selectSchedule = res.data.schedule;
+        var date =
+          this.selectSchedule[this.selectSchedule.length - 1].scheduleDay;
+        for (var i = 0; i < this.selectSchedule.length; i++) {
+          let day = this.selectSchedule[i].scheduleDay - 1;
+          let name = this.selectSchedule[i].scheduleAdditional;
+          let id = this.selectSchedule[i].scheduleTourSpotId;
+          let add;
+          for (var j = 0; j < this.tourspot.length; j++) {
+            if (id === this.tourspot[j].tourSpotId) {
+              add = this.tourspot[j].tourSpotAddress;
+              break;
+            }
+          }
+          let aaa = {
+            name: name,
+            add: add,
+          };
+          if (this.tmp[day] === undefined) {
+            this.tmp[day] = [];
+          }
+          this.tmp[day].push(aaa);
+        }
+        console.log(this.tmp);
+        for (i = 1; i <= date; i++) {
+          var str = i + " 일차";
+          this.dayArr.push(str);
+        }
+      });
+    },
+    selectDay(index) {
+      this.selectAddress = [];
+      this.day = index;
+    },
   },
   components: {
     BoardCategory,
@@ -271,5 +441,18 @@ export default {
 .card-container {
   /* width: 2040px; */
   margin: 0 auto;
+}
+#schedule_list {
+  background-color: #96b7e8ba;
+}
+#schedule_list hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 2px solid #5f5f5f;
+  margin: 3px 0;
+}
+.select-title {
+  font-weight: bold;
 }
 </style>

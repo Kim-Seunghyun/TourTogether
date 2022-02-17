@@ -3,9 +3,13 @@
     <div id="map_wrapper">
       <Map />
     </div>
-    <div v-show="memovisible" id="memo_wrapper">
-      <Memo />
-    </div>
+
+    <draggable-div v-show="memovisible" id="memo_wrapper">
+      <template v-slot:header> 메모장 헤더 </template>
+      <template v-slot:main> <memo /> </template>
+      <!-- <template v-slot:footer> footer </template> -->
+    </draggable-div>
+
     <div class="container" style="padding: 0">
       <div id="webRTC" class="col-9">
         <webRTC />
@@ -22,6 +26,7 @@ import Map from "@/views/Map.vue";
 import Memo from "@/views/Memo.vue";
 import webRTC from "@/views/WebRTC.vue";
 import BoardButtons from "@/views/components/BoardButtons.vue";
+import DraggableDiv from "@/components/DraggableDiv.vue";
 import axios from "axios";
 import { API_BASE_URL } from "@/config/index.js";
 import { mapGetters } from "vuex";
@@ -41,6 +46,7 @@ export default {
     Memo,
     webRTC,
     BoardButtons,
+    DraggableDiv,
   },
 
   computed: {

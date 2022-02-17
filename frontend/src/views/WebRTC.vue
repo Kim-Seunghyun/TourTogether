@@ -52,7 +52,9 @@
         style="position: relative; width: 250px"
       />
     </div>
-    <button class="c-btn popup-btn chat-btn" @click="changeChatToggle()">채팅</button>
+    <button class="c-btn popup-btn chat-btn" @click="changeChatToggle()">
+      채팅
+    </button>
   </div>
 </template>
 
@@ -91,8 +93,11 @@ export default {
       chatToggle: false,
     };
   },
+  unmounted() {
+    this.leaveSession();
+  },
   methods: {
-joinSession() {
+    joinSession() {
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
 
@@ -164,12 +169,33 @@ joinSession() {
         // console.log(event.type); // The type of message
 
         // 여기에 div 찾아서 내용 넣고 올리기
-        const el = document.createElement("li");
         const dest = document.getElementById("chatting");
+        const el = document.createElement("li");
+        const chattingDiv = document.createElement("div");
+        el.classList.add("chattingLi");
+        chattingDiv.classList.add("eaChatting");
+
         const wrapper = document.getElementById("chatting-wrapper");
-        el.innerText =
-          event.from.data.split(":")[1].split('"')[1] + "\t" + event.data;
-        dest.append(el);
+        const nameTag = document.createElement("span");
+        nameTag.classList.add("nameTag");
+        const contentTag = document.createElement("span");
+
+        const nameDiv = document.createElement("div");
+        const contentDiv = document.createElement("div");
+
+        nameDiv.classList.add("left");
+        contentDiv.classList.add("right");
+        contentDiv.classList.add("contentDiv");
+
+        nameTag.innerText = event.from.data.split(":")[1].split('"')[1];
+        contentTag.classList.add("contentTag");
+        contentTag.innerText = event.data;
+        nameDiv.append(nameTag);
+        contentDiv.append(contentTag);
+        chattingDiv.appendChild(nameDiv);
+        chattingDiv.appendChild(contentDiv);
+        el.appendChild(chattingDiv);
+        dest.appendChild(el);
         wrapper.scrollTop = wrapper.scrollHeight;
       });
     },
@@ -313,7 +339,7 @@ joinSession() {
       } else {
         alert("화상채팅을 켜주세요!");
       }
-    }
+    },
   },
 };
 </script>
@@ -330,6 +356,7 @@ joinSession() {
   width: 250px;
   height: 300px;
   overflow-y: auto;
+  overflow-x: hidden;
   border: none;
   background: #96b7e8ba;
   border-radius: 5px 5px 0px 0px;
@@ -376,8 +403,8 @@ joinSession() {
 
 .video-ctr-btn-group {
   position: absolute;
-  top: 1090px;
-  margin-left: 45px;
+  top: 727px;
+  margin-left: 47px;
 }
 
 #chattingInput {
@@ -405,14 +432,51 @@ joinSession() {
   width: 250px;
   position: absolute;
   right: 0.5vw;
-  top: 4.9vw;
+  top: 5.7vw;
   z-index: 5000;
   opacity: 1;
   background-color: white;
   border-radius: 5px;
 }
+.nameTag {
+  /* margin-left: 0px; */
+  /* position: absolute; */
+  text-align: right;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid black 2px;
+  padding-bottom: 2px;
+  margin-left: 5px;
+  font-size: 12px;
+}
+.contentTag {
+  /* position: absolute;
+  left: 50%; */
+  text-align: right;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: solid black 2px;
+  padding-bottom: 2px;
+  margin-right: 5px;
+  font-size: 12px;
+}
+.eaChatting {
+  margin-top: 5px;
+  position: relative;
+}
 .chat-btn {
-  position: fixed;
+  position: absolute;
   left: 970px;
+}
+.left {
+  text-align: left;
+}
+.right {
+  text-align: right;
+}
+.contentDiv {
+  margin-right: 5px;
 }
 </style>

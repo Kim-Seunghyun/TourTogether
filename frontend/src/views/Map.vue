@@ -9,7 +9,9 @@
         />
       </div>
     </div>
-    <div id="list_wrap"></div>
+    <div id="list_wrap">
+
+    </div>
   </div>
 </template>
 
@@ -39,14 +41,18 @@ export default {
       src: [
         "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EA%B2%BD%EB%B3%B5%EA%B6%81.jfif",
         "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%82%99%EC%82%B0%ED%95%B4%EC%88%98%EC%9A%95%EC%9E%A5.jfif",
-        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%8F%84%EB%9D%BC%EC%97%90%EB%AA%BD.jfif",
         "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EC%9A%A9%EC%9D%B8%EC%8B%9C%EB%B0%95%EB%AC%BC%EA%B4%80.jfif",
         "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EC%B2%A8%EC%84%B1%EB%8C%80.jfif",
         "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%ED%95%9C%EB%9D%BC%EC%82%B0.jfif",
         "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%86%80%EC%9D%B4%EA%B3%B5%EC%9B%90.png",
         "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%82%A8%EC%82%B0%ED%83%80%EC%9B%8C.png",
-        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%9D%BC%EC%9D%B4%EC%96%B8.jpg",
-        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%8F%84%EB%9D%BC%EC%97%90%EB%AA%BD.jfif",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EC%A7%84%EC%A3%BC+%EC%9C%A0%EB%93%B1%EC%B6%95%EC%A0%9C.jpg",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EA%B1%B0%EC%A0%9C%EC%99%B8%EB%8F%84.jpg",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EA%B2%BD%EC%A3%BC+%EB%B3%B4%EB%AC%B8%EB%8B%A8%EC%A7%80.jpg",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EB%8C%80%EA%B4%80%EB%A0%B9+%EC%82%BC%EC%96%91%EB%AA%A9%EC%9E%A5.jpg",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EC%84%9C%EC%9A%B8%EC%88%B2.jpg",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%EC%88%9C%EC%B2%9C%EB%A7%8C%EC%A0%95%EC%9B%90.jpg",
+        "https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%ED%86%B5%EC%98%81%EB%AA%BD%EB%8F%8C%ED%95%B4%EB%B3%80.jfif",
       ],
       infowindow: null,
       listFlag: false,
@@ -221,7 +227,7 @@ export default {
       overlay_info.appendChild(desc);
 
       var img = document.createElement("img");
-      var i = index % 10;
+      var i = index % state.src.length;
       img.src = state.src[i];
       desc.appendChild(img);
 
@@ -553,15 +559,15 @@ export default {
       var itemStr = document.createElement("span");
       var img = document.createElement("img");
       img.className = "img";
-      img.setAttribute("style", "width:100px; height:100px");
-      img.src = state.src[tourspot.tourSpotId % 10];
+      img.setAttribute("style", "width:60px; height:60px");
+      img.src = state.src[tourspot.tourSpotId % state.src.length];
       itemStr.appendChild(img);
 
       var info = document.createElement("div");
       info.className = "info";
       itemStr.appendChild(info);
 
-      var htag = document.createElement("h5");
+      var htag = document.createElement("span");
       htag.className = "htag";
       htag.innerText = tourspot.tourSpotName;
       info.appendChild(htag);
@@ -672,18 +678,21 @@ export default {
 .bg_white {
   background: #fff;
 }
-#zzz {
-}
+
 #placesList {
   z-index: 3;
   position: absolute;
   top: 0px;
   left: 0px;
   width: 400px;
-  height: 570px;
-  background: #009900;
+  height: 95%;
   overflow-y: scroll;
+  background-color: #96b7e8ba;
+  border-radius: 5px;
+  padding: 0px;
+  margin-left: 10px;
 }
+
 #placesList::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera*/
 }
@@ -702,13 +711,19 @@ export default {
   border-bottom: 1px solid #888;
   overflow: hidden;
   cursor: pointer;
-  min-height: 100px;
+  min-height: 70px;
 }
 #placesList .item span {
   display: block;
   margin-top: 4px;
+  margin-left: 1px;
+  margin-right: 2px;
+  padding-right: 2px;
+  font-size: 15px;
 }
-#placesList .item h5,
+#placesList .item .htag {
+  font-weight: bold;
+}
 #placesList .item .info {
   text-overflow: ellipsis;
   /* overflow: hidden; */
@@ -718,14 +733,14 @@ export default {
   padding: 10px 0 10px 55px;
 }
 #placesList .info .spantag {
-  color: #009900;
+  color: white;
 }
 #placesList .item .img {
   float: left;
   position: relative;
   width: 37px;
   height: 37px;
-  margin: 10px 0 0 10px;
+  margin: 5px;
   /* //background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
     no-repeat; */
 }
@@ -789,7 +804,7 @@ export default {
   color: #777;
 }
 .overlay_info {
-  border-radius: 6px;
+  border-radius: 5px;
   margin-bottom: 12px;
   float: left;
   position: relative;
@@ -817,12 +832,13 @@ export default {
 }
 .overlay_info .title {
   display: block;
-  background: #d95050;
+  background: #ec6868;
   text-decoration: none;
   color: #fff;
+  font-weight: bold;
   padding: 12px 36px 12px 14px;
   font-size: 14px;
-  border-radius: 6px 6px 0 0;
+  border-radius: 5px 5px 0 0;
 }
 .overlay_info .close {
   position: absolute;
@@ -845,6 +861,7 @@ export default {
   width: 128px;
   height: 128px;
   vertical-align: top;
+  margin-bottom: 10px
 }
 .desc div {
   text-align: left;
@@ -874,22 +891,28 @@ export default {
 
 #selectedApt_wrap {
   position: absolute;
-  top: 0;
-  right: 2%;
+  top: 0.5%;
+  right: 0.5%;
   bottom: 0;
-  width: 16%;
-  height: 50%;
+  width: 250px;
+  height: 338px;
+  padding: 0;
+  border-radius: 5px;
   /* margin: 10px 0 30px 0px; */
-  padding: 5px;
   overflow-y: auto;
   background: rgba(245, 245, 245, 1);
   z-index: 3;
   /* font-size: 12px; */
-  border-radius: 10px;
 }
 #map {
   width: 100vw;
   height: 67vh;
   position: relative;
+}
+
+
+#placesList {
+  height: 570px;
+  margin-bottom: 0;
 }
 </style>
