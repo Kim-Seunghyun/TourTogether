@@ -207,6 +207,7 @@ export default {
         const contentDiv = document.createElement("div");
 
         nameDiv.classList.add("left");
+        nameDiv.setAttribute("style", "text-align:left;");
         contentDiv.classList.add("right");
         contentDiv.classList.add("contentDiv");
         contentDiv.setAttribute("style", "text-align: right;");
