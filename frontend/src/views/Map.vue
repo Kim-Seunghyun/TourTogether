@@ -9,7 +9,7 @@
         />
       </div>
     </div>
-    <ul id="placesList"></ul>
+    <div id="list_wrap"></div>
   </div>
 </template>
 
@@ -145,6 +145,10 @@ export default {
     };
     const displayMarker = (depth, areaNum) => {
       removeAllChildNods(); // list 초기화
+      var list = document.getElementById("list_wrap");
+      var ul = document.createElement("ul");
+      ul.id = "placesList";
+      list.appendChild(ul);
       var index = 0;
       if (depth > 1) {
         removeMarker(depth);
@@ -489,7 +493,6 @@ export default {
       }
       for (i = 0; i < state.sido_polygon.length; i++) {
         state.sido_polygon[i][2].setMap(state.map);
-  
       }
     };
     const showDepth1 = () => {
@@ -573,8 +576,11 @@ export default {
     };
     const removeAllChildNods = () => {
       var listEl = document.getElementById("placesList");
-      while (listEl.firstChild) {
-        listEl.removeChild(listEl.firstChild);
+      if (listEl) {
+        while (listEl.firstChild) {
+          listEl.removeChild(listEl.firstChild);
+        }
+        listEl.remove();
       }
     };
     const emitList = function (abc) {
@@ -675,6 +681,7 @@ export default {
   left: 0px;
   width: 400px;
   height: 570px;
+  background: #009900;
   overflow-y: scroll;
 }
 #placesList::-webkit-scrollbar {
