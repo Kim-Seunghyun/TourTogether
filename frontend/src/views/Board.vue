@@ -128,6 +128,7 @@ export default {
   /* display: flex; */
   /* flex-direction: column; */
   /* background: #999; */
+  z-index: 15001;
 }
 #map_wrapper {
   /* left: 2%; */
@@ -164,7 +165,7 @@ export default {
   height: 120px;
   width: 100%;
   /* background: white; */
-  z-index: 50;
+  z-index: 15002;
 }
 #buttons {
   height: 120px;
@@ -173,6 +174,6 @@ export default {
   right: 0;
   bottom: 0;
   /* background: white; */
-  z-index: 52;
+  z-index: 15003;
 }
 </style>
