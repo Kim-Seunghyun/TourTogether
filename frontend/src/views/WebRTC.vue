@@ -55,9 +55,9 @@
 
     <draggable-div
       v-show="session && this.chatToggle"
-      c
       id="plan_wrap"
       class="chattingPart"
+      style="overflow: auto"
     >
       <template v-slot:header> 채팅 </template>
       <template v-slot:main>
@@ -72,7 +72,7 @@
           placeholder="메시지 입력"
           v-model="message"
           id="chattingInput"
-          style="position: relative; width: 250px"
+          style="position: relative; width: 250px; width: 100%"
         />
       </template>
     </draggable-div>

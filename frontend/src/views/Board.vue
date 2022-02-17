@@ -3,7 +3,12 @@
     <div id="map_wrapper">
       <Map />
     </div>
-    <draggable-div v-show="memovisible" id="memo_wrapper" class="resize">
+    <draggable-div
+      v-show="memovisible"
+      id="memo_wrapper"
+      class="resize"
+      style="overflow: hidden"
+    >
       <template v-slot:header> 메모장 </template>
       <template v-slot:main> <memo /> </template>
       <!-- <template v-slot:footer> footer </template> -->
@@ -138,7 +143,7 @@ export default {
 #memo_wrapper {
   width: 20%;
   height: 30%;
-  overflow: scroll;
+  overflow: hidden;
   position: absolute;
   bottom: 0;
   right: 0;
