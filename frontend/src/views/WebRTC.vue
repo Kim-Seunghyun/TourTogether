@@ -3,38 +3,39 @@
     <button v-if="!session" class="c-btn w-btn-green2" @click="joinSession()">
       Join!
     </button>
-
-    <div v-if="session" id="session">
-      <!-- 비디오 -->
-      <div id="video_wrapper">
-        <user-video :stream-manager="mainStreamManager" class="box" />
-        <user-video
-          v-for="sub in subscribers"
-          :key="sub.stream.connection.connectionId"
-          :stream-manager="sub"
-          @click="updateMainVideoStreamManager(sub)"
-          class="box"
-        >
-          {{ sub.stream.connection.connectionId }}
-        </user-video>
+    <div>
+      <div v-if="session" id="session">
+        <!-- 비디오 -->
+        <div id="video_wrapper">
+          <user-video :stream-manager="mainStreamManager" class="box" />
+          <user-video
+            v-for="sub in subscribers"
+            :key="sub.stream.connection.connectionId"
+            :stream-manager="sub"
+            @click="updateMainVideoStreamManager(sub)"
+            class="box"
+          >
+            {{ sub.stream.connection.connectionId }}
+          </user-video>
+        </div>
+        <!-- 비디오설정버튼 -->
       </div>
-      <!-- 비디오설정버튼 -->
-    </div>
-    <div v-if="session" class="video-ctr-btn-group">
-      <button
-        @click="toggleVideo()"
-        class="video-ctr-btn"
-        title="비디오 on/off"
-      >
-        📷
-      </button>
-      <button
-        @click="toggleAudio()"
-        class="video-ctr-btn"
-        title="마이크 on/off"
-      >
-        🎙️
-      </button>
+      <div v-if="session" class="video-ctr-btn-group">
+        <button
+          @click="toggleVideo()"
+          class="video-ctr-btn"
+          title="비디오 on/off"
+        >
+          📷
+        </button>
+        <button
+          @click="toggleAudio()"
+          class="video-ctr-btn"
+          title="마이크 on/off"
+        >
+          🎙️
+        </button>
+      </div>
     </div>
     <div v-show="session && this.chatToggle" class="chattingPart">
       <!-- 채팅화면 -->
@@ -375,7 +376,7 @@ joinSession() {
 
 .video-ctr-btn-group {
   position: absolute;
-  top: 1090px;
+  top: 125px;
   left: 26px;
 }
 
