@@ -169,20 +169,30 @@ export default {
         const dest = document.getElementById("chatting");
         const el = document.createElement("li");
         const chattingDiv = document.createElement("div");
+        el.classList.add("chattingLi");
         chattingDiv.classList.add("eaChatting");
 
         const wrapper = document.getElementById("chatting-wrapper");
-        const nameTag = document.createElement("div");
+        const nameTag = document.createElement("span");
         nameTag.classList.add("nameTag");
-        const contentTag = document.createElement("div");
-        contentTag.classList.add("contentTag");
-        nameTag.innerText = event.from.data.split(":")[1].split('"')[1];
-        contentTag.innerText = event.data;
+        const contentTag = document.createElement("span");
 
-        chattingDiv.append(nameTag);
-        chattingDiv.append(contentTag);
-        el.append(chattingDiv);
-        dest.append(el);
+        const nameDiv = document.createElement("div");
+        const contentDiv = document.createElement("div");
+
+        nameDiv.classList.add("left");
+        contentDiv.classList.add("right");
+        contentDiv.classList.add("contentDiv");
+
+        nameTag.innerText = event.from.data.split(":")[1].split('"')[1];
+        contentTag.classList.add("contentTag");
+        contentTag.innerText = event.data;
+        nameDiv.append(nameTag);
+        contentDiv.append(contentTag);
+        chattingDiv.appendChild(nameDiv);
+        chattingDiv.appendChild(contentDiv);
+        el.appendChild(chattingDiv);
+        dest.appendChild(el);
         wrapper.scrollTop = wrapper.scrollHeight;
       });
     },
@@ -343,6 +353,7 @@ export default {
   width: 250px;
   height: 300px;
   overflow-y: auto;
+  overflow-x: hidden;
   border: none;
   background: #96b7e8ba;
   border-radius: 5px 5px 0px 0px;
@@ -425,20 +436,35 @@ export default {
   border-radius: 5px;
 }
 .nameTag {
-  left: 10%;
+  /* margin-left: 0px; */
   box-shadow: 1px 1px gray;
-  position: absolute;
+  /* position: absolute; */
   border-radius: 4px;
   background-color: rgba(255, 255, 255, 0.726);
 }
 .contentTag {
+  /* position: absolute;
+  left: 50%; */
   text-align: right;
+  box-shadow: 1px 1px gray;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.726);
 }
 .eaChatting {
   margin-top: 5px;
+  position: relative;
 }
 .chat-btn {
   position: fixed;
   left: 970px;
+}
+.left {
+  text-align: left;
+}
+.right {
+  text-align: right;
+}
+.contentDiv {
+  margin-right: 5px;
 }
 </style>
