@@ -28,7 +28,7 @@ public class User extends BaseEntity {
 	}
 
 	public User(UserLoginPostReq loginInfo) {
-		setUserNickname("newUser" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddTHHmmSSnn")));
+		setUserNickname("newUser" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmSSnn")));
 		setUserJoindate(LocalDateTime.now().toString());
 		setUserLoginPlatform(1);
 		setUserScore(0);
