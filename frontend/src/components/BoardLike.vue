@@ -28,7 +28,7 @@ import { API_BASE_URL } from "@/config/index.js";
 import { computed } from "vue";
 
 export default {
-  name: 'BoardIng',
+  name: "BoardIng",
   props: {
     board: Object,
   },
@@ -37,27 +37,30 @@ export default {
     const computedGetters = computed(() => store.getters);
     const getters = store.getters;
     const likeCancel = () => {
-      axios({
-        method: "patch",
-        url: API_BASE_URL + "board/cancelBoardLike",
-        data: {
-          boardId: props.board.boardId,
-          userId: getters["userStore/getUserId"],
-        },
-      }).then(() => {
-        store.commit("boardStore/cancelBoardLike", props.board)
+      if (!getters["userStore/getUserId"]) {
+        alert("로그인 해주세요!");
+      } else {
         axios({
-          method: "post",
-          url: 
-          API_BASE_URL + "board/searchLikeBoardByUserId",
+          method: "patch",
+          url: API_BASE_URL + "board/cancelBoardLike",
           data: {
+            boardId: props.board.boardId,
             userId: getters["userStore/getUserId"],
           },
-        }).then(res => {
-          store.commit("boardStore/setBoardsLike", res.data.myBoards)
+        }).then(() => {
+          store.commit("boardStore/cancelBoardLike", props.board);
+          axios({
+            method: "post",
+            url: API_BASE_URL + "board/searchLikeBoardByUserId",
+            data: {
+              userId: getters["userStore/getUserId"],
+            },
+          }).then((res) => {
+            store.commit("boardStore/setBoardsLike", res.data.myBoards);
           });
         });
       }
+    }
     const clickBoard = () => {
       if (!props.board.boardIsActive) {
         openBoard()
@@ -80,8 +83,8 @@ export default {
       openBoard,
       clickBoard
     };
-  }
-}
+  },
+};
 </script>
 <style scoped>
 .card {
@@ -98,5 +101,4 @@ export default {
 .board-info {
   margin: 5px;
 }
-
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div id="zzz">
     <div id="map" class="map" style="width: 100%">
-      <div id="selectedApt_wrap" style="display: block">
+      <div id="plan_wrap" style="display: block">
         <Plan
           v-on:getLine="emitList"
           :tourData="state.tmp"
@@ -9,27 +9,38 @@
         />
       </div>
     </div>
-    <div id="list_wrap">
-
-    </div>
+    <div id="list_wrap"></div>
   </div>
 </template>
 
 <script>
 import { reactive } from "vue";
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 
 import Plan from "@/components/Plan.vue";
 import { API_BASE_URL } from "@/config/index.js";
 import axios from "axios";
 import html2pdf from "html2pdf.js";
 import html2canvas from "html2canvas";
+import { useStore } from "vuex";
+
 export default {
   name: "Map",
   components: {
     Plan,
   },
   setup() {
+    const store = useStore();
+    const getters = watch(
+      () => store.getters["boardStore/getPlanFlag"],
+      () => {
+        if (store.getters["boardStore/getPlanFlag"]) {
+          document.getElementById("plan_wrap").style.display = "none";
+        } else {
+          document.getElementById("plan_wrap").style.display = "block";
+        }
+      }
+    );
     const sido_json = require("../assets/sido.json");
     const sigungu_json = require("../assets/sigungu.json");
     const state = reactive({
@@ -65,10 +76,11 @@ export default {
       tmp: Object,
       day: null,
       emitflag: false,
+      planFlag: true,
     });
     onMounted(() => {
       window.kakao && window.kakao.maps ? initMap() : addKakaoMapScript();
-      const target = document.getElementById("selectedApt_wrap");
+      const target = document.getElementById("plan_wrap");
       target.onmouseenter = function () {
         state.listFlag = true;
       };
@@ -495,7 +507,6 @@ export default {
       }
       for (i = 0; i < state.sido_polygon.length; i++) {
         state.sido_polygon[i][2].setMap(state.map);
-  
       }
     };
     const showDepth1 = () => {
@@ -666,6 +677,7 @@ export default {
       showDepth0,
       showDepth1,
       aaa,
+      getters,
     };
   },
 };
@@ -858,7 +870,7 @@ export default {
   width: 128px;
   height: 128px;
   vertical-align: top;
-  margin-bottom: 10px
+  margin-bottom: 10px;
 }
 .desc div {
   text-align: left;
@@ -886,7 +898,7 @@ export default {
   margin: 0 auto;
 }
 
-#selectedApt_wrap {
+#plan_wrap {
   position: absolute;
   top: 0.5%;
   right: 0.5%;
@@ -906,7 +918,6 @@ export default {
   height: 67vh;
   position: relative;
 }
-
 
 #placesList {
   height: 570px;

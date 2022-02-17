@@ -254,19 +254,23 @@ export default {
       });
     },
     createBoard() {
-      axios({
-        method: "post",
-        url: API_BASE_URL + "board/create",
-        data: {
-          boardName: this.boardName,
-          userId: this.userId,
-        },
-      }).then((res) => {
-        console.log(res.data);
-        this.boardRandom = res.data.boardRandom;
-        console.log(this.boardRandom);
-        location.href = `/board/${this.boardRandom}`;
-      });
+      if (!this.userId) {
+        alert("로그인 해주세요!");
+      } else {
+        axios({
+          method: "post",
+          url: API_BASE_URL + "board/create",
+          data: {
+            boardName: this.boardName,
+            userId: this.userId,
+          },
+        }).then((res) => {
+          console.log(res.data);
+          this.boardRandom = res.data.boardRandom;
+          console.log(this.boardRandom);
+          location.href = `/board/${this.boardRandom}`;
+        });
+      }
     },
   },
   components: {

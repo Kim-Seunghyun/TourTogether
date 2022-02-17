@@ -1,4 +1,6 @@
 <template>
+  <button class="c-btn btn-green" @click="togglePlan()">일정 확인 🗓️</button>
+  &nbsp;
   <button
     class="c-btn btn-green"
     data-bs-toggle="modal"
@@ -295,11 +297,29 @@ export default {
       });
     },
     finishBoard() {
+      const getters = store.getters;
+      let tourList = getters["boardStore/getTourListFromStore"];
+      let schdeuleList = [];
+      let dayLen = tourList.length;
+      for (let i = 0; i < dayLen; i++) {
+        let schdeuleLen = tourList[i].list.length;
+        for (let j = 0; j < schdeuleLen; j++) {
+          let obj = {};
+          obj.scheduleDay = i + 1;
+          obj.scheduleOrd = j + 1;
+          obj.scheduleBoardId = this.boardId;
+          obj.scheduleTourSpotId = tourList[i].list[j].index;
+          obj.scheduleAdditional = tourList[i].list[j].name;
+          schdeuleList.push(obj);
+        }
+      }
+      console.log(schdeuleList);
       axios({
         method: "patch",
         url: API_BASE_URL + "board/finish",
         data: {
           boardId: this.boardId,
+          scheduleList: schdeuleList,
         },
       }).then((res) => {
         console.log(res);
@@ -345,6 +365,13 @@ export default {
       // 2. 되고나면 위치, 사이즈 조절 추가해보기
       // $("memo_wrapper").fadeOut(1000);;
       store.commit("setMemovisible");
+    },
+    togglePlan() {
+      let flag = !store.getters["boardStore/getPlanFlag"];
+      console.log("----");
+      console.log(flag);
+      console.log("----");
+      store.commit("boardStore/setPlanFlag", flag);
     },
   },
 };
