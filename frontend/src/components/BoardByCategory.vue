@@ -7,7 +7,7 @@
       style="margin-top: 13px"
     />
     <div class="board-info d-flex justify-content-between">
-      <div>{{ board.id }}</div>
+      <div>{{ board.boardName }}</div>
       <div>
         <img
           style="margin: 0 3px"
