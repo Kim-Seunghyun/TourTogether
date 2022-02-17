@@ -73,23 +73,16 @@ export default {
       this.sockjs = Object;
       this.sockjs.onopen = function () {
         // websocket을 열어줄 때 redis에서 data를 가져와야할거같음
-        // console.log(this.arr);
         this.arr = ["A", "B", "C"];
-        console.log("연결");
         alert("연결 성공");
         document.getElementById("memoConnect").setAttribute("hidden", "hidden");
       };
-      this.sockjs.onmessage = function (data) {
-        console.log(data);
-        console.log(typeof data.data);
-        console.log("data받음 > " + data.data);
+      this.sockjs.onmessage = function () {
         axios({
           method: "get",
           url: "http://127.0.0.1:8080/api/redisschedule/all",
         }).then((res) => {
-          console.log(res.data);
           this.scheduleList = res.data.redisScheduleList;
-          console.log(this.scheduleList);
         });
       };
       // this.sockjs.addEventListener('message', function () {
@@ -116,9 +109,7 @@ export default {
       // area.innerText = (event.data);
       // })
     },
-    sendMessage() {
-      console.log("sendMessage: ");
-    },
+
     updateArray() {
       this.arr[0] = "Z";
       this.arr[1] = "X";
@@ -130,9 +121,7 @@ export default {
         url: API_BASE_URL + "redisschedule/all",
       })
         .then((res) => {
-          console.log(res.data.redisScheduleList);
           this.scheduleList = res.data.redisScheduleList;
-          console.log(this.scheduleList);
         })
         .catch((err) => {
           console.log(err);

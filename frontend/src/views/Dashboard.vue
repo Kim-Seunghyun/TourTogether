@@ -43,25 +43,11 @@
       <div class="col-lg-5">
         <div class="card h-100 p-3">
           <div
-            class="
-              overflow-hidden
-              position-relative
-              border-radius-lg
-              bg-cover
-              h-100
-            "
+            class="overflow-hidden position-relative border-radius-lg bg-cover h-100"
           >
             <span class="mask bg-gradient-dark"></span>
             <div
-              class="
-                card-body
-                position-relative
-                z-index-1
-                d-flex
-                flex-column
-                h-100
-                p-3
-              "
+              class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3"
               style="background-color: rgb(180 211 245)"
             >
               <h2 class="text-white font-weight-bolder mb-4 pt-2">
@@ -78,13 +64,7 @@
                 당신의 완벽한 여행을 위해 Tour Together가 도와줍니다.
               </p>
               <a
-                class="
-                  text-white text-sm
-                  font-weight-bold
-                  mb-0
-                  icon-move-right
-                  mt-auto
-                "
+                class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto"
                 href="javascript:;"
               >
                 <h4>
@@ -208,12 +188,6 @@
             <h5 class="modal-title" id="exampleModalLabel">
               {{ this.selectBoardName }}
             </h5>
-            <button
-              type="button"
-              class="btn-close"
-              data-bs-dismiss="modal"
-              aria-label="Close"
-            ></button>
           </div>
           <div class="modal-body">
             <div class="d-flex p-2 bd-highlight select-title">일차별</div>
@@ -264,6 +238,24 @@
             >
               Close
             </button>
+            <div>
+              <img
+                class="cursur-pointer"
+                style="margin: 0 3px"
+                v-if="this.favoriteBoardId.includes(this.selectBoard)"
+                src="@/assets/img/full_heart.png"
+                width="30"
+                @click="likeCancel(this.selectBoard)"
+              />
+              <img
+                class="cursur-pointer"
+                style="margin: 0 3px"
+                v-if="!this.favoriteBoardId.includes(this.selectBoard)"
+                src="@/assets/img/empty_heart.png"
+                width="30"
+                @click="likeClick(this.selectBoard)"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -271,13 +263,10 @@
   </div>
 </template>
 <script>
-import setNavPills from "@/assets/js/nav-pills.js";
 import BoardByCategory from "@/components/BoardByCategory.vue";
 import BoardCategory from "./components/BoardCategory.vue";
-// import DefaultInfoCard from "@/examples/Cards/DefaultInfoCard.vue";
 import { API_BASE_URL } from "@/config/index.js";
 import { mapMutations, mapState } from "vuex";
-// import { useStore } from "vuex";
 import { onMounted } from "vue";
 import axios from "axios";
 
@@ -293,9 +282,6 @@ export default {
   name: "dashboard",
   data() {
     return {
-      salary: {
-        classIcon: "✈️",
-      },
       boards: [],
       selectBoard: null,
       selectBoardName: null,
@@ -340,9 +326,9 @@ export default {
     // this.getAllBoards();
     this.getUserFavoriteBoards();
   },
-  mounted() {
-    setNavPills();
-  },
+  // mounted() {
+  //   setNavPills();
+  // },
   methods: {
     ...mapMutations(boardStore, ["setAllBoards", "setSearchByCategoryBoards"]),
     // getAllBoards() {
@@ -354,6 +340,64 @@ export default {
     //     this.setAllBoards(res.data.boards);
     //   });
     // },
+    likeClick(boardId) {
+      if (!this.userId) {
+        alert("로그인 해주세요!");
+      } else {
+        axios({
+          method: "patch",
+          url: API_BASE_URL + "board/clickBoardLike",
+          data: {
+            boardId: boardId,
+            userId: this.userId,
+          },
+        }).then((res) => {
+          this.favoriteBoardId = res.data.favoriteBoardId;
+          this.getListByCategory(
+            this.withWhom,
+            this.season,
+            this.area,
+            this.theme
+          );
+        });
+      }
+    },
+    likeCancel(boardId) {
+      if (!this.userId) {
+        alert("로그인 해주세요!");
+      } else {
+        axios({
+          method: "patch",
+          url: API_BASE_URL + "board/cancelBoardLike",
+          data: {
+            boardId: boardId,
+            userId: this.userId,
+          },
+        }).then((res) => {
+          this.favoriteBoardId = res.data.favoriteBoardId;
+          this.getListByCategory(
+            this.withWhom,
+            this.season,
+            this.area,
+            this.theme
+          );
+        });
+      }
+    },
+    getListByCategory(withWhom, season, area, theme) {
+      axios({
+        method: "post",
+        url: API_BASE_URL + "board/searchByCategory",
+        data: {
+          categoryArea: area,
+          categorySeason: season,
+          categoryTheme: theme,
+          categoryWithWhom: withWhom,
+        },
+      }).then((res) => {
+        this.setSearchByCategoryBoards(res.data.boards);
+      });
+    },
     getUserFavoriteBoards() {
       axios({
         method: "post",
@@ -379,9 +423,7 @@ export default {
             userId: this.userId,
           },
         }).then((res) => {
-          console.log(res.data);
           this.boardRandom = res.data.boardRandom;
-          console.log(this.boardRandom);
           location.href = `/board/${this.boardRandom}`;
         });
       }
@@ -422,7 +464,6 @@ export default {
           }
           this.tmp[day].push(aaa);
         }
-        console.log(this.tmp);
         for (i = 1; i <= date; i++) {
           var str = i + " 일차";
           this.dayArr.push(str);
@@ -437,7 +478,6 @@ export default {
   components: {
     BoardCategory,
     BoardByCategory,
-    // DefaultInfoCard,
   },
 };
 </script>
@@ -449,13 +489,7 @@ export default {
 #schedule_list {
   background-color: #96b7e8ba;
 }
-#schedule_list hr {
-  display: block;
-  height: 1px;
-  border: 0;
-  border-top: 2px solid #5f5f5f;
-  margin: 3px 0;
-}
+
 .select-title {
   font-weight: bold;
 }

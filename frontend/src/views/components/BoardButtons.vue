@@ -269,7 +269,6 @@ export default {
           boardRandom: boardRandom,
         },
       }).then((res) => {
-        console.log(res.data);
         this.boardId = res.data.board.boardId;
       });
     },
@@ -296,8 +295,7 @@ export default {
           categoryArea: this.area,
           categoryTheme: this.theme,
         },
-      }).then((res) => {
-        console.log(res);
+      }).then(() => {
         this.finishBoard();
       });
     },
@@ -318,7 +316,6 @@ export default {
           schdeuleList.push(obj);
         }
       }
-      console.log(schdeuleList);
       axios({
         method: "patch",
         url: API_BASE_URL + "board/finish",
@@ -326,8 +323,7 @@ export default {
           boardId: this.boardId,
           scheduleList: schdeuleList,
         },
-      }).then((res) => {
-        console.log(res);
+      }).then(() => {
         location.href = `/dashboard`;
       });
     },

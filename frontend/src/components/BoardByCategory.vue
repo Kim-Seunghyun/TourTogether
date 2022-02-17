@@ -8,23 +8,7 @@
     <div class="board-info d-flex justify-content-between">
       <div>{{ board.boardName }}</div>
       <div>
-        <img
-          class="cursur-pointer"
-          style="margin: 0 3px"
-          v-if="this.favoriteBoardId.includes(board.boardId)"
-          src="@/assets/img/full_heart.png"
-          width="30"
-          @click="likeCancel(board.boardId)"
-        />
-        <img
-          class="cursur-pointer"
-          style="margin: 0 3px"
-          v-if="!this.favoriteBoardId.includes(board.boardId)"
-          src="@/assets/img/empty_heart.png"
-          width="30"
-          @click="likeClick(board.boardId)"
-        />
-        <span>{{ board.boardLikesCount }}</span>
+        <span>💝{{ board.boardLikesCount }}</span>
       </div>
     </div>
   </div>
@@ -79,77 +63,9 @@ export default {
         }
       });
     },
-    likeClick(boardId) {
-      if (!this.userId) {
-        alert("로그인 해주세요!");
-      } else {
-        console.log("좋아요 누르기 ");
-        axios({
-          method: "patch",
-          url: API_BASE_URL + "board/clickBoardLike",
-          data: {
-            boardId: boardId,
-            userId: this.userId,
-          },
-        }).then((res) => {
-          this.favoriteBoardId = res.data.favoriteBoardId;
-          this.getListByCategory(
-            this.withWhom,
-            this.season,
-            this.area,
-            this.theme
-          );
-        });
-      }
-    },
-    likeCancel(boardId) {
-      if (!this.userId) {
-        alert("로그인 해주세요!");
-      } else {
-        console.log("좋아요 취소하기");
-        axios({
-          method: "patch",
-          url: API_BASE_URL + "board/cancelBoardLike",
-          data: {
-            boardId: boardId,
-            userId: this.userId,
-          },
-        }).then((res) => {
-          this.favoriteBoardId = res.data.favoriteBoardId;
-          this.getListByCategory(
-            this.withWhom,
-            this.season,
-            this.area,
-            this.theme
-          );
-        });
-      }
-    },
+
     selectDay(index) {
       this.withWhom = index;
-    },
-    getListByCategory(withWhom, season, area, theme) {
-      axios({
-        method: "post",
-        url: API_BASE_URL + "board/searchByCategory",
-        data: {
-          categoryArea: area,
-          categorySeason: season,
-          categoryTheme: theme,
-          categoryWithWhom: withWhom,
-        },
-      }).then((res) => {
-        this.setSearchByCategoryBoards(res.data.boards);
-      });
-    },
-    clickBoard(boardId) {
-      console.log(boardId);
-      axios({
-        method: "post",
-        url: API_BASE_URL + "tourspot",
-      }).then((res) => {
-        console.log(res);
-      });
     },
   },
 };
