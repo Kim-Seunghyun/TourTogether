@@ -2,7 +2,20 @@
   <div id="root">
     <ul id="day_wrap" class="list">
       <div v-for="item in state.tourList" v-bind:key="item.list">
-        <div class="day_item day sort" @click="showPlan(item.index)">
+        <div
+          class="day_item day sort"
+          @click="showPlan(item.index)"
+          @mouseover="showComponent($event)"
+          @mouseout="blockComponent($event)"
+        >
+          <img
+            src="https://user-images.githubusercontent.com/63468607/153530715-d5123829-4dc5-4a63-86d0-6b156fa0bd38.png"
+            class="close_image"
+            @click="deleteDay(item.index)"
+            @mouseover="mouseOverImg($event)"
+            @mouseout="mouseOutImg($event)"
+            style="display: none"
+          />
           {{ item.index + 1 }}일차
           <div v-if="state.selectedIndex === item.index" class="selected">
             <div
@@ -65,6 +78,9 @@
         </button>
       </div>
     </div>
+  </div>
+  <div id="my_context" style="display: none; z-index: 500">
+    <button class="btn btn-danger btn-sm">삭제</button>
   </div>
 </template>
 
@@ -220,11 +236,11 @@ export default {
     //redis 에서 받기
     const showComponent = (event) => {
       const target = event.target;
-      $(target).children("img").css("display", "");
+      $(target).children("img:eq(0)").css("display", "");
     };
     const blockComponent = (event) => {
       const target = event.target;
-      $(target).children("img").css("display", "none");
+      $(target).children("img:eq(0)").css("display", "none");
     };
     const listSwap = (day, index) => {
       let len = state.tourList[day].list.length;
@@ -261,8 +277,6 @@ export default {
     };
     const updateList = (response) => {
       state.tourList = JSON.parse(response.content);
-      console.log("updateList!!!!!!");
-      console.log(state.tourList);
       emitDay();
       emitLine();
     };
@@ -295,8 +309,7 @@ export default {
         {
           userNickname: state.user,
         },
-        function (frame) {
-          console.log("frame : " + frame);
+        function () {
           ws.subscribe(subUrl, function (message) {
             var resMessage = JSON.parse(message.body);
             updateList(resMessage);
@@ -306,6 +319,14 @@ export default {
           console.log(error);
         }
       );
+    };
+    const mouseOverImg = (event) => {
+      const target = event.target;
+      $(target).css("display", "");
+    };
+    const mouseOutImg = (event) => {
+      const target = event.target;
+      $(target).css("display", "none");
     };
     const setStateTour = () => {
       let tourList = [];
@@ -356,6 +377,8 @@ export default {
       init,
       updateList,
       setStateTour,
+      mouseOverImg,
+      mouseOutImg,
     };
   },
 };

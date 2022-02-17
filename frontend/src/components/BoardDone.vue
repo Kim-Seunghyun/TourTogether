@@ -7,11 +7,17 @@
         alt="delete-button"
         data-bs-toggle="modal"
         data-bs-target="#modal1"
+        @click="commitBoardToDelete(board)"
       />
     </div>
-    <img src="@/assets/trip-route.jpg" alt="trip-route" />
+    <img
+      src="@/assets/trip-route.jpg"
+      alt="trip-route"
+    />
     <div class="board-info d-flex justify-content-between">
-      <div>{{ board.boardName }}</div>
+      <div>
+        <h6>{{ board.boardName }}</h6>
+      </div>
       <div>
         <img
           class="heart cursur-pointer"
@@ -61,7 +67,7 @@
         </div>
         <div class="modal-body">
           <div class="profile-image d-inline-block">
-            <span>일정 "{{ board.boardName }}"</span><br />
+            <span>일정 "{{ computedGetters['boardStore/getBoardToDelete'].boardName }}"</span><br />
             <span>정말 삭제하시겠습니까?</span>
           </div>
         </div>
@@ -74,7 +80,7 @@
             취소
           </button>
           <button
-            @click="deleteBoard"
+            @click="deleteBoard(computedGetters['boardStore/getBoardToDelete'])"
             class="btn btn-primary"
             data-bs-dismiss="modal"
           >
@@ -101,7 +107,6 @@ export default {
     const store = useStore();
     const computedGetters = computed(() => store.getters);
     const getters = store.getters;
-
     const deleteBoard = () => {
       axios({
         method: "delete",
@@ -159,6 +164,7 @@ export default {
         },
       }).then((res) => {
         store.commit("boardStore/setBoardsLike", res.data.myBoards);
+        store.commit("boardStore/setBoardsLikeId", res.data.myBoards);
       });
     };
     const getBoardsDone = () => {
@@ -172,6 +178,9 @@ export default {
         store.commit("boardStore/setBoardsDone", res.data.myBoards);
       });
     };
+    const commitBoardToDelete = (board) => {
+      store.commit("boardStore/setBoardToDelete", board);
+    };
 
     return {
       deleteBoard,
@@ -181,6 +190,7 @@ export default {
       likeCancel,
       getBoardsLike,
       getBoardsDone,
+      commitBoardToDelete
     };
   },
 };
