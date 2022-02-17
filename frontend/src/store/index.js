@@ -25,6 +25,7 @@ export default createStore({
     showNavbar: true,
     showFooter: true,
     showMain: true,
+    memovisible: false,
   },
   getters: {},
   mutations: {
@@ -55,6 +56,9 @@ export default createStore({
       } else {
         state.isNavFixed = false;
       }
+    },
+    setMemovisible(state) {
+      state.memovisible = !state.memovisible;
     },
   },
   actions: {

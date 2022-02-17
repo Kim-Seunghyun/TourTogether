@@ -93,6 +93,9 @@ export default {
       chatToggle: false,
     };
   },
+  unmounted() {
+    this.leaveSession();
+  },
   methods: {
     joinSession() {
       // --- Get an OpenVidu object ---
@@ -400,8 +403,8 @@ export default {
 
 .video-ctr-btn-group {
   position: absolute;
-  top: 125px;
-  left: 26px;
+  top: 1090px;
+  margin-left: 45px;
 }
 
 #chattingInput {

@@ -139,10 +139,10 @@
     <!-- 유형 선택하기 -->
     <div class="mt-4 row">
       <div class="mb-4 col-lg-12 mb-lg-0">
-        <h4>🌏 추천</h4>
+        <h4 style="text-align: left; margin-left: 60px;">🌏 추천</h4>
         <div class="card z-index-2">
-          <div class="p-3 card-body d-flex justify-content-center">
-            <div class="col-lg-4 col-sm-8">
+          <div class="p-3 card-body d-flex">
+            <div class="col-lg-7 col-sm-8" style="text-align: left; margin-left: 40px;">
               <board-category />
             </div>
             <br />

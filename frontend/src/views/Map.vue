@@ -9,10 +9,7 @@
         />
       </div>
     </div>
-    <div id="menu_wrap" class="bg_white">
-      <ul id="placesList"></ul>
-      <div id="pagination"></div>
-    </div>
+    <ul id="placesList"></ul>
   </div>
 </template>
 
@@ -87,6 +84,7 @@ export default {
       state.map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리
       kakao.maps.event.addListener(state.map, "rightclick", function () {
         if (state.depthlevel === 1) {
+          removeAllChildNods();
           showDepth0();
         } else if (state.depthlevel === 2) {
           showDepth1();
@@ -259,7 +257,7 @@ export default {
       for (var j = 1; j <= state.day; j++) {
         var tmp = document.createElement("option");
         tmp.value = j;
-        tmp.innerHTML = j;
+        tmp.innerHTML = j + "일차";
         selectbar.appendChild(tmp);
       }
       selectbar.onchange = function () {
@@ -491,6 +489,7 @@ export default {
       }
       for (i = 0; i < state.sido_polygon.length; i++) {
         state.sido_polygon[i][2].setMap(state.map);
+  
       }
     };
     const showDepth1 = () => {
@@ -530,7 +529,6 @@ export default {
     };
     const displayPlaces = (listindex, tourspot, markerindex) => {
       var listEl = document.getElementById("placesList");
-      var menuEl = document.getElementById("menu_wrap");
       removeMarker();
       var itemEl = getListItem(listindex, tourspot);
       itemEl.onclick = function () {
@@ -543,13 +541,19 @@ export default {
         displayCustomOverlay();
       };
       listEl.appendChild(itemEl);
-      menuEl.scrollTop = 0;
+      listEl.scrollTop = 0;
     };
     const getListItem = (index, tourspot) => {
       var el = document.createElement("li");
+      el.className = "item";
 
       var itemStr = document.createElement("span");
-      itemStr.className = "markerbg marker_" + index;
+      var img = document.createElement("img");
+      img.className = "img";
+      img.setAttribute("style", "width:100px; height:100px");
+      img.src = state.src[tourspot.tourSpotId % 10];
+      itemStr.appendChild(img);
+
       var info = document.createElement("div");
       info.className = "info";
       itemStr.appendChild(info);
@@ -563,8 +567,8 @@ export default {
       spantag.className = "spantag";
       spantag.innerText = tourspot.tourSpotAddress;
       info.appendChild(spantag);
+
       el.appendChild(itemStr);
-      el.className = "item";
       return el;
     };
     const removeAllChildNods = () => {
@@ -662,7 +666,21 @@ export default {
 .bg_white {
   background: #fff;
 }
-#menu_wrap hr {
+#zzz {
+}
+#placesList {
+  z-index: 3;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 400px;
+  height: 570px;
+  overflow-y: scroll;
+}
+#placesList::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera*/
+}
+#placesList hr {
   display: block;
   height: 1px;
   border: 0;
@@ -687,7 +705,7 @@ export default {
 #placesList .item .info {
   text-overflow: ellipsis;
   /* overflow: hidden; */
-  white-space: nowrap;
+  white-space: normal;
 }
 #placesList .item .info {
   padding: 10px 0 10px 55px;
@@ -695,16 +713,16 @@ export default {
 #placesList .info .spantag {
   color: #009900;
 }
-#placesList .item .markerbg {
+#placesList .item .img {
   float: left;
-  position: absolute;
-  width: 36px;
+  position: relative;
+  width: 37px;
   height: 37px;
   margin: 10px 0 0 10px;
-  background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
-    no-repeat;
+  /* //background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png)
+    no-repeat; */
 }
-#placesList .item .marker_1 {
+/* #placesList .item .marker_1 {
   background-position: 0 -10px;
 }
 #placesList .item .marker_2 {
@@ -748,7 +766,7 @@ export default {
 }
 #placesList .item .marker_15 {
   background-position: 0 -654px;
-}
+} */
 
 #pagination {
   margin: 10px auto;
@@ -826,9 +844,9 @@ export default {
   font-size: 12px;
 }
 .desc .register {
-  width: 17px;
-  height: 17px;
-  background: url("../assets/kakao_login_large_wide.png");
+  width: 32px;
+  height: 32px;
+  background: url("../assets/circularplusbutton_121982.png");
 }
 .desc .register:hover {
   cursor: pointer;
