@@ -44,10 +44,14 @@
       </ul>
     </div>
     <div class="button_wrapper">
-      <button @click="addDay()" class="btn btn-info">일정 추가</button>
-      <button @click="deleteDay(0)" class="btn btn-secondary">
-        일정 전체 삭제
-      </button>
+      <div>
+        <button @click="addDay()" class="btn" style="background-color: rgb(125 185 233); color: white; margin-left: 0px;">일정 추가</button>
+      </div>
+      <div>
+        <button @click="deleteDay(0)" class="btn btn-secondary" style="margin-left: 0px;">
+          일정 전체 삭제
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -378,10 +382,9 @@ export default {
 <style>
 .day {
   list-style: none;
-  padding-top: 10%;
+  padding-top: 5%;
   background-color: rgba(255, 255, 255, 0.849);
-  border-radius: 10px;
-  box-shadow: 2px 2px gray;
+  border-radius: 5px;
   border-top: 1px solid rgb(187, 187, 187);
   border-left: 1px solid rgb(187, 187, 187);
 }
@@ -409,7 +412,7 @@ export default {
 #root {
   width: 100%;
   height: 100%;
-  position: relative;
+
 }
 .close_image {
   z-index: 5;
@@ -437,18 +440,20 @@ export default {
   position: relative;
   overflow: visible;
 }
+
 .button_wrapper {
   position: absolute;
   bottom: 0;
-  left: 10%;
+  left: 25%;
 }
-.button_wrapper button {
-  margin-left: 10px;
-}
+
 .selected {
   border-radius: 1px solid black;
 }
 #day_wrap {
-  margin: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 </style>
