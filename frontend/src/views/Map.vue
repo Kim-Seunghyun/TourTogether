@@ -9,10 +9,7 @@
         />
       </div>
     </div>
-    <div id="menu_wrap" class="bg_white">
-      <ul id="placesList"></ul>
-      <div id="pagination"></div>
-    </div>
+    <ul id="placesList"></ul>
   </div>
 </template>
 
@@ -87,6 +84,7 @@ export default {
       state.map = new kakao.maps.Map(container, options); //지도 생성 및 객체 리
       kakao.maps.event.addListener(state.map, "rightclick", function () {
         if (state.depthlevel === 1) {
+          removeAllChildNods();
           showDepth0();
         } else if (state.depthlevel === 2) {
           showDepth1();
@@ -491,6 +489,7 @@ export default {
       }
       for (i = 0; i < state.sido_polygon.length; i++) {
         state.sido_polygon[i][2].setMap(state.map);
+  
       }
     };
     const showDepth1 = () => {
@@ -530,7 +529,6 @@ export default {
     };
     const displayPlaces = (listindex, tourspot, markerindex) => {
       var listEl = document.getElementById("placesList");
-      var menuEl = document.getElementById("menu_wrap");
       removeMarker();
       var itemEl = getListItem(listindex, tourspot);
       itemEl.onclick = function () {
@@ -543,7 +541,7 @@ export default {
         displayCustomOverlay();
       };
       listEl.appendChild(itemEl);
-      menuEl.scrollTop = 0;
+      listEl.scrollTop = 0;
     };
     const getListItem = (index, tourspot) => {
       var el = document.createElement("li");
@@ -552,8 +550,8 @@ export default {
       var itemStr = document.createElement("span");
       var img = document.createElement("img");
       img.className = "img";
-      img.setAttribute('style', 'width:120px; height:120px');
-      img.src = state.src[tourspot.tourSpotId%10];
+      img.setAttribute("style", "width:100px; height:100px");
+      img.src = state.src[tourspot.tourSpotId % 10];
       itemStr.appendChild(img);
 
       var info = document.createElement("div");
@@ -668,10 +666,21 @@ export default {
 .bg_white {
   background: #fff;
 }
-#zzz{
-  
+#zzz {
 }
-#menu_wrap hr {
+#placesList {
+  z-index: 3;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  width: 400px;
+  height: 570px;
+  overflow-y: scroll;
+}
+#placesList::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera*/
+}
+#placesList hr {
   display: block;
   height: 1px;
   border: 0;
@@ -696,7 +705,7 @@ export default {
 #placesList .item .info {
   text-overflow: ellipsis;
   /* overflow: hidden; */
-  white-space: nowrap;
+  white-space: normal;
 }
 #placesList .item .info {
   padding: 10px 0 10px 55px;
