@@ -1,8 +1,8 @@
 <template>
   <div class="card col-3">
-    <img src="@/assets/trip-route.jpg" alt="trip-route" style="margin-top: 30px;">
+    <img @click="clickBoard" src="@/assets/trip-route.jpg" alt="trip-route" style="margin-top: 30px;">
     <div class="board-info d-flex justify-content-between">
-      <div>{{ board.boardName }}</div>
+      <div @click="clickBoard"><h6>{{ board.boardName }}</h6></div>
       <div>
         <!-- <img
           class="delete-button"
@@ -28,7 +28,7 @@ import { API_BASE_URL } from "@/config/index.js";
 import { computed } from "vue";
 
 export default {
-  name: 'BoardIng',
+  name: "BoardIng",
   props: {
     board: Object,
   },
@@ -37,33 +37,54 @@ export default {
     const computedGetters = computed(() => store.getters);
     const getters = store.getters;
     const likeCancel = () => {
-      axios({
-        method: "patch",
-        url: API_BASE_URL + "board/cancelBoardLike",
-        data: {
-          boardId: props.board.boardId,
-          userId: getters["userStore/getUserId"],
-        },
-      }).then(() => {
-        store.commit("boardStore/cancelBoardLike", props.board)
+      if (!getters["userStore/getUserId"]) {
+        alert("로그인 해주세요!");
+      } else {
         axios({
-          method: "post",
-          url: 
-          API_BASE_URL + "board/searchLikeBoardByUserId",
+          method: "patch",
+          url: API_BASE_URL + "board/cancelBoardLike",
           data: {
+            boardId: props.board.boardId,
             userId: getters["userStore/getUserId"],
           },
-        }).then(res => {
-          store.commit("boardStore/setBoardsLike", res.data.myBoards)
+        }).then(() => {
+          store.commit("boardStore/cancelBoardLike", props.board);
+          axios({
+            method: "post",
+            url: API_BASE_URL + "board/searchLikeBoardByUserId",
+            data: {
+              userId: getters["userStore/getUserId"],
+            },
+          }).then((res) => {
+            store.commit("boardStore/setBoardsLike", res.data.myBoards);
           });
         });
       }
+    }
+    const clickBoard = () => {
+      if (!props.board.boardIsActive) {
+        openBoard()
+      }
+    }
+    const openBoard = () => {
+      axios({
+        method: 'post',
+        url: API_BASE_URL + 'board/searchByBoardId',
+        data: {
+          boardId: props.board.boardId,
+        }
+      }).then(res => {
+        location.href = `/board/${res.data.board.boardRandom}`;
+      }) 
+    }
     return {
       likeCancel,
       computedGetters,
+      openBoard,
+      clickBoard
     };
-  }
-}
+  },
+};
 </script>
 <style scoped>
 .card {
@@ -80,5 +101,4 @@ export default {
 .board-info {
   margin: 5px;
 }
-
 </style>

@@ -13,6 +13,7 @@ export const boardStore = {
     boardsLikeId: [],
     boardToDelete: null,
     tourList: [],
+    planFlag: true,
   },
   getters: {
     getAllBoards(state) {
@@ -31,13 +32,16 @@ export const boardStore = {
       return state.boardsLike;
     },
     getBoardsLikeId(state) {
-      return state.boardsLikeId
+      return state.boardsLikeId;
     },
     getBoardToDelete(state) {
-      return state.boardToDelete
+      return state.boardToDelete;
     },
     getTourListFromStore(state) {
       return state.tourList;
+    },
+    getPlanFlag(state) {
+      return state.planFlag;
     },
   },
   mutations: {
@@ -64,10 +68,12 @@ export const boardStore = {
     },
     setBoardsLikeId(state, boardsLike) {
       const boardIds = [];
-      state.boardsLikeId = boardsLike.forEach((board) => {
-        boardIds.push(board.boardId);
-      });
-      state.boardsLikeId = boardIds;
+      if (state.boardsLike) {
+        state.boardsLikeId = boardsLike.forEach((board) => {
+          boardIds.push(board.boardId);
+        });
+        state.boardsLikeId = boardIds;
+      }
     },
     deleteBoardIng(state, boardId) {
       state.boardsIng = state.boardsIng.filter((board) => {
@@ -88,16 +94,18 @@ export const boardStore = {
       state.boardsLikeId.push(board.boardId);
     },
     cancelBoardLike(state, board) {
-      state.boardsLikeId = state.boardsLikeId.filter(boardLikeId => {
-        return (boardLikeId !== board.boardId)
-      })
+      state.boardsLikeId = state.boardsLikeId.filter((boardLikeId) => {
+        return boardLikeId !== board.boardId;
+      });
     },
-    setBoardToDelete(state, boardId) {
-      state.boardToDelete = boardId
-
+    setBoardToDelete(state, board) {
+      state.boardToDelete = board;
     },
     setTourList(state, tourList) {
       state.tourList = tourList;
+    },
+    setPlanFlag(state, flag) {
+      state.planFlag = flag;
     },
   },
   actions: {},

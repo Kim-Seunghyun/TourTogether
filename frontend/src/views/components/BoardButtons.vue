@@ -1,28 +1,35 @@
 <template>
-  <button
-    class="c-btn btn-green"
-    data-bs-toggle="modal"
-    data-bs-target="#inviteModal"
-  >
-    친구 초대 👭
-  </button>
-  &nbsp;
-  <button
-    class="c-btn btn-green"
-    data-bs-toggle="modal"
-    data-bs-target="#finishModal"
-  >
-    일정 완료 💾
-  </button>
-  &nbsp;
-  <button type="button" class="c-btn popup-btn" @click="writeMemo()">
-    메모 작성 📄
-  </button>
-  &nbsp;
-  <button type="button" class="c-btn btn-green" @click="goToDashboard()">
-    회의 종료 🚪
-  </button>
-  &nbsp;
+  <div class="d-flex flex-column">
+    <div class="d-flex flex-row-reverse">
+      <button
+        class="c-btn btn-green"
+        data-bs-toggle="modal"
+        data-bs-target="#inviteModal"
+      >
+        친구 초대 👭
+      </button>
+      <button class="c-btn btn-green" @click="togglePlan()">
+        일정 확인 🗓️
+      </button>
+    </div>
+    <div class="d-flex flex-row-reverse">
+      <button
+        class="c-btn btn-green"
+        data-bs-toggle="modal"
+        data-bs-target="#finishModal"
+      >
+        일정 완료 💾
+      </button>
+      <button type="button" class="c-btn popup-btn" @click="writeMemo()">
+        메모 작성 📄
+      </button>
+    </div>
+    <div class="d-flex flex-row-reverse">
+      <button type="button" class="c-btn btn-green" @click="goToDashboard()">
+        회의 종료 🚪
+      </button>
+    </div>
+  </div>
   <!-- Modal -->
   <div
     class="modal fade"
@@ -295,11 +302,29 @@ export default {
       });
     },
     finishBoard() {
+      const getters = store.getters;
+      let tourList = getters["boardStore/getTourListFromStore"];
+      let schdeuleList = [];
+      let dayLen = tourList.length;
+      for (let i = 0; i < dayLen; i++) {
+        let schdeuleLen = tourList[i].list.length;
+        for (let j = 0; j < schdeuleLen; j++) {
+          let obj = {};
+          obj.scheduleDay = i + 1;
+          obj.scheduleOrd = j + 1;
+          obj.scheduleBoardId = this.boardId;
+          obj.scheduleTourSpotId = tourList[i].list[j].index;
+          obj.scheduleAdditional = tourList[i].list[j].name;
+          schdeuleList.push(obj);
+        }
+      }
+      console.log(schdeuleList);
       axios({
         method: "patch",
         url: API_BASE_URL + "board/finish",
         data: {
           boardId: this.boardId,
+          scheduleList: schdeuleList,
         },
       }).then((res) => {
         console.log(res);
@@ -310,7 +335,7 @@ export default {
       const copyText = document.getElementById("myInput");
       copyText.select();
       document.execCommand("copy");
-      // alert(copyText.value + "을 복사했습니다.");
+      alert(copyText.value + "을 복사했습니다.");
     },
     // exportToPDF() {
     //   //여기서 map.vue clickPDF함수 실행시키고 map.vue에서 맵그리고 html2pdf다운로드 하게하기 => best => 다른component의 함수 호출하기
@@ -345,6 +370,10 @@ export default {
       // 2. 되고나면 위치, 사이즈 조절 추가해보기
       // $("memo_wrapper").fadeOut(1000);;
       store.commit("setMemovisible");
+    },
+    togglePlan() {
+      let flag = !store.getters["boardStore/getPlanFlag"];
+      store.commit("boardStore/setPlanFlag", flag);
     },
   },
 };

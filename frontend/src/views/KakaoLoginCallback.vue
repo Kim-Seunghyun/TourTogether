@@ -57,8 +57,7 @@
                 여행지는 정했지만 어디 가야할지 도저히 모르겠는 사람!
                 <br /><br />
                 Tour Together을 통해 실시간으로 소통하고,<br />
-                인기있는 여행계획을 둘러보고,
-                관광지를 추천받으세요!
+                인기있는 여행계획을 둘러보고, 관광지를 추천받으세요!
                 <br />
                 당신의 완벽한 여행을 위해 Tour Together가 도와줍니다.
               </p>
@@ -67,7 +66,6 @@
                 href="javascript:;"
               >
                 <h4>
-
                   <button
                     type="button"
                     class="btn btn-primary"
@@ -401,6 +399,12 @@ export default {
                 ) {
                   email = response.kakao_account.email;
                 }
+                let imageURL = null;
+                if (response.properties.profile_image) {
+                  imageURL = response.properties.profile_image
+                } else {
+                  imageURL = 'https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%ED%81%AC%EB%AA%BD.png'
+                }
                 store.commit(
                   "userStore/setKakaoProfileImage",
                   response.properties.profile_image
@@ -413,21 +417,17 @@ export default {
                     userClientId: response.id,
                     userEmail: email,
                     userName: response.properties.nickname,
-                    userProfileImage: response.properties.profile_image,
+                    userProfileImage: imageURL,
                   },
                 }).then((res) => {
                   let token = res.data.accessToken;
                   store.commit("userStore/setUserLoginPlatform", "kakao");
                   store.commit("userStore/setUserClientId", response.id);
-                  store.commit(
-                    "userStore/setAccessToken",
-                    token
-                  );
+                  store.commit("userStore/setAccessToken", token);
                   store.dispatch("userStore/getUserInfo");
                 });
               },
-              fail: function () {
-              },
+              fail: function () {},
             });
           });
         router.push("/dashboard");

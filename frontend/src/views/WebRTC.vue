@@ -3,6 +3,38 @@
     <button v-if="!session" class="c-btn w-btn-green2" @click="joinSession()">
       Join!
     </button>
+    <!-- 비디오설정버튼 -->
+    <div class="d-flex flex-row">
+      <div v-if="session">
+        <div>
+          <button
+            @click="toggleVideo()"
+            class="video-ctr-btn"
+            title="비디오 on/off"
+          >
+            📷
+          </button>
+        </div>
+        <div>
+          <button
+            @click="toggleAudio()"
+            class="video-ctr-btn"
+            title="마이크 on/off"
+          >
+            🎙️
+          </button>
+        </div>
+        <div>
+          <button
+            class="video-ctr-btn"
+            @click="changeChatToggle()"
+            styl="bottom:120px; left: 0"
+          >
+            💬
+          </button>
+        </div>
+      </div>
+    </div>
     <div>
       <div v-if="session" id="session">
         <!-- 비디오 -->
@@ -18,43 +50,32 @@
             {{ sub.stream.connection.connectionId }}
           </user-video>
         </div>
-        <!-- 비디오설정버튼 -->
-      </div>
-      <div v-if="session" class="video-ctr-btn-group">
-        <button
-          @click="toggleVideo()"
-          class="video-ctr-btn"
-          title="비디오 on/off"
-        >
-          📷
-        </button>
-        <button
-          @click="toggleAudio()"
-          class="video-ctr-btn"
-          title="마이크 on/off"
-        >
-          🎙️
-        </button>
       </div>
     </div>
-    <div v-show="session && this.chatToggle" class="chattingPart">
-      <!-- 채팅화면 -->
-      <div id="chatting-wrapper">
-        <ul id="chatting"></ul>
 
-        <!-- 채팅입력 -->
-      </div>
-      <input
-        @keyup.enter="submitChatting()"
-        placeholder="메시지 입력"
-        v-model="message"
-        id="chattingInput"
-        style="position: relative; width: 250px"
-      />
-    </div>
-    <button class="c-btn popup-btn chat-btn" @click="changeChatToggle()">
-      채팅
-    </button>
+    <draggable-div
+      v-show="session && this.chatToggle"
+      c
+      id="plan_wrap"
+      class="chattingPart"
+    >
+      <template v-slot:header> 채팅 헤더 </template>
+      <template v-slot:main>
+        <!-- 채팅화면 -->
+        <div id="chatting-wrapper">
+          <ul id="chatting"></ul>
+
+          <!-- 채팅입력 -->
+        </div>
+        <input
+          @keyup.enter="submitChatting()"
+          placeholder="메시지 입력"
+          v-model="message"
+          id="chattingInput"
+          style="position: relative; width: 250px"
+        />
+      </template>
+    </draggable-div>
   </div>
 </template>
 
@@ -64,6 +85,7 @@ import { OpenVidu } from "openvidu-browser";
 import UserVideo from "@/components/UserVideo";
 import store from "@/store";
 const getters = store.getters;
+import DraggableDiv from "@/components/DraggableDiv.vue";
 
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
@@ -77,6 +99,7 @@ export default {
 
   components: {
     UserVideo,
+    DraggableDiv,
   },
 
   data() {
@@ -353,8 +376,8 @@ export default {
   float: left;
 }
 #chatting-wrapper {
-  width: 250px;
-  height: 300px;
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   border: none;
@@ -432,11 +455,14 @@ export default {
   width: 250px;
   position: absolute;
   right: 0.5vw;
-  top: 5.7vw;
+  /* top: 0.3vh; */
+  top: 0;
   z-index: 5000;
   opacity: 1;
   background-color: white;
   border-radius: 5px;
+  overflow: hidden;
+  resize: both;
 }
 .nameTag {
   /* margin-left: 0px; */
@@ -468,7 +494,7 @@ export default {
 }
 .chat-btn {
   position: absolute;
-  left: 970px;
+  left: 0;
 }
 .left {
   text-align: left;

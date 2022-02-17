@@ -1,7 +1,10 @@
 <template>
   <div class="card col-xxl-12">
     <img
+<<<<<<< HEAD
       class="modal_img"
+=======
+>>>>>>> ssafy/develop
       src="@/assets/trip-route.jpg"
       alt="trip-route"
       style="margin-top: 13px"
@@ -79,6 +82,7 @@ export default {
       });
     },
     likeClick(boardId) {
+<<<<<<< HEAD
       axios({
         method: "patch",
         url: API_BASE_URL + "board/clickBoardLike",
@@ -96,25 +100,52 @@ export default {
           this.theme
         );
       });
+=======
+      if (!this.userId) {
+        alert("로그인 해주세요!");
+      } else {
+        console.log("좋아요 누르기 ");
+        axios({
+          method: "patch",
+          url: API_BASE_URL + "board/clickBoardLike",
+          data: {
+            boardId: boardId,
+            userId: this.userId,
+          },
+        }).then((res) => {
+          this.favoriteBoardId = res.data.favoriteBoardId;
+          this.getListByCategory(
+            this.withWhom,
+            this.season,
+            this.area,
+            this.theme
+          );
+        });
+      }
+>>>>>>> ssafy/develop
     },
     likeCancel(boardId) {
-      console.log("좋아요 취소하기");
-      axios({
-        method: "patch",
-        url: API_BASE_URL + "board/cancelBoardLike",
-        data: {
-          boardId: boardId,
-          userId: this.userId,
-        },
-      }).then((res) => {
-        this.favoriteBoardId = res.data.favoriteBoardId;
-        this.getListByCategory(
-          this.withWhom,
-          this.season,
-          this.area,
-          this.theme
-        );
-      });
+      if (!this.userId) {
+        alert("로그인 해주세요!");
+      } else {
+        console.log("좋아요 취소하기");
+        axios({
+          method: "patch",
+          url: API_BASE_URL + "board/cancelBoardLike",
+          data: {
+            boardId: boardId,
+            userId: this.userId,
+          },
+        }).then((res) => {
+          this.favoriteBoardId = res.data.favoriteBoardId;
+          this.getListByCategory(
+            this.withWhom,
+            this.season,
+            this.area,
+            this.theme
+          );
+        });
+      }
     },
     selectDay(index) {
       this.withWhom = index;
