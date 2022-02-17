@@ -209,6 +209,7 @@ export default {
         nameDiv.classList.add("left");
         contentDiv.classList.add("right");
         contentDiv.classList.add("contentDiv");
+        contentDiv.setAttribute("style", "text-align: right;");
 
         nameTag.innerText = event.from.data.split(":")[1].split('"')[1];
         contentTag.classList.add("contentTag");
@@ -409,7 +410,6 @@ export default {
 }
 
 #chatting {
-  width: 250px;
   list-style: none;
 }
 
