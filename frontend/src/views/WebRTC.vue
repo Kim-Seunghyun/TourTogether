@@ -432,7 +432,7 @@ export default {
   width: 250px;
   position: absolute;
   right: 0.5vw;
-  top: 4.9vw;
+  top: 5.7vw;
   z-index: 5000;
   opacity: 1;
   background-color: white;
