@@ -98,8 +98,8 @@ export const boardStore = {
         return boardLikeId !== board.boardId;
       });
     },
-    setBoardToDelete(state, boardId) {
-      state.boardToDelete = boardId;
+    setBoardToDelete(state, board) {
+      state.boardToDelete = board;
     },
     setTourList(state, tourList) {
       state.tourList = tourList;
