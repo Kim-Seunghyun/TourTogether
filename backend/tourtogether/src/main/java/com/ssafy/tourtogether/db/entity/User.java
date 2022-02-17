@@ -5,6 +5,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -27,7 +28,7 @@ public class User extends BaseEntity {
 	}
 
 	public User(UserLoginPostReq loginInfo) {
-		setUserNickname("newUser" + loginInfo.getUserClientId());
+		setUserNickname("newUser" + LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddTHHmmSSnn")));
 		setUserJoindate(LocalDateTime.now().toString());
 		setUserLoginPlatform(1);
 		setUserScore(0);
