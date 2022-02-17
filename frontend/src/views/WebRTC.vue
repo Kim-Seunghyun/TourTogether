@@ -1,5 +1,5 @@
 <template>
-  <div id="main-container" class="container" style="padding: 0;">
+  <div id="main-container" class="container" style="padding: 0; margin: 0">
     <button v-if="!session" class="c-btn w-btn-green2" @click="joinSession()">
       Join!
     </button>
@@ -19,21 +19,39 @@
         </user-video>
       </div>
       <!-- 비디오설정버튼 -->
-      <div>
-        <button @click="toggleVideo()" class="video-ctr-btn">📹</button>
-        <button @click="toggleAudio()" class="video-ctr-btn">🎙️</button>
-      </div>
-      <!-- 채팅입력 -->
-      <input
-        @keyup.enter="submitChatting()"
-        placeholder="여기에 메시지 입력"
-        v-model="message"
-      />
+    </div>
+    <div v-if="session" class="video-ctr-btn-group">
+      <button
+        @click="toggleVideo()"
+        class="video-ctr-btn"
+        title="비디오 on/off"
+      >
+        📷
+      </button>
+      <button
+        @click="toggleAudio()"
+        class="video-ctr-btn"
+        title="마이크 on/off"
+      >
+        🎙️
+      </button>
+    </div>
+    <div v-show="session && this.chatToggle" class="chattingPart">
       <!-- 채팅화면 -->
       <div id="chatting-wrapper">
         <ul id="chatting"></ul>
+
+        <!-- 채팅입력 -->
       </div>
+      <input
+        @keyup.enter="submitChatting()"
+        placeholder="메시지 입력"
+        v-model="message"
+        id="chattingInput"
+        style="position: relative; width: 250px"
+      />
     </div>
+    <button class="c-btn popup-btn chat-btn" @click="changeChatToggle()">채팅</button>
   </div>
 </template>
 
@@ -66,13 +84,14 @@ export default {
       publisher: undefined,
       subscribers: [],
       message: undefined,
-      mySessionId: window.location.pathname.split("/")[1],
+      mySessionId: window.location.pathname.split("/")[2],
       myUserName: getters["userStore/getUserNickname"],
+      // 토글버튼
+      chatToggle: false,
     };
   },
-
   methods: {
-    joinSession() {
+joinSession() {
       // --- Get an OpenVidu object ---
       this.OV = new OpenVidu();
 
@@ -283,6 +302,17 @@ export default {
           console.error(error);
         });
     },
+    changeChatToggle() {
+      if (this.session) {
+        if (this.chatToggle == false) {
+          this.chatToggle = true;
+        } else {
+          this.chatToggle = false;
+        }
+      } else {
+        alert("화상채팅을 켜주세요!");
+      }
+    }
   },
 };
 </script>
@@ -296,13 +326,14 @@ export default {
   float: left;
 }
 #chatting-wrapper {
-  width: 400px;
+  width: 250px;
   height: 300px;
   overflow-y: auto;
-  border: solid 1px black;
+  border: none;
+  background: #96b7e8ba;
+  border-radius: 5px 5px 0px 0px;
   top: 130%;
   right: 10%;
-  position: absolute;
   z-index: 3;
 }
 
@@ -322,11 +353,12 @@ export default {
 }
 
 .w-btn-green2 {
-    background-color: #80da52;
-    color: white;
+  background-color: #80da52;
+  color: white;
 }
 
 #chatting {
+  width: 250px;
   list-style: none;
 }
 
@@ -337,7 +369,49 @@ export default {
 }
 
 #session {
-  width: 150px;
+  /* width: 150px; */
   /* height: 150px; */
+}
+
+.video-ctr-btn-group {
+  position: relative;
+  top: 125px;
+  right: 274px;
+}
+
+#chattingInput {
+  width: 250px;
+  background: #afafaf61;
+  bottom: 0;
+  width: 400px;
+  height: 40px;
+  border: none;
+  border-radius: 0px 0px 5px 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.box {
+  margin: 0 20px;
+}
+
+.popup-btn {
+  background-color: rgb(252, 160, 14);
+  color: rgb(84, 52, 4);
+}
+
+.chattingPart {
+  width: 250px;
+  position: absolute;
+  right: 0.5vw;
+  top: 4.9vw;
+  z-index: 5000;
+  opacity: 1;
+  background-color: white;
+  border-radius: 5px;
+}
+.chat-btn {
+  position: fixed;
+  left: 970px;
 }
 </style>

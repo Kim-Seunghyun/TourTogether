@@ -96,8 +96,7 @@ export default {
         data: {
           boardId: props.board.boardId
         }
-      }).then(res => {
-          console.log(res)
+      }).then(() => {
           store.commit("boardStore/deleteBoardIng", props.board.boardId)
           getBoardsLike()
         })
@@ -114,7 +113,6 @@ export default {
         store.commit("boardStore/addBoardLike", props.board)
         getBoardsLike()
         getBoardsDone()
-        // isLiked()
       });
     }
     const likeCancel = () => {
@@ -129,7 +127,6 @@ export default {
         store.commit("boardStore/cancelBoardLike", props.board)
         getBoardsLike()
         getBoardsDone()
-        // isLiked()
       });
     }
     const getBoardsLike = () => {

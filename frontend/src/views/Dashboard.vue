@@ -1,5 +1,5 @@
-<template>
-  <div class="py-4 container-fluid">
+`<template>
+  <div class="pb-4 container-fluid">
     <div class="row">
       <div class="col-lg-7 mb-lg-0 mb-4">
         <div class="card">
@@ -48,16 +48,17 @@
             <span class="mask bg-gradient-dark"></span>
             <div
               class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3"
-              style="background-color: #90d5eb"
+              style="background-color: rgb(180 211 245)"
             >
-              <h1 class="text-white font-weight-bolder mb-4 pt-2">📅</h1>
-              <p class="text-white">
+              <h2 class="text-white font-weight-bolder mb-4 pt-2">🗓️👭✈️👬🚢</h2>
+              <p class="" style="font-weight: bold;">
                 친구들과 실시간으로 소통하며 여행 계획을 짜고 싶은 사람!<br />
                 다른 사람들의 기깔나는 여행 계획을 추천받고 싶은 사람! <br />
                 여행지는 정했지만 어디 가야할지 도저히 모르겠는 사람!
-                <br /><br /><br />
-                Tour Together을 통해 실시간으로 소통하고, 인기있는 여행계획을
-                둘러보고, 관광지를 추천받으세요!
+                <br /><br />
+                Tour Together을 통해 실시간으로 소통하고,<br />
+                인기있는 여행계획을 둘러보고,
+                관광지를 추천받으세요!
                 <br />
                 당신의 완벽한 여행을 위해 Tour Together가 도와줍니다.
               </p>
@@ -146,11 +147,11 @@
             </div>
             <br />
           </div>
-          <div style="display: flex">
-            <div v-if="boards.length == 0">
-              <h5>선택하신 유형에 해당되는 여행 계획이 없습니다.😭</h5>
+          <div>
+            <div v-if="boards.length == 0" style="text-align: center;" class="d-flex justify-content-center">
+              <h5 style="text-align: center; margin: 7px;">선택하신 유형에 해당되는 여행 계획이 없습니다.😭</h5>
             </div>
-            <div v-else class="row card-container">
+            <div v-else class="row card-container" style="padding: 0 33px;">
               <BoardByCategory
                 v-for="board in boards"
                 :board="board"
@@ -266,3 +267,9 @@ export default {
   },
 };
 </script>
+<style scoped>
+.card-container {
+  /* width: 2040px; */
+  margin: 0 auto;
+}
+</style>

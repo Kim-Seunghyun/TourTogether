@@ -28,9 +28,6 @@ export default createStore({
   },
   getters: {},
   mutations: {
-    toggleConfigurator(state) {
-      state.showConfig = !state.showConfig;
-    },
     navbarMinimize(state) {
       const sidenav_show = document.querySelector(".g-sidenav-show");
       const sidenav = document.getElementById("sidenav-main");

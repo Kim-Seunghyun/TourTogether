@@ -1,8 +1,9 @@
 <template>
-  <div class="card col-3">
+  <div class="card">
     <div class="delete-button-div">
       <img
         class="delete-button cursur-pointer"
+        @click="pushDeleteBoardId(board.boardId)"
         src="../assets/delete_button.png"
         alt="delete-button"
         data-bs-toggle="modal"
@@ -11,6 +12,7 @@
     <img src="@/assets/trip-route.jpg" alt="trip-route">
     <div class="board-info d-flex justify-content-between">
       <div>{{ board.boardName }}</div>
+      <div>{{ board.boardId }}</div>
       <div>
         <img
           class="heart cursur-pointer"
@@ -66,7 +68,7 @@
           >
             취소
           </button>
-          <button @click="deleteBoard" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+          <button @click="deleteBoard(computedGetters['boardStore/getBoardToDelete'])" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
         </div>
       </div>
     </div>
@@ -89,20 +91,20 @@ export default {
     const store = useStore();
     const computedGetters = computed(() => store.getters);
     const getters = store.getters;
-    const deleteBoard = () => {
+    const deleteBoard = (boardId) => {
       axios({
         method: 'delete',
         url: API_BASE_URL + 'board/delete',
         data: {
-          boardId: props.board.boardId
+          boardId: boardId
         }
-      }).then(res => {
-          console.log(res)
-          store.commit("boardStore/deleteBoardIng", props.board.boardId)
+      }).then(() => {
+          store.commit("boardStore/deleteBoardIng", boardId)
           getBoardsLike()
         })
     };
     const like = () => {
+      console.log(props.board.boardId)
       axios({
         method: "patch",
         url: API_BASE_URL + "board/clickBoardLike",
@@ -113,9 +115,8 @@ export default {
       }).then(() => {
         store.commit("boardStore/addBoardLike", props.board)
         getBoardsLike()
-        // 이걸 실행하는 이유는 mypage에서 computed로 boarding들을 뿌리기 때문!
+        // 이걸 실행하는 이유는 mypage에서 computed로 boardIng들을 뿌리기 때문!
         getBoardsIng()
-        // isLiked()
       });
     }
     const likeCancel = () => {
@@ -130,7 +131,6 @@ export default {
         store.commit("boardStore/cancelBoardLike", props.board)
         getBoardsLike()
         getBoardsIng()
-        // isLiked()
         });
     }
     const getBoardsLike = () => {
@@ -157,15 +157,18 @@ export default {
         store.commit("boardStore/setBoardsIng", res.data.myBoards)
       })
     }
+    const pushDeleteBoardId = (boardId) => {
+      store.commit("boardStore/setBoardToDelete", boardId)
+    }
     
     return {
-      // getters는 등록을 안해줘도 되나?????
       deleteBoard,
       like,
       likeCancel,
       computedGetters,
       getBoardsLike,
-      getBoardsIng
+      getBoardsIng,
+      pushDeleteBoardId
     };
   }
 }

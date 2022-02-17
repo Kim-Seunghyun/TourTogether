@@ -42,6 +42,7 @@ export default {
     webRTC,
     BoardButtons,
   },
+
   created() {
     var boardRandom = window.location.pathname.substr(7);
     this.findBoardId(boardRandom);
@@ -100,6 +101,7 @@ export default {
 #whole_wrapper {
   width: 100%;
   height: 100%;
+  margin-bottom: 35px;
 }
 #map_wrapper {
   /* left: 2%; */
