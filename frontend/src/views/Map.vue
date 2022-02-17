@@ -698,7 +698,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .bg_white {
   background: #fff;
 }
