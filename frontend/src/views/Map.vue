@@ -77,6 +77,7 @@ export default {
       day: null,
       emitflag: false,
       planFlag: true,
+      tmpList: [],
     });
     onMounted(() => {
       window.kakao && window.kakao.maps ? initMap() : addKakaoMapScript();
@@ -112,6 +113,11 @@ export default {
       });
       makePolygonDepth1(sido_json);
       makePolygonDepth2(sigungu_json);
+      if (state.emitflag) {
+        state.emitflag = false;
+        emitList(state.tmpList);
+        state.tmpList = [];
+      }
     };
     const addKakaoMapScript = () => {
       const script = document.createElement("script");
@@ -598,6 +604,10 @@ export default {
       }
     };
     const emitList = function (abc) {
+      if (!window.kakao && window.kakao.maps) {
+        state.tmpList = abc;
+        state.emitflag = true;
+      }
       console.log(abc);
       if (state.polyline) {
         nondisplayPolyline();
