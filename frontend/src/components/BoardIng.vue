@@ -3,11 +3,11 @@
     <div class="delete-button-div">
       <img
         class="delete-button cursur-pointer"
-        @click="pushDeleteBoardId(board.boardId)"
         src="../assets/delete_button.png"
         alt="delete-button"
         data-bs-toggle="modal"
         data-bs-target="#modal1"
+        @click="commitBoardToDelete(board)"
       />
     </div>
     <img
@@ -69,7 +69,7 @@
         </div>
         <div class="modal-body">
           <div class="profile-image d-inline-block">
-            <span>일정 "{{ board.boardName }}"</span><br />
+            <span>일정 "{{ computedGetters['boardStore/getBoardToDelete'].boardName }}"</span><br />
             <span>정말 삭제하시겠습니까?</span>
           </div>
         </div>
@@ -99,7 +99,6 @@ import axios from "axios";
 import { useStore } from "vuex";
 import { API_BASE_URL } from "@/config/index.js";
 import { computed } from "vue";
-// import { reactive } from "vue";
 
 export default {
   name: "BoardIng",
@@ -182,8 +181,8 @@ export default {
         store.commit("boardStore/setBoardsIng", res.data.myBoards);
       });
     };
-    const pushDeleteBoardId = (boardId) => {
-      store.commit("boardStore/setBoardToDelete", boardId);
+    const commitBoardToDelete = (board) => {
+      store.commit("boardStore/setBoardToDelete", board);
     };
     const openBoard = () => {
       axios({
@@ -204,7 +203,7 @@ export default {
       computedGetters,
       getBoardsLike,
       getBoardsIng,
-      pushDeleteBoardId,
+      commitBoardToDelete,
       openBoard,
     };
   },

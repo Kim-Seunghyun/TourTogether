@@ -1,4 +1,6 @@
 <template>
+  <button class="c-btn btn-green" @click="togglePlan()">일정 확인 🗓️</button>
+  &nbsp;
   <button
     class="c-btn btn-green"
     data-bs-toggle="modal"
@@ -328,7 +330,7 @@ export default {
       const copyText = document.getElementById("myInput");
       copyText.select();
       document.execCommand("copy");
-      // alert(copyText.value + "을 복사했습니다.");
+      alert(copyText.value + "을 복사했습니다.");
     },
     // exportToPDF() {
     //   //여기서 map.vue clickPDF함수 실행시키고 map.vue에서 맵그리고 html2pdf다운로드 하게하기 => best => 다른component의 함수 호출하기
@@ -363,6 +365,13 @@ export default {
       // 2. 되고나면 위치, 사이즈 조절 추가해보기
       // $("memo_wrapper").fadeOut(1000);;
       store.commit("setMemovisible");
+    },
+    togglePlan() {
+      let flag = !store.getters["boardStore/getPlanFlag"];
+      console.log("----");
+      console.log(flag);
+      console.log("----");
+      store.commit("boardStore/setPlanFlag", flag);
     },
   },
 };

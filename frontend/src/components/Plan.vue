@@ -1,65 +1,92 @@
 <template>
   <div id="root">
-    <div>
-      <ul id="day_wrap" class="list">
-        <div v-for="item in state.tourList" v-bind:key="item.list">
-          <div class="day_item day sort" @click="showPlan(item.index)">
-            {{ item.index + 1 }}일차
-            <div v-if="state.selectedIndex === item.index" class="selected">
+    <ul id="day_wrap" class="list">
+      <div v-for="item in state.tourList" v-bind:key="item.list">
+        <div
+          class="day_item day sort"
+          @click="showPlan(item.index)"
+          @mouseover="showComponent($event)"
+          @mouseout="blockComponent($event)"
+        >
+          <img
+            src="https://user-images.githubusercontent.com/63468607/153530715-d5123829-4dc5-4a63-86d0-6b156fa0bd38.png"
+            class="close_image"
+            @click="deleteDay(item.index)"
+            @mouseover="mouseOverImg($event)"
+            @mouseout="mouseOutImg($event)"
+            style="display: none"
+          />
+          {{ item.index + 1 }}일차
+          <div v-if="state.selectedIndex === item.index" class="selected">
+            <div
+              v-for="tourItem in item.list"
+              v-bind:key="tourItem"
+              class="relative"
+            >
               <div
-                v-for="tourItem in item.list"
-                v-bind:key="tourItem"
-                class="relative"
+                class="tour_item"
+                @mouseenter="showComponent($event)"
+                @mouseleave="blockComponent($event)"
               >
-                <div
-                  class="tour_item"
-                  @mouseenter="showComponent($event)"
-                  @mouseleave="blockComponent($event)"
-                >
-                  {{ tourItem.name }}
-                  <img
-                    src="https://user-images.githubusercontent.com/63468607/153530715-d5123829-4dc5-4a63-86d0-6b156fa0bd38.png"
-                    class="close_image"
-                    @click="deleteTour(item.index, tourItem.id)"
-                    style="display: none"
-                  />
-                </div>
-                <div
-                  v-if="
-                    tourItem.id !== state.tourList[item.index].list.length - 1
-                  "
-                >
-                  <img
-                    src="https://user-images.githubusercontent.com/63468607/153804094-71229922-2e1e-4186-ba14-a4c6db03ae19.png"
-                    class="swap_image"
-                    @click="listSwap(item.index, tourItem.id)"
-                    @mouseenter="chageColorImage($event)"
-                    @mouseleave="reChangeImage($event)"
-                  />
-                </div>
+                {{ tourItem.name }}
+                <img
+                  src="https://user-images.githubusercontent.com/63468607/153530715-d5123829-4dc5-4a63-86d0-6b156fa0bd38.png"
+                  class="close_image"
+                  @click="deleteTour(item.index, tourItem.id)"
+                  style="display: none"
+                />
+              </div>
+              <div
+                v-if="
+                  tourItem.id !== state.tourList[item.index].list.length - 1
+                "
+              >
+                <img
+                  src="https://user-images.githubusercontent.com/63468607/153804094-71229922-2e1e-4186-ba14-a4c6db03ae19.png"
+                  class="swap_image"
+                  @click="listSwap(item.index, tourItem.id)"
+                  @mouseenter="chageColorImage($event)"
+                  @mouseleave="reChangeImage($event)"
+                />
               </div>
             </div>
           </div>
         </div>
-      </ul>
-    </div>
+      </div>
+    </ul>
     <div class="button_wrapper">
       <div>
-        <button @click="addDay()" class="btn" style="background-color: rgb(125 185 233); color: white; margin-left: 0px;">일정 추가</button>
+        <button
+          @click="addDay()"
+          class="btn"
+          style="
+            background-color: rgb(125 185 233);
+            color: white;
+            margin-left: 0px;
+          "
+        >
+          일정 추가
+        </button>
       </div>
       <div>
-        <button @click="deleteDay(0)" class="btn btn-secondary" style="margin-left: 0px;">
+        <button
+          @click="deleteDay(0)"
+          class="btn btn-secondary"
+          style="margin-left: 0px"
+        >
           일정 전체 삭제
         </button>
       </div>
     </div>
+  </div>
+  <div id="my_context" style="display: none; z-index: 500">
+    <button class="btn btn-danger btn-sm">삭제</button>
   </div>
 </template>
 
 <script>
 import { reactive } from "vue";
 import { onMounted, watch } from "vue";
-// import { onBeforeUnmount } from "vue";
 import axios from "axios";
 import $ from "jquery";
 import "jquery-ui/ui/widgets/sortable";
@@ -119,9 +146,6 @@ export default {
       document
         .getElementById("root")
         .addEventListener("contextmenu", (event) => event.preventDefault());
-      // document.body.addEventListener("contextmenu", (event) =>
-      //   event.preventDefault()
-      // );
     };
     const makeSortable = () => {
       let prev = 0;
@@ -212,11 +236,11 @@ export default {
     //redis 에서 받기
     const showComponent = (event) => {
       const target = event.target;
-      $(target).children("img").css("display", "");
+      $(target).children("img:eq(0)").css("display", "");
     };
     const blockComponent = (event) => {
       const target = event.target;
-      $(target).children("img").css("display", "none");
+      $(target).children("img:eq(0)").css("display", "none");
     };
     const listSwap = (day, index) => {
       let len = state.tourList[day].list.length;
@@ -253,8 +277,6 @@ export default {
     };
     const updateList = (response) => {
       state.tourList = JSON.parse(response.content);
-      console.log("updateList!!!!!!");
-      console.log(state.tourList);
       emitDay();
       emitLine();
     };
@@ -287,8 +309,7 @@ export default {
         {
           userNickname: state.user,
         },
-        function (frame) {
-          console.log("frame : " + frame);
+        function () {
           ws.subscribe(subUrl, function (message) {
             var resMessage = JSON.parse(message.body);
             updateList(resMessage);
@@ -299,15 +320,20 @@ export default {
         }
       );
     };
+    const mouseOverImg = (event) => {
+      const target = event.target;
+      $(target).css("display", "");
+    };
+    const mouseOutImg = (event) => {
+      const target = event.target;
+      $(target).css("display", "none");
+    };
     const setStateTour = () => {
       let tourList = [];
       //양식에 맞게 tourList에 저장
       tourList = state.tourList;
       store.commit("boardStore/setTourList", tourList);
     };
-    // onBeforeUnmount(() => {
-    //   sendMessage();
-    // }),
     watch(
       () => props.tourData,
       () => {
@@ -325,28 +351,7 @@ export default {
           index: props.tourData.index,
         });
         state.selectedIndex = day;
-        // console.log("------");
-        // console.log(JSON.stringify(state.tourList));
-        // console.log("------");
         goEmit();
-        // console.log(state.tourList);
-        /*
-        TODO
-        Redis 로 보낼때
-        schdeule: {
-          scheduleId: 1,
-          boardId: 1,
-          day: 1,
-          userSpotId: 1,
-          tourSpotId: 1,
-          order: 1,
-          additional: "변경",
-        }
-        형식으로 보내줘야함..... 1개씩 따로 for문 돌려서 보낼지
-        뭔가 캐싱 할 수 있는 방법이 있을지 고민 해봐야됨. 근데 캐싱하면 다른사람이 바꿨을 때 내 캐싱값이 바껴야되는데 저게 되나?
-        캐싱이 안된다면 Redis DB값을 먼저 조회 해서 달라진 값들 비교해서 다를것들 모아서 다시 select 걸어주는 방법도 있는데 이건 또 생각 해봐야됨 뭔가 되게 복잡해질듯
-
-        */
       }
     );
     return {
@@ -372,6 +377,8 @@ export default {
       init,
       updateList,
       setStateTour,
+      mouseOverImg,
+      mouseOutImg,
     };
   },
 };
@@ -410,7 +417,7 @@ export default {
 #root {
   width: 100%;
   height: 100%;
-
+  overflow: hidden;
 }
 .close_image {
   z-index: 5;
@@ -453,5 +460,7 @@ export default {
   margin-bottom: 5px;
   padding-left: 16px;
   padding-right: 16px;
+  height: 60%;
+  overflow-y: scroll;
 }
 </style>
