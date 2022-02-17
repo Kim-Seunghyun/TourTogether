@@ -1,10 +1,6 @@
 <template>
   <div class="card col-xxl-12">
     <img
-<<<<<<< HEAD
-      class="modal_img"
-=======
->>>>>>> ssafy/develop
       src="@/assets/trip-route.jpg"
       alt="trip-route"
       style="margin-top: 13px"
@@ -82,25 +78,6 @@ export default {
       });
     },
     likeClick(boardId) {
-<<<<<<< HEAD
-      axios({
-        method: "patch",
-        url: API_BASE_URL + "board/clickBoardLike",
-        data: {
-          boardId: boardId,
-          userId: this.userId,
-        },
-      }).then((res) => {
-        this.favoriteBoardId = res.data.favoriteBoardId;
-        console.log(this.favoriteBoardId);
-        this.getListByCategory(
-          this.withWhom,
-          this.season,
-          this.area,
-          this.theme
-        );
-      });
-=======
       if (!this.userId) {
         alert("로그인 해주세요!");
       } else {
@@ -122,7 +99,6 @@ export default {
           );
         });
       }
->>>>>>> ssafy/develop
     },
     likeCancel(boardId) {
       if (!this.userId) {
