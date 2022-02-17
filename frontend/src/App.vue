@@ -88,7 +88,7 @@ export default {
 
 #nav {
   padding: 30px;
-  height: ;
+  height: 90px;
 }
 
 #nav a {
