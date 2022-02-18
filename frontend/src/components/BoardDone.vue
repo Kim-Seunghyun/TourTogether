@@ -6,7 +6,7 @@
         src="../assets/delete_button.png"
         alt="delete-button"
         data-bs-toggle="modal"
-        data-bs-target="#modal1"
+        data-bs-target="#modal2"
         @click="commitBoardToDelete(board)"
       />
     </div>
@@ -49,7 +49,7 @@
   <!-- Modal -->
   <div
     class="modal fade"
-    id="modal1"
+    id="modal2"
     tabindex="-1"
     aria-labelledby="modalLabel"
     aria-hidden="true"
@@ -90,6 +90,8 @@
       </div>
     </div>
   </div>
+
+  
 </template>
 
 <script>
