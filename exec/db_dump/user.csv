@@ -1,0 +1,10 @@
+user_id,user_name,user_nickname,user_profile_image,user_phone,user_joindate,user_login_platform,user_score,user_client_id,user_email
+1,소율,하하,https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/CzzwMgRUUAASv8k.jpg,NULL,"2022-02-07 08:49:08",1,0,2092314078,NULL
+2,김승현,김승현짱짱걸,https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/1.png,NULL,"2022-02-07 08:52:41",1,0,2095086868,sialskdn@nate.com
+3,이진솔,newUser2123703400,https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/1645075794508data_design_data_design_%E1%84%81%E1%85%AE%E1%86%AF%E1%84%83%E1%85%A1%E1%86%AB%E1%84%8C%E1%85%B5.png,NULL,"2022-02-17 05:23:49",1,0,2123703400,NULL
+4,이소희,newUser2123703744,http://k.kakaocdn.net/dn/cD8C5s/btrr4x6f0Di/7y1lc9xrLpGyBW0uKguxAk/img_640x640.jpg,NULL,"2022-02-17 05:24:05",1,0,2123703744,shfksthgml@naver.com
+5,박세진,newUser2094852191,NULL,NULL,"2022-02-17 07:29:47",1,0,2094852191,NULL
+6,이민정,newUser2096169866,NULL,NULL,"2022-02-17 07:36:51",1,0,2096169866,3sally@naver.com
+7,오재우,오재우,http://k.kakaocdn.net/dn/b0J0hc/btrpMP62ezN/dHufmHLSoIvQEraik40th0/img_640x640.jpg,NULL,"2022-02-17 08:14:59",1,0,2093715480,peg7325@naver.com
+8,손형선,투위스투,https://tour-together--s3.s3.ap-northeast-2.amazonaws.com/%ED%81%AC%EB%AA%BD.png,NULL,"2022-02-17 08:45:09",1,0,2091809058,gudtjs0428@naver.com
+9,성준킴,newUser20220217111992926000000,http://k.kakaocdn.net/dn/osPxL/btqWY4GjdE8/kNY4soagO7LlGJhrgBVHZK/img_640x640.jpg,NULL,"2022-02-17 11:19:26",1,0,2123269523,cheuora@gmail.com
