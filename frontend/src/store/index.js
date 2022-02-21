@@ -1,47 +1,76 @@
 import { createStore } from "vuex";
+// import createPersistedState from "vuex-persistedstate";
+
+import { userStore } from "@/store/modules/userStore.js";
+import { boardStore } from "@/store/modules/boardStore.js";
+import createPersistedState from "vuex-persistedstate";
 
 export default createStore({
+  namespaced: true,
+  modules: {
+    userStore,
+    boardStore,
+  },
   state: {
-    userNickname: '',
-    userProfileImage: '',
-    userInputNickname: '',
-    userLoginPlatform: '',
-    userClientId: '',
+    hideConfigButton: false,
+    isPinned: true,
+    showConfig: false,
+    isTransparent: "",
+    isRTL: false,
+    mcolor: "",
+    isNavFixed: false,
+    isAbsolute: false,
+    showNavs: true,
+    showSidenav: true,
+    showNavbar: true,
+    showFooter: true,
+    showMain: true,
+    memovisible: false,
   },
-  getters: {
-    getUserNickname(state) {
-      return state.userNickname
-    },
-    getUserProfileImage(state) {
-      return state.userProfileImage
-    },
-    getUserInputNickname(state) {
-      return state.userInputNickname
-    },
-    getUserLoginPlatform(state) {
-      return state.userLoginPlatform
-    },
-    getUserClientId(state) {
-      return state.userClientId
-    }
-  },
+  getters: {},
   mutations: {
-    setUserNickname(state, userNickname) {
-      state.userNickname = userNickname
+    navbarMinimize(state) {
+      const sidenav_show = document.querySelector(".g-sidenav-show");
+      const sidenav = document.getElementById("sidenav-main");
+
+      if (sidenav_show.classList.contains("g-sidenav-pinned")) {
+        sidenav_show.classList.remove("g-sidenav-pinned");
+        setTimeout(function () {
+          sidenav.classList.remove("bg-white");
+        }, 100);
+        sidenav.classList.remove("bg-transparent");
+        state.isPinned = true;
+      } else {
+        sidenav_show.classList.add("g-sidenav-pinned");
+        sidenav.classList.add("bg-white");
+        sidenav.classList.remove("bg-transparent");
+        state.isPinned = false;
+      }
     },
-    setUserProfileImage(state, userProfileImage) {
-      state.userProfileImage = userProfileImage
+    sidebarType(state, payload) {
+      state.isTransparent = payload;
     },
-    setUserInputNickname(state, value) {
-      state.userInputNickname = value
+    navbarFixed(state) {
+      if (state.isNavFixed === false) {
+        state.isNavFixed = true;
+      } else {
+        state.isNavFixed = false;
+      }
     },
-    setUserLoginPlatform(state, userLoginPlatform) {
-      state.userLoginPlatform = userLoginPlatform
+    setMemovisible(state) {
+      state.memovisible = !state.memovisible;
     },
-    setUserClientId(state, userCliendId) {
-      state.userClientId = userCliendId
-    }
   },
-  actions: {},
-  // modules: {},
+  actions: {
+    toggleSidebarColor({ commit }, payload) {
+      commit("sidebarType", payload);
+    },
+  },
+  plugins: [
+    createPersistedState({
+      // 브라우저 종료시 제거하기 위해 localStorage가 아닌 sessionStorage로 변경. (default: localStorage)
+      // storage: sessionStorage,
+      storage: localStorage,
+    }),
+  ],
 });

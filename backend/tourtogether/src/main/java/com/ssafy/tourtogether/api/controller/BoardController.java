@@ -14,16 +14,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ssafy.tourtogether.api.request.BoardAddParticipantPostReq;
+import com.ssafy.tourtogether.api.request.BoardCategoryPostReq;
 import com.ssafy.tourtogether.api.request.BoardClickBoardLikePatchReq;
 import com.ssafy.tourtogether.api.request.BoardCreatePostReq;
 import com.ssafy.tourtogether.api.request.BoardDeleteDeleteReq;
 import com.ssafy.tourtogether.api.request.BoardFinishPatchReq;
-import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdGetReq;
-import com.ssafy.tourtogether.api.request.BoardSearchByUserIdGetReq;
-import com.ssafy.tourtogether.api.response.BoardSearchAllGetRes;
-import com.ssafy.tourtogether.api.response.BoardSearchByBoardIdGetRes;
-import com.ssafy.tourtogether.api.response.BoardSearchByUserIdGetRes;
+import com.ssafy.tourtogether.api.request.BoardSearchBoardIdByBoardRandomPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByBoardIdPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByCategoryPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchByUserIdPostReq;
+import com.ssafy.tourtogether.api.request.BoardSearchParticipantPostReq;
+import com.ssafy.tourtogether.api.response.BoardClickBoardLikePatchRes;
+import com.ssafy.tourtogether.api.response.BoardCreatePostRes;
+import com.ssafy.tourtogether.api.response.BoardSearchAllPostRes;
+import com.ssafy.tourtogether.api.response.BoardSearchBoardIdByBoardRandomPostRes;
+import com.ssafy.tourtogether.api.response.BoardSearchByBoardIdPostRes;
+import com.ssafy.tourtogether.api.response.BoardSearchByUserIdPostRes;
+import com.ssafy.tourtogether.api.response.BoardSearchParticipantPostRes;
 import com.ssafy.tourtogether.api.service.BoardService;
+import com.ssafy.tourtogether.api.service.ScheduleDBService;
 import com.ssafy.tourtogether.common.model.response.BaseResponseBody;
 import com.ssafy.tourtogether.db.entity.Board;
 
@@ -38,10 +47,12 @@ import io.swagger.annotations.ApiResponses;
  */
 @Api(value = "게시판 API", tags = { "board" })
 @RestController
-@RequestMapping("/board")
+@RequestMapping("/api/board")
 public class BoardController {
 	@Autowired
 	BoardService boardService;
+	@Autowired
+	ScheduleDBService scheduleDBService;
 
 	@PostMapping("/create")
 	@ApiOperation(value = "보드생성", notes = "새로운 보드를 생성한다")
@@ -54,8 +65,8 @@ public class BoardController {
 			@RequestBody @ApiParam(value = "보드 생성 정보", required = true) BoardCreatePostReq boardCreateInfo) {
 
 		// 보드 생성
-		boardService.createBoard(boardCreateInfo);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		String boardRandom = boardService.createBoard(boardCreateInfo);
+		return ResponseEntity.status(200).body(BoardCreatePostRes.of(200, "Success", boardRandom));
 	}
 
 	@PatchMapping("/finish")
@@ -69,7 +80,10 @@ public class BoardController {
 			@RequestBody @ApiParam(value = "보드 완료 정보", required = true) BoardFinishPatchReq boardFinishInfo) {
 
 		// 보드 생성
-		boardService.finishBoard(boardFinishInfo);
+		boardService.finishBoard(boardFinishInfo.getBoardId());
+		
+		// 스케줄 저장
+		scheduleDBService.saveScheduleList(boardFinishInfo.getScheduleList());
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
@@ -104,7 +118,7 @@ public class BoardController {
 	}
 
 	@GetMapping
-	@ApiOperation(value = "모든 보드 가져오기", notes = "모든 보드 가져온다")
+	@ApiOperation(value = "모든 보드 중 완료된 보드만 가져오기", notes = "모든 보드 가져온다")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
 			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
@@ -114,10 +128,10 @@ public class BoardController {
 
 		// 보드 ID로 불러오기
 		List<Board> boards = boardService.searchAll();
-		return ResponseEntity.status(200).body(BoardSearchAllGetRes.of(200, "Success", boards));
+		return ResponseEntity.status(200).body(BoardSearchAllPostRes.of(200, "Success", boards));
 	}
 
-	@GetMapping("/searchByBoardId")
+	@PostMapping("/searchByBoardId")
 	@ApiOperation(value = "보드 ID로 보드 가져오기", notes = "보드 ID로 보드 가져온다")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
@@ -125,14 +139,14 @@ public class BoardController {
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 
 	public ResponseEntity<? extends BaseResponseBody> searchByBoardId(
-			@RequestBody @ApiParam(value = "불러올 보드 ID", required = true) BoardSearchByBoardIdGetReq boardSearchByBoardIdInfo) {
+			@RequestBody @ApiParam(value = "불러올 보드 ID", required = true) BoardSearchByBoardIdPostReq boardSearchByBoardIdInfo) {
 
 		// 보드 ID로 불러오기
 		Optional<Board> board = boardService.searchByBoardId(boardSearchByBoardIdInfo);
-		return ResponseEntity.status(200).body(BoardSearchByBoardIdGetRes.of(200, "Success", board));
+		return ResponseEntity.status(200).body(BoardSearchByBoardIdPostRes.of(200, "Success", board));
 	}
 
-	@GetMapping("/searchByUserId")
+	@PostMapping("/searchByUserId")
 	@ApiOperation(value = "유저 ID로 모든 보드 가져오기", notes = "유저 ID로 모든 보드 가져온다")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
@@ -140,14 +154,58 @@ public class BoardController {
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 
 	public ResponseEntity<? extends BaseResponseBody> searchByUserId(
-			@RequestBody @ApiParam(value = "불러올 보드 ID", required = true) BoardSearchByUserIdGetReq boardSearchByUserIdInfo) {
+			@RequestBody @ApiParam(value = "불러올 보드 ID", required = true) BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
 
 		// 보드 ID로 불러오기
 		List<Board> myBoards = boardService.searchByUserId(boardSearchByUserIdInfo);
-		return ResponseEntity.status(200).body(BoardSearchByUserIdGetRes.of(200, "Success", myBoards));
+		return ResponseEntity.status(200).body(BoardSearchByUserIdPostRes.of(200, "Success", myBoards));
 	}
 
-	@GetMapping("/searchLikeBoardByUserId")
+	@PostMapping("/searchByUserId/finish")
+	@ApiOperation(value = "유저 ID로 완료된 보드 가져오기", notes = "유저 ID로 모든 보드 가져온다")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+
+	public ResponseEntity<? extends BaseResponseBody> searchByUserIdFinish(
+			@RequestBody @ApiParam(value = "불러올 유저 ID", required = true) BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
+
+		// 보드 ID로 불러오기
+		List<Board> myBoards = boardService.searchByUserIdFinish(boardSearchByUserIdInfo);
+		return ResponseEntity.status(200).body(BoardSearchByUserIdPostRes.of(200, "Success", myBoards));
+	}
+
+	@PostMapping("/searchByUserId/proceeding")
+	@ApiOperation(value = "유저 ID로 진행중인 보드 가져오기", notes = "유저 ID로 모든 보드 가져온다")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+
+	public ResponseEntity<? extends BaseResponseBody> searchByUserIdProceeding(
+			@RequestBody @ApiParam(value = "불러올 유저 ID", required = true) BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
+
+		// 보드 ID로 불러오기
+		List<Board> myBoards = boardService.searchByUserIdProceeding(boardSearchByUserIdInfo);
+		return ResponseEntity.status(200).body(BoardSearchByUserIdPostRes.of(200, "Success", myBoards));
+	}
+
+	@PostMapping("/searchBoardIdByBoardRandom")
+	@ApiOperation(value = "보드 랜덤값으로 보드 아이디 가져오기", notes = "보드 랜덤값으로 보드 아이디 가져온다")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+
+	public ResponseEntity<? extends BaseResponseBody> searchByUserId(
+			@RequestBody @ApiParam(value = "보드 랜덤값", required = true) BoardSearchBoardIdByBoardRandomPostReq searchBoardIdByBoardRandomInfo) {
+
+		Board board = boardService.searchByBoardRandom(searchBoardIdByBoardRandomInfo);
+		return ResponseEntity.status(200).body(BoardSearchBoardIdByBoardRandomPostRes.of(200, "Success", board));
+	}
+
+	@PostMapping("/searchLikeBoardByUserId")
 	@ApiOperation(value = "유저 ID로 좋아요 누른 모든 보드 가져오기", notes = "유저 ID로 좋아요 누른 모든 보드 가져온다")
 	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
 			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
@@ -155,11 +213,11 @@ public class BoardController {
 			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
 
 	public ResponseEntity<? extends BaseResponseBody> searchLikeBoardByUserId(
-			@RequestBody @ApiParam(value = "불러올 보드 ID", required = true) BoardSearchByUserIdGetReq boardSearchByUserIdInfo) {
+			@RequestBody @ApiParam(value = "불러올 보드 ID", required = true) BoardSearchByUserIdPostReq boardSearchByUserIdInfo) {
 
 		// 보드 ID로 불러오기
 		List<Board> myBoards = boardService.searchLikeBoardByUserId(boardSearchByUserIdInfo);
-		return ResponseEntity.status(200).body(BoardSearchByUserIdGetRes.of(200, "Success", myBoards));
+		return ResponseEntity.status(200).body(BoardSearchByUserIdPostRes.of(200, "Success", myBoards));
 	}
 
 	@PatchMapping("/clickBoardLike")
@@ -172,9 +230,8 @@ public class BoardController {
 	public ResponseEntity<? extends BaseResponseBody> clickBoardLike(
 			@RequestBody @ApiParam(value = "좋아요 누른 보드 아이디와 유저 아이디 정보", required = true) BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
 
-		// 보드 생성
-		boardService.clickBoardLike(boardclickBoardLikeInfo);
-		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+		List<Integer> favoriteBoardId = boardService.clickBoardLike(boardclickBoardLikeInfo);
+		return ResponseEntity.status(200).body(BoardClickBoardLikePatchRes.of(200, "Success", favoriteBoardId));
 	}
 
 	@PatchMapping("/cancelBoardLike")
@@ -187,9 +244,52 @@ public class BoardController {
 	public ResponseEntity<? extends BaseResponseBody> cancelBoardLike(
 			@RequestBody @ApiParam(value = "좋아요 취소할 보드 아이디와 유저 아이디 정보", required = true) BoardClickBoardLikePatchReq boardclickBoardLikeInfo) {
 
+		List<Integer> favoriteBoardId = boardService.cancelBoardLike(boardclickBoardLikeInfo);
+		return ResponseEntity.status(200).body(BoardClickBoardLikePatchRes.of(200, "Success", favoriteBoardId));
+	}
+
+	@PostMapping("/category")
+	@ApiOperation(value = "보드에 유형 설정하기", notes = "보드에 유형 설정한다")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+
+	public ResponseEntity<? extends BaseResponseBody> category(
+			@RequestBody @ApiParam(value = "추가할 유저의 아이디와 보드 아이 정보", required = true) BoardCategoryPostReq boardCategoryInfo) {
+
 		// 보드 생성
-		boardService.cancelBoardLike(boardclickBoardLikeInfo);
+		boardService.category(boardCategoryInfo);
 		return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
 	}
 
+	@PostMapping("/searchByCategory")
+	@ApiOperation(value = "선택된 유형에 해당되는 보드만 가져오기", notes = "선택된 유형에 해당되는 보드 가져온다")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+
+	public ResponseEntity<? extends BaseResponseBody> searchByCategory(
+			@RequestBody @ApiParam(value = "추가할 유저의 아이디와 보드 아이 정보", required = true) BoardSearchByCategoryPostReq boardSearchByCategoryInfo) {
+
+		// 보드 ID로 불러오기
+		List<Board> boards = boardService.searchByCategory(boardSearchByCategoryInfo);
+		return ResponseEntity.status(200).body(BoardSearchAllPostRes.of(200, "Success", boards));
+	}
+
+	@PostMapping("/searchParticipant")
+	@ApiOperation(value = "보드에 참여한 참가자인지 확인", notes = "보드에 참여한 참가자인지 확인한다")
+	@ApiResponses({ @ApiResponse(code = 200, message = "성공", response = BaseResponseBody.class),
+			@ApiResponse(code = 401, message = "인증 실패", response = BaseResponseBody.class),
+			@ApiResponse(code = 404, message = "보드 없음", response = BaseResponseBody.class),
+			@ApiResponse(code = 500, message = "서버 오류", response = BaseResponseBody.class) })
+
+	public ResponseEntity<? extends BaseResponseBody> searchParticipant(
+			@RequestBody @ApiParam(value = "추가할 유저의 아이디와 보드 아이디 정보", required = true) BoardSearchParticipantPostReq boardSearchParticipantInfo) {
+
+		// 보드 ID로 불러오기
+		Boolean isIncluded = boardService.searchParticipant(boardSearchParticipantInfo);
+		return ResponseEntity.status(200).body(BoardSearchParticipantPostRes.of(200, "Success", isIncluded));
+	}
 }

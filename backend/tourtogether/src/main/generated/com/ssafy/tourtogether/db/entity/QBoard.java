@@ -29,6 +29,8 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final StringPath boardName = createString("boardName");
 
+    public final StringPath boardRandom = createString("boardRandom");
+
     public QBoard(String variable) {
         super(Board.class, forVariable(variable));
     }
