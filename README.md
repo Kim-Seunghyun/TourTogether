@@ -33,7 +33,7 @@ Tour Together을 통해 실시간으로 소통하고, 인기있는 여행계획�
     - Sub1 : 22.01.10 - 22.02.14
     - Sub2 : 22.01.17 - 22.01.28
     - Sub3 : 22.01.31 - 22.02.18 
-    - [세부 일정](https://www.notion.so/79098e3921524c51ab5f992d430e954a?v=b79c670d23a14315bfc79d2ac54af7e3)
+    - [세부 일정](https://amused-viper-137.notion.site/79098e3921524c51ab5f992d430e954a?v=b79c670d23a14315bfc79d2ac54af7e3)
 2. 인원 (총 6인)
     - 김승현 : Front-end, Front-end Tech Leader
     - 박세진 : Front-end, 기획
@@ -118,17 +118,17 @@ Tour Together을 통해 실시간으로 소통하고, 인기있는 여행계획�
 
 ---
 
-- 프로젝트 관리 : [Notion](https://www.notion.so/SSAFY-2-5-ba42d6abf58c4708a3257429d4c31bc9)
-- [기획서](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A105/-/blob/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/%EA%B8%B0%ED%9A%8D%EC%84%9C/%E1%84%80%E1%85%A9%E1%86%BC%E1%84%90%E1%85%A9%E1%86%BCPJT_%E1%84%80%E1%85%B5%E1%84%92%E1%85%AC%E1%86%A8%E1%84%87%E1%85%A1%E1%86%AF%E1%84%91%E1%85%AD.pdf) 
-- [와이어프레임](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A105/-/tree/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84)
-- [ERD](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A105/-/tree/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/erd) 
-- [시퀀스 다이어그램](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A105/-/tree/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/%EC%8B%9C%ED%80%80%EC%8A%A4%20%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8)
-- [서비스 아키텍처](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A105/-/tree/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EA%B5%AC%EC%84%B1%EB%8F%84)
-- [화면정의서](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A105/-/tree/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/%ED%99%94%EB%A9%B4%EC%A0%95%EC%9D%98%EC%84%9C)
+- 프로젝트 관리 : [Notion](https://amused-viper-137.notion.site/SSAFY-2-5-ba42d6abf58c4708a3257429d4c31bc9)
+- [기획서](https://github.com/Kim-Seunghyun/TourTogether/blob/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/%EA%B8%B0%ED%9A%8D%EC%84%9C/%EA%B3%B5%ED%86%B5PJT_%EA%B8%B0%ED%9A%8D%EB%B0%9C%ED%91%9C.pdf) 
+- [와이어프레임](https://github.com/Kim-Seunghyun/TourTogether/tree/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84)
+- [ERD](https://github.com/Kim-Seunghyun/TourTogether/blob/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/erd/tt_erd.pdf) 
+- [시퀀스 다이어그램](https://github.com/Kim-Seunghyun/TourTogether/tree/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/%EC%8B%9C%ED%80%80%EC%8A%A4%20%EB%8B%A4%EC%9D%B4%EC%96%B4%EA%B7%B8%EB%9E%A8)
+- [서비스 아키텍처](https://github.com/Kim-Seunghyun/TourTogether/blob/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/%EC%8B%9C%EC%8A%A4%ED%85%9C%20%EA%B5%AC%EC%84%B1%EB%8F%84/tt_%EC%8B%9C%EC%8A%A4%ED%85%9C%EA%B5%AC%EC%84%B1%EB%8F%84.pdf)
+- [화면정의서](https://github.com/Kim-Seunghyun/TourTogether/blob/develop/%EC%82%B0%EC%B6%9C%EB%AC%BC/%ED%99%94%EB%A9%B4%EC%A0%95%EC%9D%98%EC%84%9C/%ED%99%94%EB%A9%B4%EC%A0%95%EC%9D%98%EC%84%9C.pdf)
 
 
 ## 4️⃣ 프로젝트 빌드
 
 ---
 
-- [포팅 메뉴얼](https://lab.ssafy.com/s06-webmobile1-sub2/S06P12A105/-/blob/develop/exec/%ED%8F%AC%ED%8C%85%EB%A7%A4%EB%89%B4%EC%96%BC.pdf)
+- [포팅 메뉴얼](https://github.com/Kim-Seunghyun/TourTogether/blob/develop/exec/%ED%8F%AC%ED%8C%85%EB%A7%A4%EB%89%B4%EC%96%BC.pdf)
